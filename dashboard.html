@@ -308,14 +308,16 @@ async function dashAnalyze() {
   document.getElementById('dashBtn').disabled = false
 }
 
-function toggleProfileMenu(e) {
-  e.stopPropagation()
-  document.getElementById('profileMenu').classList.toggle('open')
+function toggleMenu() {
+  const menu = document.getElementById('profileMenu')
+  menu.style.display = menu.style.display === 'none' ? 'block' : 'none'
 }
-function closeProfileMenu() {
-  document.getElementById('profileMenu').classList.remove('open')
+function closeMenu() {
+  document.getElementById('profileMenu').style.display = 'none'
 }
-document.addEventListener('click', closeProfileMenu)
+document.addEventListener('click', function(e) {
+  if (!document.getElementById('userCard').contains(e.target)) closeMenu()
+})
 
 function setAvatarColor(gradient) {
   const style = `linear-gradient(135deg,${gradient})`
