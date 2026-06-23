@@ -98,7 +98,6 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
   <div class="nav-section">Outils</div>
   <button class="nav-item" id="nav-analyzer" onclick="showPage('analyzer',this)">🤖 Analyseur IA</button>
   <button class="nav-item" id="nav-reports" onclick="showPage('reports',this)">📬 Rapports</button>
-  <button class="nav-item" id="nav-settings" onclick="showPage('settings',this)">⚙️ Paramètres</button>
   <div class="sidebar-bottom">
     <div class="user-card">
       <div class="user-avatar" id="userAvatar">?</div>
@@ -318,6 +317,14 @@ function closeProfileMenu() {
 }
 document.addEventListener('click', closeProfileMenu)
 
+function setAvatarColor(gradient) {
+  const style = `linear-gradient(135deg,${gradient})`
+  document.getElementById('bigAvatar').style.background = style
+  document.getElementById('userAvatar').style.background = style
+  localStorage.setItem('avatarColor', gradient)
+  showNotif('Avatar mis à jour !', 'success')
+}
+
 async function saveSettings() {
   const firstname = document.getElementById('set-firstname').value.trim()
   const lastname = document.getElementById('set-lastname').value.trim()
@@ -351,6 +358,15 @@ async function changePassword() {
   const meta = currentUser.user_metadata || {}
   if (meta.firstname) document.getElementById('set-firstname').value = meta.firstname
   if (meta.lastname) document.getElementById('set-lastname').value = meta.lastname
+  // Load avatar color
+  const savedColor = localStorage.getItem('avatarColor')
+  if (savedColor) {
+    const style = `linear-gradient(135deg,${savedColor})`
+    document.getElementById('userAvatar').style.background = style
+    if (document.getElementById('bigAvatar')) document.getElementById('bigAvatar').style.background = style
+  }
+  // Set big avatar letter
+  if (document.getElementById('bigAvatar')) document.getElementById('bigAvatar').textContent = email[0].toUpperCase()
   const params = new URLSearchParams(window.location.search)
   if (params.get('connected') === 'google') { showNotif('Google Business connecté !', 'success'); loadGoogleReviews() }
   if (params.get('error')) showNotif('Erreur de connexion. Réessayez.', 'error')
