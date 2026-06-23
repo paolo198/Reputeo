@@ -23,6 +23,19 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .user-email{font-size:0.75rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
 .logout-btn{font-size:0.75rem;color:var(--muted);background:none;border:none;cursor:pointer;padding:4px;transition:color 0.2s;flex-shrink:0}
 .logout-btn:hover{color:var(--red)}
+.user-card{cursor:pointer;position:relative}
+.user-card:hover{border-color:rgba(255,255,255,0.15)}
+.profile-menu{position:absolute;bottom:64px;left:0;right:0;background:#111122;border:1px solid rgba(255,255,255,0.1);border-radius:14px;overflow:hidden;display:none;z-index:200;box-shadow:0 20px 40px rgba(0,0,0,0.5)}
+.profile-menu.open{display:block}
+.pmenu-item{display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:0.85rem;color:rgba(255,255,255,0.5);cursor:pointer;transition:all 0.2s;border:none;background:none;width:100%;text-align:left}
+.pmenu-item:hover{background:rgba(255,255,255,0.05);color:#f0f0ff}
+.pmenu-item.danger:hover{background:rgba(239,68,68,0.08);color:#f87171}
+.pmenu-div{height:1px;background:rgba(255,255,255,0.07);margin:4px 0}
+.form-group{margin-bottom:20px}
+.form-label{display:block;font-size:0.78rem;color:rgba(255,255,255,0.38);margin-bottom:6px}
+.form-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px 16px;font-family:"Inter",sans-serif;font-size:0.9rem;color:#f0f0ff;outline:none;transition:border-color 0.2s}
+.form-input:focus{border-color:rgba(79,110,247,0.4)}
+.settings-card{background:#0d0d1a;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:28px;margin-bottom:20px}
 .main{margin-left:240px;flex:1;padding:40px 48px;min-height:100vh}
 .page{display:none}.page.active{display:block}
 .page-title{font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;letter-spacing:-0.04em;margin-bottom:4px}
@@ -85,11 +98,16 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
   <div class="nav-section">Outils</div>
   <button class="nav-item" id="nav-analyzer" onclick="showPage('analyzer',this)">🤖 Analyseur IA</button>
   <button class="nav-item" id="nav-reports" onclick="showPage('reports',this)">📬 Rapports</button>
+  <button class="nav-item" id="nav-settings" onclick="showPage('settings',this)">⚙️ Paramètres</button>
   <div class="sidebar-bottom">
     <div class="user-card">
       <div class="user-avatar" id="userAvatar">?</div>
       <div class="user-email" id="userEmail">Chargement...</div>
-      <button class="logout-btn" onclick="logout()" title="Se déconnecter">↪</button>
+    </div>
+    <div class="profile-menu" id="profileMenu">
+      <button class="pmenu-item" onclick="showPage('settings', null); closeProfileMenu()">⚙️ Paramètres</button>
+      <div class="pmenu-div"></div>
+      <button class="pmenu-item danger" onclick="logout()">↪ Se déconnecter</button>
     </div>
   </div>
 </aside>
@@ -169,6 +187,28 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
     </div>
   </div>
 
+  <div class="page" id="page-settings">
+    <div class="page-title">Paramètres</div>
+    <div class="page-sub">Gérez votre compte Reputeo.</div>
+    <div class="settings-card">
+      <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:20px">Informations personnelles</h3>
+      <div class="form-group"><label class="form-label">Prénom</label><input class="form-input" id="set-firstname" placeholder="Votre prénom"></div>
+      <div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="set-lastname" placeholder="Votre nom"></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="set-email" disabled style="opacity:0.5;cursor:not-allowed"></div>
+      <button class="btn-primary" onclick="saveSettings()">Enregistrer</button>
+    </div>
+    <div class="settings-card">
+      <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:20px">Changer le mot de passe</h3>
+      <div class="form-group"><label class="form-label">Nouveau mot de passe</label><input class="form-input" type="password" id="set-password" placeholder="8 caractères minimum"></div>
+      <div class="form-group"><label class="form-label">Confirmer</label><input class="form-input" type="password" id="set-confirm" placeholder="••••••••"></div>
+      <button class="btn-primary" onclick="changePassword()">Changer le mot de passe</button>
+    </div>
+    <div class="settings-card" style="border-color:rgba(239,68,68,0.2)">
+      <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:8px;color:#f87171">Zone de danger</h3>
+      <p style="font-size:0.85rem;color:rgba(255,255,255,0.38);margin-bottom:20px">Ces actions sont irréversibles.</p>
+      <button onclick="logout()" style="padding:10px 20px;background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2);border-radius:100px;font-size:0.85rem;cursor:pointer">Se déconnecter</button>
+    </div>
+  </div>
 </main>
 
 <div class="notif" id="notif"></div>
@@ -269,6 +309,33 @@ async function dashAnalyze() {
   document.getElementById('dashBtn').disabled = false
 }
 
+function toggleProfileMenu(e) {
+  e.stopPropagation()
+  document.getElementById('profileMenu').classList.toggle('open')
+}
+function closeProfileMenu() {
+  document.getElementById('profileMenu').classList.remove('open')
+}
+document.addEventListener('click', closeProfileMenu)
+
+async function saveSettings() {
+  const firstname = document.getElementById('set-firstname').value.trim()
+  const lastname = document.getElementById('set-lastname').value.trim()
+  const { error } = await sb.auth.updateUser({ data: { firstname, lastname } })
+  if (error) showNotif('Erreur : ' + error.message, 'error')
+  else showNotif('Paramètres enregistrés !', 'success')
+}
+
+async function changePassword() {
+  const pass = document.getElementById('set-password').value
+  const confirm = document.getElementById('set-confirm').value
+  if (pass !== confirm) return showNotif('Les mots de passe ne correspondent pas', 'error')
+  if (pass.length < 8) return showNotif('Mot de passe trop court', 'error')
+  const { error } = await sb.auth.updateUser({ password: pass })
+  if (error) showNotif('Erreur : ' + error.message, 'error')
+  else { showNotif('Mot de passe changé !', 'success'); document.getElementById('set-password').value = ''; document.getElementById('set-confirm').value = '' }
+}
+
 // INIT
 ;(async () => {
   const cfg = await fetch('/api/auth').then(r => r.json()).catch(() => ({}))
@@ -280,6 +347,10 @@ async function dashAnalyze() {
   document.getElementById('userEmail').textContent = email
   document.getElementById('userAvatar').textContent = email[0].toUpperCase()
   document.getElementById('welcomeTitle').textContent = `Bonjour ${email.split('@')[0]} 👋`
+  document.getElementById('set-email').value = email
+  const meta = currentUser.user_metadata || {}
+  if (meta.firstname) document.getElementById('set-firstname').value = meta.firstname
+  if (meta.lastname) document.getElementById('set-lastname').value = meta.lastname
   const params = new URLSearchParams(window.location.search)
   if (params.get('connected') === 'google') { showNotif('Google Business connecté !', 'success'); loadGoogleReviews() }
   if (params.get('error')) showNotif('Erreur de connexion. Réessayez.', 'error')
