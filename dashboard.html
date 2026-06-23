@@ -85,6 +85,11 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
 .notif.success{border-color:rgba(16,185,129,0.3);color:#34d399}
 .notif.info{border-color:rgba(79,110,247,0.3);color:rgba(79,110,247,0.9)}
 .notif.error{border-color:rgba(239,68,68,0.3);color:#f87171}
+.premium-banner{background:linear-gradient(135deg,rgba(79,110,247,0.15),rgba(124,58,237,0.1));border:1px solid rgba(79,110,247,0.3);border-radius:14px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+.premium-banner-text{font-size:0.875rem;color:rgba(255,255,255,0.8);line-height:1.5}
+.premium-banner-title{font-family:"Syne",sans-serif;font-weight:700;font-size:1rem;margin-bottom:4px}
+.locked-overlay{position:relative}
+.locked-overlay::after{content:"🔒 Fonctionnalité premium";position:absolute;inset:0;background:rgba(8,8,16,0.85);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:0.875rem;color:rgba(255,255,255,0.5);backdrop-filter:blur(4px)}
 </style>
 </head>
 <body>
@@ -388,8 +393,46 @@ async function changePassword() {
   const params = new URLSearchParams(window.location.search)
   if (params.get('connected') === 'google') { showNotif('Google Business connecté !', 'success'); loadGoogleReviews() }
   if (params.get('error')) showNotif('Erreur de connexion. Réessayez.', 'error')
+  // Check subscription
+  const subRes = await fetch(`/api/check-subscription?user_id=${currentUser.id}`)
+  const subData = await subRes.json()
+  
+  if (!subData.isPremium) {
+    // Show premium banner
+    const banner = document.createElement('div')
+    banner.className = 'premium-banner'
+    banner.id = 'premiumBanner'
+    banner.innerHTML = `
+      <div class="premium-banner-text">
+        <div class="premium-banner-title">🚀 Activez votre accès Reputeo</div>
+        Commencez votre essai gratuit de 14 jours — carte bancaire requise, résiliation en 1 clic.
+      </div>
+      <button onclick="startCheckout()" class="btn-primary" style="white-space:nowrap;flex-shrink:0">Démarrer l'essai gratuit →</button>`
+    document.querySelector('.main').prepend(banner)
+    
+    // Lock features
+    document.querySelectorAll('#page-reviews .section-card, #page-connect .connect-card:first-child').forEach(el => {
+      el.classList.add('locked-overlay')
+    })
+  }
+  
   loadGoogleReviews()
 })()
+
+async function startCheckout() {
+  const btn = document.querySelector('#premiumBanner button')
+  if (btn) { btn.textContent = 'Chargement...'; btn.disabled = true }
+  
+  const { data: { session } } = await sb.auth.getSession()
+  const res = await fetch('/api/create-checkout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: currentUser.id, email: currentUser.email })
+  })
+  const data = await res.json()
+  if (data.url) window.location = data.url
+  else { showNotif('Erreur paiement', 'error'); if (btn) { btn.textContent = 'Démarrer l\'essai gratuit →'; btn.disabled = false } }
+}
 </script>
 </body>
 </html>
