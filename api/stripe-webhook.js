@@ -49,6 +49,23 @@ export default async function handler(req, res) {
           status: isActive ? 'active' : 'inactive',
           trial_ends_at: sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null
         }).eq('stripe_customer_id', customerId)
+
+        // Send welcome email on first activation
+        if (event.type === 'customer.subscription.created' && isActive) {
+          const stripeClient2 = (await import('stripe')).default(process.env.STRIPE_SECRET_KEY)
+          const customer = await stripeClient2.customers.retrieve(customerId)
+          if (customer.email) {
+            await fetch(`${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'https://avisio-4b.vercel.app'}/api/send-email`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                type: 'welcome',
+                to: customer.email,
+                data: { name: customer.email.split('@')[0] }
+              })
+            })
+          }
+        }
       }
     }
 
