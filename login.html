@@ -87,7 +87,11 @@ async function initSupabase(){
 }
 
 // Check already logged in
-(async()=>{await initSupabase();const{data:{session}}=await sb.auth.getSession();if(session)window.location='/dashboard.html';})().then(({data:{session}})=>{if(session)window.location='/dashboard.html'})
+(async()=>{
+  await initSupabase()
+  const{data:{session}}=await sb.auth.getSession()
+  if(session) window.location='/dashboard.html'
+})()
 
 function switchTab(tab){
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',(tab==='login'&&i===0)||(tab==='signup'&&i===1)))
