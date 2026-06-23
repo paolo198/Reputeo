@@ -178,7 +178,10 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
     <div class="page-sub">Analysez n'importe quel avis en quelques secondes.</div>
     <div class="section-card" style="padding:32px">
       <textarea id="dashInput" placeholder="Collez un avis client ici..."></textarea>
-      <button class="btn-primary" onclick="dashAnalyze()" style="margin-top:14px" id="dashBtn">Analyser avec l'IA →</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:10px">
+        <button class="btn-primary" onclick="dashAnalyze()" id="dashBtn">Analyser avec l'IA →</button>
+        <div id="analyzerCounter" style="font-size:0.75rem;color:rgba(255,255,255,0.35)"></div>
+      </div>
       <div id="dashLoading" style="display:none;padding:20px;text-align:center;color:var(--muted)">Analyse en cours...</div>
       <div id="dashResult" style="display:none;margin-top:20px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:20px"></div>
     </div>
@@ -283,9 +286,41 @@ function updateStats(reviews) {
   document.getElementById('stat-week').textContent = reviews.filter(r => new Date(r.date) > weekAgo).length
 }
 
+function updateAnalyzerCounter(used) {
+  const el = document.getElementById('analyzerCounter')
+  if (!el) return
+  const left = Math.max(0, 3 - used)
+  if (left === 0) {
+    el.innerHTML = '🔒 Limite atteinte — <a href="#" onclick="startCheckout()" style="color:rgba(79,110,247,0.8)">S\'abonner</a>'
+  } else {
+    el.textContent = `Démo — ${left} analyse${left > 1 ? 's' : ''} gratuite${left > 1 ? 's' : ''} restante${left > 1 ? 's' : ''}`
+  }
+}
+
 async function dashAnalyze() {
   const review = document.getElementById('dashInput').value.trim()
   if (!review) return
+
+  // Check premium or demo limit
+  const subRes = await fetch(`/api/check-subscription?user_id=${currentUser.id}`)
+  const subData = await subRes.json()
+  
+  if (!subData.isPremium) {
+    const used = parseInt(localStorage.getItem('dash_uses') || '0')
+    if (used >= 3) {
+      document.getElementById('dashResult').innerHTML = `
+        <div style="text-align:center;padding:24px">
+          <div style="font-size:2rem;margin-bottom:12px">🔒</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:8px">Limite de 3 analyses atteinte</div>
+          <div style="font-size:0.82rem;color:rgba(255,255,255,0.45);margin-bottom:20px">Passez à l'abonnement pour des analyses illimitées.</div>
+          <button onclick="startCheckout()" class="btn-primary">Démarrer l'essai gratuit 14 jours →</button>
+        </div>`
+      document.getElementById('dashResult').style.display = 'block'
+      return
+    }
+    localStorage.setItem('dash_uses', used + 1)
+    updateAnalyzerCounter(used + 1)
+  }
   document.getElementById('dashResult').style.display = 'none'
   document.getElementById('dashLoading').style.display = 'block'
   document.getElementById('dashBtn').disabled = true
@@ -414,6 +449,14 @@ async function changePassword() {
     document.querySelectorAll('#page-reviews .section-card, #page-connect .connect-card:first-child').forEach(el => {
       el.classList.add('locked-overlay')
     })
+  }
+  
+  // Init analyzer counter for non-premium
+  const subCheck = await fetch(`/api/check-subscription?user_id=${currentUser.id}`)
+  const subCheck2 = await subCheck.json()
+  if (!subCheck2.isPremium) {
+    const used = parseInt(localStorage.getItem('dash_uses') || '0')
+    updateAnalyzerCounter(used)
   }
   
   loadGoogleReviews()
