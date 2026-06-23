@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reputeo — Connexion</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080810;--bg2:#0d0d1a;--border:rgba(255,255,255,0.08);--text:#f0f0ff;--muted:rgba(255,255,255,0.38);--accent:#4f6ef7;--accent2:#7c3aed;--red:#ef4444;--green:#10b981}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden}
+.bg-glow{position:fixed;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(79,110,247,0.1),rgba(124,58,237,0.05) 40%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:24px;padding:48px 44px;width:100%;max-width:440px;position:relative;z-index:1}
+.card::before{content:'';position:absolute;inset:0;border-radius:24px;padding:1px;background:linear-gradient(135deg,rgba(79,110,247,0.3),rgba(124,58,237,0.2),transparent,transparent);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;letter-spacing:-0.05em;text-align:center;margin-bottom:32px;text-decoration:none;display:block;color:var(--text)}
+.logo em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tabs{display:flex;background:rgba(255,255,255,0.04);border-radius:12px;padding:4px;margin-bottom:32px;gap:4px}
+.tab{flex:1;padding:10px;text-align:center;font-size:0.875rem;font-weight:500;color:var(--muted);border-radius:10px;cursor:pointer;transition:all 0.2s;border:none;background:none}
+.tab.active{background:var(--bg);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+.form-group{margin-bottom:16px}
+label{display:block;font-size:0.8rem;color:var(--muted);margin-bottom:6px;letter-spacing:0.03em}
+input{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px;font-family:'Inter',sans-serif;font-size:0.9rem;color:var(--text);outline:none;transition:border-color 0.2s}
+input::placeholder{color:rgba(255,255,255,0.2)}
+input:focus{border-color:rgba(79,110,247,0.5);background:rgba(79,110,247,0.04)}
+.btn-main{width:100%;padding:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:0.95rem;font-weight:500;cursor:pointer;transition:all 0.2s;margin-top:8px}
+.btn-main:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(79,110,247,0.4)}
+.btn-main:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--muted);font-size:0.78rem}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.btn-google{width:100%;padding:14px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:12px;font-family:'Inter',sans-serif;font-size:0.875rem;color:var(--text);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-google:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15)}
+.google-icon{width:18px;height:18px}
+.msg{padding:12px 16px;border-radius:10px;font-size:0.82rem;margin-top:14px;display:none}
+.msg.error{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#f87171}
+.msg.success{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);color:#34d399}
+.back-link{display:block;text-align:center;margin-top:24px;font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s}
+.back-link:hover{color:var(--text)}
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="card">
+  <a href="/" class="logo">Repute<em>o</em></a>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('login')">Connexion</button>
+    <button class="tab" onclick="switchTab('signup')">Créer un compte</button>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="loginForm">
+    <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="votre@email.fr"></div>
+    <div class="form-group"><label>Mot de passe</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
+    <button class="btn-main" onclick="login()">Se connecter</button>
+    <div class="divider">ou</div>
+    <button class="btn-google" onclick="loginGoogle()">
+      <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continuer avec Google
+    </button>
+    <div class="msg" id="loginMsg"></div>
+  </div>
+
+  <!-- SIGNUP -->
+  <div id="signupForm" style="display:none">
+    <div class="form-group"><label>Email</label><input type="email" id="signupEmail" placeholder="votre@email.fr"></div>
+    <div class="form-group"><label>Mot de passe</label><input type="password" id="signupPassword" placeholder="8 caractères minimum"></div>
+    <div class="form-group"><label>Confirmer le mot de passe</label><input type="password" id="signupConfirm" placeholder="••••••••"></div>
+    <button class="btn-main" onclick="signup()">Créer mon compte</button>
+    <div class="divider">ou</div>
+    <button class="btn-google" onclick="loginGoogle()">
+      <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continuer avec Google
+    </button>
+    <div class="msg" id="signupMsg"></div>
+  </div>
+
+  <a href="/" class="back-link">← Retour à l'accueil</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+let sb;
+async function initSupabase(){
+  const r=await fetch('/api/auth').then(x=>x.json()).catch(()=>({}))
+  const url=r.supabase_url||'https://cqgbxslhggexjjgkagtq.supabase.co'
+  const anon=r.supabase_anon||''
+  sb=supabase.createClient(url,anon)
+}
+
+// Check already logged in
+(async()=>{await initSupabase();const{data:{session}}=await sb.auth.getSession();if(session)window.location='/dashboard.html';})().then(({data:{session}})=>{if(session)window.location='/dashboard.html'})
+
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',(tab==='login'&&i===0)||(tab==='signup'&&i===1)))
+  document.getElementById('loginForm').style.display=tab==='login'?'block':'none'
+  document.getElementById('signupForm').style.display=tab==='signup'?'block':'none'
+}
+
+function showMsg(id,text,type){
+  const el=document.getElementById(id)
+  el.textContent=text;el.className='msg '+type;el.style.display='block'
+}
+
+async function login(){
+  if(!sb)await initSupabase();
+  const email=document.getElementById('loginEmail').value.trim()
+  const password=document.getElementById('loginPassword').value
+  if(!email||!password)return showMsg('loginMsg','Remplissez tous les champs','error')
+  const btn=document.querySelector('#loginForm .btn-main')
+  btn.disabled=true;btn.textContent='Connexion...'
+  const{error}=await sb.auth.signInWithPassword({email,password})
+  if(error){showMsg('loginMsg',error.message==='Invalid login credentials'?'Email ou mot de passe incorrect':error.message,'error');btn.disabled=false;btn.textContent='Se connecter'}
+  else window.location='/dashboard.html'
+}
+
+async function signup(){
+  if(!sb)await initSupabase();
+  const email=document.getElementById('signupEmail').value.trim()
+  const password=document.getElementById('signupPassword').value
+  const confirm=document.getElementById('signupConfirm').value
+  if(!email||!password||!confirm)return showMsg('signupMsg','Remplissez tous les champs','error')
+  if(password!==confirm)return showMsg('signupMsg','Les mots de passe ne correspondent pas','error')
+  if(password.length<8)return showMsg('signupMsg','Mot de passe trop court (8 caractères min)','error')
+  const btn=document.querySelector('#signupForm .btn-main')
+  btn.disabled=true;btn.textContent='Création...'
+  const{error}=await sb.auth.signUp({email,password,options:{emailRedirectTo:window.location.origin+'/dashboard.html'}})
+  if(error){showMsg('signupMsg',error.message,'error');btn.disabled=false;btn.textContent='Créer mon compte'}
+  else showMsg('signupMsg','Compte créé ! Vérifiez votre email pour confirmer.','success')
+}
+
+async function loginGoogle(){
+  if(!sb)await initSupabase();
+  const{error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+'/dashboard.html'}})
+  if(error)showMsg('loginMsg',error.message,'error')
+}
+</script>
+</body>
+</html>

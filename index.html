@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reputeo — Votre réputation. Automatisée.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080810;
+  --bg2:#0d0d1a;
+  --surface:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.08);
+  --text:#f0f0ff;
+  --muted:rgba(255,255,255,0.38);
+  --accent:#4f6ef7;
+  --accent2:#7c3aed;
+  --green:#10b981;
+  --red:#ef4444;
+  --gold:#f59e0b;
+}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.6;overflow-x:hidden}
+
+/* CANVAS PARTICLES */
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.4}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:20px 6vw;transition:all 0.4s}
+nav.scrolled{background:rgba(8,8,16,0.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:14px 6vw}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;letter-spacing:-0.05em;color:var(--text);text-decoration:none;position:relative;z-index:1}
+.logo em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-link{font-size:0.85rem;color:var(--muted);text-decoration:none;transition:color 0.2s;letter-spacing:0.01em}
+.nav-link:hover{color:var(--text)}
+.nav-cta{font-size:0.85rem;font-weight:500;color:var(--text);background:linear-gradient(135deg,var(--accent),var(--accent2));padding:11px 24px;border-radius:100px;text-decoration:none;transition:all 0.3s;box-shadow:0 0 24px rgba(79,110,247,0.3)}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(79,110,247,0.5)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 6vw 100px;position:relative;overflow:hidden;z-index:1}
+.hero-glow{position:absolute;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(79,110,247,0.12) 0%,rgba(124,58,237,0.06) 40%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-55%);pointer-events:none;animation:heroGlow 6s ease-in-out infinite alternate}
+@keyframes heroGlow{from{transform:translate(-50%,-55%) scale(1)}to{transform:translate(-50%,-50%) scale(1.1)}}
+.hero-line{width:1px;height:80px;background:linear-gradient(to bottom,transparent,var(--accent),transparent);margin:0 auto 40px;animation:fadeIn 1s ease both}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(79,110,247,0.1);border:1px solid rgba(79,110,247,0.25);border-radius:100px;padding:7px 18px 7px 12px;font-size:0.75rem;font-weight:500;color:rgba(79,110,247,0.9);margin-bottom:36px;animation:slideDown 0.8s 0.2s ease both;letter-spacing:0.05em;text-transform:uppercase}
+@keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+.badge-pulse{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:badgePulse 2s ease-in-out infinite}
+@keyframes badgePulse{0%,100%{box-shadow:0 0 0 0 rgba(79,110,247,0.4)}50%{box-shadow:0 0 0 6px rgba(79,110,247,0)}}
+h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(3.5rem,9vw,7.5rem);line-height:0.95;letter-spacing:-0.05em;margin-bottom:32px;animation:heroText 1s 0.3s ease both}
+@keyframes heroText{from{opacity:0;transform:translateY(40px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.word-gradient{background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,0.6) 50%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.word-outline{-webkit-text-stroke:1px rgba(255,255,255,0.2);-webkit-text-fill-color:transparent;color:transparent}
+.hero-sub{font-size:1.15rem;color:var(--muted);max-width:500px;margin:0 auto 52px;line-height:1.75;animation:heroText 1s 0.4s ease both;font-weight:300}
+.hero-actions{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;animation:heroText 1s 0.5s ease both}
+.btn-glow{font-size:1rem;font-weight:500;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2));padding:18px 40px;border-radius:100px;text-decoration:none;transition:all 0.3s;position:relative;overflow:hidden}
+.btn-glow::after{content:'';position:absolute;inset:-2px;border-radius:100px;background:linear-gradient(135deg,var(--accent),var(--accent2));z-index:-1;filter:blur(12px);opacity:0;transition:opacity 0.3s}
+.btn-glow:hover{transform:translateY(-3px)}
+.btn-glow:hover::after{opacity:0.6}
+.btn-outline{font-size:0.95rem;color:var(--muted);text-decoration:none;padding:18px 28px;border:1px solid var(--border);border-radius:100px;transition:all 0.3s}
+.btn-outline:hover{color:var(--text);border-color:rgba(255,255,255,0.2)}
+.hero-scroll{position:absolute;bottom:48px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;animation:heroText 1s 1s ease both}
+.scroll-txt{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)}
+.scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,var(--border),transparent)}
+
+/* METRICS BAR */
+.metrics{position:relative;z-index:1;display:flex;justify-content:center;gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);backdrop-filter:blur(10px)}
+.metric{flex:1;max-width:220px;padding:32px 24px;text-align:center;border-right:1px solid var(--border);position:relative;overflow:hidden;cursor:default;transition:background 0.3s}
+.metric:last-child{border-right:none}
+.metric:hover{background:rgba(79,110,247,0.04)}
+.metric::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity 0.3s}
+.metric:hover::before{opacity:1}
+.metric-val{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;letter-spacing:-0.05em;line-height:1;margin-bottom:6px;background:linear-gradient(135deg,var(--text),var(--muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.metric-lbl{font-size:0.75rem;color:var(--muted);letter-spacing:0.05em}
+
+/* MARQUEE */
+.marquee-wrap{overflow:hidden;padding:20px 0;border-bottom:1px solid var(--border);position:relative;z-index:1}
+.marquee-wrap::before,.marquee-wrap::after{content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none}
+.marquee-wrap::before{left:0;background:linear-gradient(to right,var(--bg),transparent)}
+.marquee-wrap::after{right:0;background:linear-gradient(to left,var(--bg),transparent)}
+.marquee-row{display:flex;gap:0;width:max-content;animation:marqueeAnim 25s linear infinite}
+.marquee-row.reverse{animation-direction:reverse;animation-duration:30s}
+@keyframes marqueeAnim{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.marquee-tag{display:inline-flex;align-items:center;gap:8px;padding:8px 24px;border-right:1px solid var(--border);font-size:0.8rem;color:var(--muted);white-space:nowrap;letter-spacing:0.05em}
+.marquee-dot{width:4px;height:4px;border-radius:50%;background:var(--accent);opacity:0.6}
+
+/* BENTO GRID */
+.bento-section{position:relative;z-index:1;padding:100px 6vw;max-width:1200px;margin:0 auto}
+.bento-header{margin-bottom:60px}
+.bento-label{font-size:0.72rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;opacity:0.8}
+.bento-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,5vw,4rem);letter-spacing:-0.05em;line-height:1.0}
+.bento-sub{font-size:1rem;color:var(--muted);margin-top:16px;font-weight:300;max-width:420px;line-height:1.7}
+.bento-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.bento-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:32px;position:relative;overflow:hidden;transition:border-color 0.3s,transform 0.3s;cursor:default}
+.bento-card::before{content:'';position:absolute;inset:0;border-radius:20px;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(79,110,247,0.06),transparent 60%);opacity:0;transition:opacity 0.3s;pointer-events:none}
+.bento-card:hover{border-color:rgba(79,110,247,0.25);transform:translateY(-2px)}
+.bento-card:hover::before{opacity:1}
+.bc1{grid-column:span 7}
+.bc2{grid-column:span 5}
+.bc3{grid-column:span 4}
+.bc4{grid-column:span 4}
+.bc5{grid-column:span 4}
+.bc6{grid-column:span 12}
+.card-icon{width:40px;height:40px;border-radius:12px;background:rgba(79,110,247,0.12);border:1px solid rgba(79,110,247,0.2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:20px}
+.card-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.2rem;margin-bottom:10px;letter-spacing:-0.02em}
+.card-text{font-size:0.875rem;color:var(--muted);line-height:1.7}
+.card-accent{position:absolute;top:0;right:0;width:200px;height:200px;border-radius:50%;pointer-events:none}
+.ca-blue{background:radial-gradient(circle,rgba(79,110,247,0.08),transparent)}
+.ca-purple{background:radial-gradient(circle,rgba(124,58,237,0.08),transparent)}
+
+/* DASHBOARD INSIDE BENTO */
+.mini-dash{margin-top:24px}
+.mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.mini-stat{background:rgba(255,255,255,0.04);border-radius:12px;padding:14px}
+.ms-lbl{font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px}
+.ms-val{font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;letter-spacing:-0.04em;line-height:1}
+.ms-delta{font-size:0.68rem;margin-top:3px}
+.delta-up{color:var(--green)}.delta-dn{color:var(--red)}
+.mini-reviews{display:flex;flex-direction:column;gap:8px}
+.mini-rev{background:rgba(255,255,255,0.03);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px}
+.mr-src{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;flex-shrink:0}
+.mr-body{flex:1}
+.mr-name{font-size:0.75rem;font-weight:500;margin-bottom:1px}
+.mr-text{font-size:0.68rem;color:var(--muted)}
+.mr-stars{font-size:0.6rem;color:var(--gold);margin-bottom:1px}
+.mr-badge{font-size:0.62rem;font-weight:600;padding:2px 8px;border-radius:100px;flex-shrink:0}
+.b-pos{background:rgba(16,185,129,0.12);color:#34d399}
+.b-neg{background:rgba(239,68,68,0.12);color:#f87171}
+.b-neu{background:rgba(255,255,255,0.06);color:var(--muted)}
+
+/* AI SCORE CARD */
+.score-display{margin-top:20px}
+.score-ring{position:relative;width:100px;height:100px;margin:0 auto 20px}
+.score-ring svg{transform:rotate(-90deg)}
+.score-ring-bg{fill:none;stroke:rgba(255,255,255,0.06);stroke-width:6}
+.score-ring-fill{fill:none;stroke:url(#scoreGrad);stroke-width:6;stroke-linecap:round;stroke-dasharray:283;stroke-dashoffset:60;animation:ringFill 2s ease both}
+@keyframes ringFill{from{stroke-dashoffset:283}to{stroke-dashoffset:60}}
+.score-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;letter-spacing:-0.04em}
+.score-items{display:flex;flex-direction:column;gap:8px}
+.score-item{display:flex;align-items:center;gap:10px;font-size:0.8rem;color:var(--muted)}
+.score-bar{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}
+.score-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));animation:fillBar 1.5s ease both}
+@keyframes fillBar{from{width:0}to{width:var(--w)}}
+
+/* REPORT PREVIEW */
+.report-preview{margin-top:20px;background:rgba(255,255,255,0.03);border-radius:14px;padding:16px;border:1px solid var(--border)}
+.rp-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.rp-icon{font-size:1.2rem}
+.rp-title{font-size:0.82rem;font-weight:500}
+.rp-date{font-size:0.7rem;color:var(--muted);margin-top:1px}
+.rp-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.rp-stat{background:rgba(255,255,255,0.03);border-radius:8px;padding:10px;text-align:center}
+.rp-stat-v{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;letter-spacing:-0.04em}
+.rp-stat-l{font-size:0.65rem;color:var(--muted);margin-top:2px}
+.rp-tags{display:flex;gap:6px;flex-wrap:wrap}
+.rp-tag{font-size:0.68rem;padding:3px 10px;border-radius:100px;border:1px solid var(--border);color:var(--muted)}
+
+/* WIDE CARD TICKER */
+.ticker-row{display:flex;gap:12px;overflow:hidden;margin-top:24px}
+.ticker-item{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 18px;flex-shrink:0;min-width:200px;position:relative;overflow:hidden}
+.ticker-item::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.ti-platform{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:6px}
+.ti-score{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;letter-spacing:-0.04em;line-height:1}
+.ti-delta{font-size:0.72rem;margin-top:4px}
+.ti-bar{margin-top:10px;height:3px;border-radius:2px;background:rgba(255,255,255,0.06);overflow:hidden}
+.ti-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+
+/* DEMO SECTION */
+.demo-section{position:relative;z-index:1;padding:100px 6vw;background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 50%,var(--bg) 100%)}
+.demo-inner{max-width:1100px;margin:0 auto}
+.demo-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:80px;align-items:center}
+.demo-label{font-size:0.72rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;opacity:0.8}
+.demo-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.2rem,4vw,3.2rem);letter-spacing:-0.05em;line-height:1.0;margin-bottom:16px}
+.demo-sub{font-size:0.95rem;color:var(--muted);line-height:1.75;font-weight:300;margin-bottom:24px}
+.demo-limit{display:inline-flex;align-items:center;gap:6px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:100px;padding:6px 14px;font-size:0.73rem;color:rgba(245,158,11,0.7);letter-spacing:0.03em}
+
+/* WIDGET */
+.widget{background:var(--bg2);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,0.4)}
+.widget-bar{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.02)}
+.wdot{width:10px;height:10px;border-radius:50%}
+.wd-r{background:#ff5f57}.wd-y{background:#febc2e}.wd-g{background:#28c840}
+.widget-url{margin-left:10px;background:rgba(255,255,255,0.05);border-radius:6px;padding:4px 14px;font-size:0.72rem;color:var(--muted);font-family:monospace}
+.widget-body{padding:24px}
+#reviewInput{width:100%;min-height:110px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px;font-family:'Inter',sans-serif;font-size:0.875rem;color:var(--text);resize:vertical;outline:none;transition:border-color 0.2s;line-height:1.65}
+#reviewInput::placeholder{color:rgba(255,255,255,0.2)}
+#reviewInput:focus{border-color:rgba(79,110,247,0.4);background:rgba(79,110,247,0.04)}
+.widget-actions{display:flex;align-items:center;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:10px}
+#analyzeBtn{padding:12px 26px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:100px;font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:500;cursor:pointer;transition:all 0.2s}
+#analyzeBtn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(79,110,247,0.4)}
+#analyzeBtn:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none}
+#demoCounter{font-size:0.73rem;color:var(--muted)}
+#demoCounter a{color:rgba(79,110,247,0.8);text-decoration:none}
+#loadingState{display:none;padding:24px;text-align:center}
+.spin{width:28px;height:28px;border:2px solid rgba(79,110,247,0.2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin-txt{font-size:0.78rem;color:var(--muted)}
+#analysisResult{display:none;margin-top:16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:14px;padding:20px;animation:fadeUp 0.4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.r-badge{font-size:0.72rem;font-weight:600;padding:5px 14px;border-radius:100px}
+.rpos{background:rgba(16,185,129,0.12);color:#34d399}
+.rneg{background:rgba(239,68,68,0.12);color:#f87171}
+.rneu{background:rgba(255,255,255,0.06);color:var(--muted)}
+.r-score-box{text-align:right}
+.r-score-lbl{font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em}
+.r-score{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;letter-spacing:-0.05em;line-height:1}
+.r-sec{margin-bottom:14px}
+.r-lbl{font-size:0.62rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:6px;opacity:0.6}
+.r-txt{font-size:0.82rem;color:rgba(255,255,255,0.72);line-height:1.65}
+.r-item{font-size:0.8rem;color:rgba(255,255,255,0.6);padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.r-item:last-child{border-bottom:none}
+.r-sug{background:linear-gradient(135deg,rgba(79,110,247,0.08),rgba(124,58,237,0.06));border:1px solid rgba(79,110,247,0.15);border-radius:12px;padding:16px;margin-top:14px}
+.r-sug-lbl{font-size:0.62rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:rgba(79,110,247,0.7);margin-bottom:6px}
+.r-sug-txt{font-size:0.82rem;color:rgba(255,255,255,0.65);line-height:1.65}
+
+/* HOW */
+.how-section{position:relative;z-index:1;padding:100px 6vw;max-width:1200px;margin:0 auto}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:20px;overflow:hidden;margin-top:52px}
+.step{background:var(--bg2);padding:44px 36px;position:relative;overflow:hidden;transition:background 0.3s}
+.step:hover{background:rgba(79,110,247,0.04)}
+.step-glow{position:absolute;top:-40px;right:-40px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(79,110,247,0.08),transparent);opacity:0;transition:opacity 0.3s;pointer-events:none}
+.step:hover .step-glow{opacity:1}
+.step-n{font-family:'Syne',sans-serif;font-size:4.5rem;font-weight:800;letter-spacing:-0.06em;color:rgba(255,255,255,0.05);line-height:1;margin-bottom:24px;transition:color 0.3s}
+.step:hover .step-n{color:rgba(79,110,247,0.2)}
+.step-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.15rem;margin-bottom:10px;letter-spacing:-0.02em}
+.step-txt{font-size:0.875rem;color:var(--muted);line-height:1.7}
+.step-line{position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);transform:scaleX(0);transition:transform 0.4s ease;transform-origin:left}
+.step:hover .step-line{transform:scaleX(1)}
+
+/* PRICING */
+.pricing-section{position:relative;z-index:1;text-align:center;padding:100px 6vw}
+.pricing-inner{max-width:500px;margin:0 auto}
+.price-card{background:var(--bg2);border:1px solid var(--border);border-radius:28px;padding:56px 48px;margin-top:52px;position:relative;overflow:hidden}
+.price-card::before{content:'';position:absolute;inset:0;border-radius:28px;padding:1px;background:linear-gradient(135deg,var(--accent),var(--accent2),transparent,transparent);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.price-glow{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(79,110,247,0.06),transparent);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.price-badge{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:0.72rem;font-weight:600;padding:5px 18px;border-radius:100px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:24px}
+.price-amount{font-family:'Syne',sans-serif;font-size:5.5rem;font-weight:800;letter-spacing:-0.06em;line-height:1;margin-bottom:4px}
+.price-amount sup{font-size:2rem;vertical-align:super}
+.price-amount sub{font-size:1.1rem;font-weight:300;color:var(--muted);vertical-align:baseline;font-family:'Inter',sans-serif}
+.price-period{font-size:0.875rem;color:var(--muted);margin-bottom:40px}
+.price-feats{list-style:none;text-align:left;margin-bottom:44px;display:flex;flex-direction:column;gap:18px}
+.price-feats li{display:flex;align-items:flex-start;gap:12px;font-size:0.9rem}
+.pck{width:20px;height:20px;border-radius:50%;background:rgba(79,110,247,0.12);border:1px solid rgba(79,110,247,0.25);display:flex;align-items:center;justify-content:center;font-size:0.62rem;color:var(--accent);flex-shrink:0;font-weight:700;margin-top:2px}
+.price-note{font-size:0.78rem;color:var(--muted);margin-top:16px}
+
+/* TESTIMONIAL */
+.testi-section{position:relative;z-index:1;padding:100px 6vw;text-align:center;overflow:hidden}
+.testi-bg{position:absolute;inset:0;pointer-events:none}
+.testi-glow1{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(79,110,247,0.05),transparent);top:50%;left:20%;transform:translate(-50%,-50%)}
+.testi-glow2{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.05),transparent);top:50%;right:10%;transform:translate(50%,-50%)}
+.testi-inner{max-width:750px;margin:0 auto;position:relative;z-index:1}
+.testi-qmark{font-family:'Syne',sans-serif;font-size:10rem;font-weight:800;line-height:0.5;color:rgba(79,110,247,0.12);display:block;margin-bottom:28px}
+.testi-quote{font-family:'Syne',sans-serif;font-size:clamp(1.5rem,3.5vw,2.4rem);font-weight:700;line-height:1.25;letter-spacing:-0.03em;color:var(--text);margin-bottom:0}
+
+/* CTA */
+.cta-section{position:relative;z-index:1;padding:120px 6vw;text-align:center;overflow:hidden}
+.cta-glow{position:absolute;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(79,110,247,0.07),rgba(124,58,237,0.04) 40%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.cta-inner{max-width:700px;margin:0 auto;position:relative;z-index:1}
+.cta-title{font-family:'Syne',sans-serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:800;letter-spacing:-0.05em;line-height:0.95;margin-bottom:24px}
+.cta-sub{font-size:1rem;color:var(--muted);margin-bottom:48px;font-weight:300}
+
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:32px 6vw;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+footer p{font-size:0.78rem;color:var(--muted)}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity 0.8s ease,transform 0.8s ease}
+.reveal.on{opacity:1;transform:none}
+.d1{transition-delay:0.1s}.d2{transition-delay:0.2s}.d3{transition-delay:0.3s}.d4{transition-delay:0.4s}
+
+@media(max-width:900px){
+  .bento-grid{grid-template-columns:1fr}
+  .bc1,.bc2,.bc3,.bc4,.bc5,.bc6{grid-column:span 1}
+  .demo-grid{grid-template-columns:1fr;gap:48px}
+  .steps{grid-template-columns:1fr}
+  .mini-stats{grid-template-columns:1fr 1fr}
+  .nav-links .nav-link{display:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo">Repute<em>o</em></a>
+  <div class="nav-links">
+    <a href="#features" class="nav-link">Fonctionnalités</a>
+    <a href="#demo" class="nav-link">Démo</a>
+    <a href="#pricing" class="nav-link">Tarifs</a>
+    <a href="/login.html" class="nav-link">Connexion</a><a href="https://buy.stripe.com/test_fZu28s0830Qr5Lg4j90VO00" target="_blank" class="nav-cta">Essai gratuit →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-line"></div>
+  <div class="hero-badge"><div class="badge-pulse"></div>Analyse IA en temps réel</div>
+  <h1>
+    <span class="word-gradient">Vos avis.</span><br>
+    <span class="word-outline">Centralisés.</span><br>
+    <span class="word-gradient">Maîtrisés.</span>
+  </h1>
+  <p class="hero-sub">Reputeo collecte tous vos avis Google, TripAdvisor et Facebook. L'IA les analyse automatiquement et vous envoie un rapport chaque semaine.</p>
+  <div class="hero-actions">
+    <a href="https://buy.stripe.com/test_fZu28s0830Qr5Lg4j90VO00" target="_blank" class="btn-glow">Essai gratuit 14 jours →</a>
+    <a href="#demo" class="btn-outline">Voir la démo ↓</a>
+  </div>
+  <div class="hero-scroll">
+    <span class="scroll-txt">Découvrir</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- METRICS -->
+<div class="metrics">
+  <div class="metric"><div class="metric-val" id="m1">0</div><div class="metric-lbl">Note moyenne améliorée</div></div>
+  <div class="metric"><div class="metric-val">< 5 min</div><div class="metric-lbl">Pour démarrer</div></div>
+  <div class="metric"><div class="metric-val" id="m2">0</div><div class="metric-lbl">Avis analysés / semaine</div></div>
+  <div class="metric"><div class="metric-val">29,99€</div><div class="metric-lbl">Par mois tout inclus</div></div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-row" id="mq">
+    <span class="marquee-tag"><span class="marquee-dot"></span>Google Business</span>
+    <span class="marquee-tag"><span class="marquee-dot"></span>TripAdvisor</span>
+    <span class="marquee-tag"><span class="marquee-dot"></span>Facebook</span>
+    <span class="marquee-tag"><span class="marquee-dot"></span>Analyse IA</span>
+    <span class="marquee-tag"><span class="marquee-dot"></span>Rapport hebdomadaire</span>
+    <span class="marquee-tag"><span class="marquee-dot"></span>Alertes temps réel</span>
+    <span class="marquee-tag"><span class="marquee-dot"></span>Score de réputation</span>
+    <span class="marquee-tag"><span class="marquee-dot"></span>Sentiment positif/négatif</span>
+    <span class="marquee-tag"><span class="marquee-dot"></span>Google Business</span>
+    <span class="marquee-tag"><span class="marquee-dot"></span>TripAdvisor</span>
+    <span class="marquee-tag"><span class="marquee-dot"></span>Facebook</span>
+    <span class="marquee-tag"><span class="marquee-dot"></span>Analyse IA</span>
+    <span class="marquee-tag"><span class="marquee-dot"></span>Rapport hebdomadaire</span>
+    <span class="marquee-tag"><span class="marquee-dot"></span>Alertes temps réel</span>
+    <span class="marquee-tag"><span class="marquee-dot"></span>Score de réputation</span>
+    <span class="marquee-tag"><span class="marquee-dot"></span>Sentiment positif/négatif</span>
+  </div>
+</div>
+
+<!-- BENTO -->
+<section class="bento-section" id="features">
+  <div class="bento-header reveal">
+    <div class="bento-label">Fonctionnalités</div>
+    <h2 class="bento-title">Tout ce dont vous<br>avez besoin.</h2>
+    <p class="bento-sub">Un outil complet pour piloter votre réputation en ligne sans effort.</p>
+  </div>
+  <div class="bento-grid">
+
+    <!-- Card 1 : Dashboard -->
+    <div class="bento-card bc1 reveal">
+      <div class="card-accent ca-blue"></div>
+      <div class="card-icon">📊</div>
+      <div class="card-title">Tableau de bord centralisé</div>
+      <div class="card-text">Google, TripAdvisor, Facebook — tous vos avis dans un seul endroit. Fini de jongler entre 4 onglets.</div>
+      <div class="mini-dash">
+        <div class="mini-stats">
+          <div class="mini-stat"><div class="ms-lbl">Note globale</div><div class="ms-val">4.7</div><div class="ms-delta delta-up">↑ +0.3</div></div>
+          <div class="mini-stat"><div class="ms-lbl">Cette semaine</div><div class="ms-val">23</div><div class="ms-delta delta-up">↑ +8</div></div>
+          <div class="mini-stat"><div class="ms-lbl">À répondre</div><div class="ms-val">5</div><div class="ms-delta delta-dn">2 urgents</div></div>
+        </div>
+        <div class="mini-reviews">
+          <div class="mini-rev"><div class="mr-src" style="background:rgba(66,133,244,0.15)">G</div><div class="mr-body"><div class="mr-stars">★★★★★</div><div class="mr-name">Marie D.</div><div class="mr-text">Service impeccable !</div></div><span class="mr-badge b-pos">Positif</span></div>
+          <div class="mini-rev"><div class="mr-src" style="background:rgba(234,67,53,0.15)">T</div><div class="mr-body"><div class="mr-stars">★★☆☆☆</div><div class="mr-name">Thomas R.</div><div class="mr-text">Attente trop longue.</div></div><span class="mr-badge b-neg">Négatif</span></div>
+          <div class="mini-rev"><div class="mr-src" style="background:rgba(24,119,242,0.15)">F</div><div class="mr-body"><div class="mr-stars">★★★★☆</div><div class="mr-name">Sophie L.</div><div class="mr-text">Bonne expérience.</div></div><span class="mr-badge b-neu">Neutre</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 : Score IA -->
+    <div class="bento-card bc2 reveal d1">
+      <div class="card-accent ca-purple"></div>
+      <div class="card-icon">🤖</div>
+      <div class="card-title">Score IA instantané</div>
+      <div class="card-text">Chaque avis reçoit un score et une analyse détaillée en quelques secondes.</div>
+      <div class="score-display">
+        <div class="score-ring">
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            <defs><linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#4f6ef7"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient></defs>
+            <circle class="score-ring-bg" cx="50" cy="50" r="45"/>
+            <circle class="score-ring-fill" cx="50" cy="50" r="45"/>
+          </svg>
+          <div class="score-num">8.2</div>
+        </div>
+        <div class="score-items">
+          <div class="score-item"><span style="min-width:70px">Accueil</span><div class="score-bar"><div class="score-fill" style="--w:90%"></div></div><span>9/10</span></div>
+          <div class="score-item"><span style="min-width:70px">Service</span><div class="score-bar"><div class="score-fill" style="--w:75%;animation-delay:0.2s"></div></div><span>7.5</span></div>
+          <div class="score-item"><span style="min-width:70px">Attente</span><div class="score-bar"><div class="score-fill" style="--w:55%;animation-delay:0.4s"></div></div><span>5.5</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards 3,4,5 -->
+    <div class="bento-card bc3 reveal">
+      <div class="card-icon">⚡</div>
+      <div class="card-title">Alertes instantanées</div>
+      <div class="card-text">Un avis négatif ? Vous êtes notifié immédiatement par email. Répondez avant que ça ne se propage.</div>
+    </div>
+    <div class="bento-card bc4 reveal d1">
+      <div class="card-icon">📬</div>
+      <div class="card-title">Rapport hebdo auto</div>
+      <div class="card-text">Chaque lundi matin, un résumé clair arrive dans votre boîte mail. Note, tendances, actions.</div>
+      <div class="report-preview">
+        <div class="rp-header"><div class="rp-icon">📩</div><div><div class="rp-title">Rapport semaine 24</div><div class="rp-date">Lundi 16 juin · 08h00</div></div></div>
+        <div class="rp-stats">
+          <div class="rp-stat"><div class="rp-stat-v" style="color:var(--green)">+0.4</div><div class="rp-stat-l">Note</div></div>
+          <div class="rp-stat"><div class="rp-stat-v">23</div><div class="rp-stat-l">Avis</div></div>
+        </div>
+        <div class="rp-tags"><span class="rp-tag">Accueil ↑</span><span class="rp-tag">Délais ↓</span><span class="rp-tag">5 urgents</span></div>
+      </div>
+    </div>
+    <div class="bento-card bc5 reveal d2">
+      <div class="card-icon">🔒</div>
+      <div class="card-title">Données en France</div>
+      <div class="card-text">Hébergement RGPD, données stockées en France. Aucun accès tiers à vos informations.</div>
+    </div>
+
+    <!-- Wide card : Platforms -->
+    <div class="bento-card bc6 reveal">
+      <div class="card-icon">🔗</div>
+      <div class="card-title">Connectez toutes vos plateformes</div>
+      <div class="card-text" style="margin-bottom:0">Un seul outil pour piloter votre réputation partout où vos clients vous notent.</div>
+      <div class="ticker-row" id="tickerRow">
+        <div class="ticker-item"><div class="ti-platform">Google</div><div class="ti-score">4.8</div><div class="ti-delta delta-up">↑ +0.4 ce mois</div><div class="ti-bar"><div class="ti-fill" style="width:96%"></div></div></div>
+        <div class="ticker-item"><div class="ti-platform">TripAdvisor</div><div class="ti-score">4.5</div><div class="ti-delta delta-up">↑ +0.2</div><div class="ti-bar"><div class="ti-fill" style="width:90%"></div></div></div>
+        <div class="ticker-item"><div class="ti-platform">Facebook</div><div class="ti-score">4.6</div><div class="ti-delta delta-dn">↓ -0.1</div><div class="ti-bar"><div class="ti-fill" style="width:92%"></div></div></div>
+        <div class="ticker-item"><div class="ti-platform">Yelp</div><div class="ti-score">4.3</div><div class="ti-delta delta-up">↑ +0.3</div><div class="ti-bar"><div class="ti-fill" style="width:86%"></div></div></div>
+        <div class="ticker-item"><div class="ti-platform">Pages Jaunes</div><div class="ti-score">4.1</div><div class="ti-delta">→ stable</div><div class="ti-bar"><div class="ti-fill" style="width:82%"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section class="demo-section" id="demo">
+  <div class="demo-inner">
+    <div class="demo-grid">
+      <div class="reveal">
+        <div class="demo-label">Démo interactive</div>
+        <h2 class="demo-title">Testez l'IA<br>maintenant.</h2>
+        <p class="demo-sub">Collez un vrai avis client et obtenez une analyse complète en quelques secondes. Score, sentiment, points clés, suggestion d'action.</p>
+        <div class="demo-limit"><span>⚡</span><span id="limitTxt">3 analyses gratuites disponibles</span></div>
+      </div>
+      <div class="reveal d1">
+        <div class="widget">
+          <div class="widget-bar">
+            <div class="wdot wd-r"></div><div class="wdot wd-y"></div><div class="wdot wd-g"></div>
+            <div class="widget-url">app.reputeo.fr — Analyseur IA</div>
+          </div>
+          <div class="widget-body">
+            <textarea id="reviewInput" placeholder="Collez un avis ici... ex: 'Super restaurant, accueil chaleureux mais attente longue en caisse.'"></textarea>
+            <div class="widget-actions">
+              <button id="analyzeBtn" onclick="analyzeReview()">Analyser avec l'IA →</button>
+              <div id="demoCounter"></div>
+            </div>
+            <div id="loadingState"><div class="spin"></div><div class="spin-txt">Analyse en cours...</div></div>
+            <div id="analysisResult"><div id="resultContent"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section class="how-section" id="how">
+  <div class="bento-label reveal">Comment ça marche</div>
+  <h2 class="bento-title reveal" style="margin-bottom:8px">Opérationnel en<br>5 minutes.</h2>
+  <p class="bento-sub reveal" style="margin-bottom:0">Pas de technique. Pas de formation. Juste brancher et regarder.</p>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-glow"></div>
+      <div class="step-n">01</div>
+      <div class="step-title">Connectez vos plateformes</div>
+      <div class="step-txt">Google Business, TripAdvisor, Facebook — une connexion simple, aucun code requis. En 5 minutes c'est prêt.</div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step reveal d1">
+      <div class="step-glow"></div>
+      <div class="step-n">02</div>
+      <div class="step-title">L'IA analyse tout</div>
+      <div class="step-txt">Chaque avis est lu, scoré et classé automatiquement. Les urgences remontent. Vous ne manquez rien.</div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step reveal d2">
+      <div class="step-glow"></div>
+      <div class="step-n">03</div>
+      <div class="step-title">Rapport chaque lundi</div>
+      <div class="step-txt">Un résumé clair dans votre boîte mail. Note globale, tendances, points à traiter. 5 minutes suffisent.</div>
+      <div class="step-line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="pricing-inner">
+    <div class="bento-label reveal">Tarif</div>
+    <h2 class="bento-title reveal">Simple.<br>Transparent.</h2>
+    <div class="price-card reveal">
+      <div class="price-glow"></div>
+      <div class="price-badge">Offre de lancement</div>
+      <div class="price-amount"><sup>€</sup>29<sub>,99/mois</sub></div>
+      <p class="price-period">14 jours gratuits · sans engagement</p>
+      <ul class="price-feats">
+        <li><span class="pck">✓</span>Centralisation Google, TripAdvisor, Facebook</li>
+        <li><span class="pck">✓</span>Analyse IA du sentiment en temps réel</li>
+        <li><span class="pck">✓</span>Rapport hebdomadaire automatique par email</li>
+        <li><span class="pck">✓</span>Alertes instantanées sur les avis négatifs</li>
+        <li><span class="pck">✓</span>Tableau de bord illimité</li>
+        <li><span class="pck">✓</span>Support email sous 24h</li>
+      </ul>
+      <a href="https://buy.stripe.com/test_fZu28s0830Qr5Lg4j90VO00" target="_blank" class="btn-glow" style="display:block;text-align:center;">Commencer l'essai gratuit 14 jours</a>
+      <p class="price-note">Carte bancaire requise · Résiliation en 1 clic · Données 🇫🇷</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="testi-section">
+  <div class="testi-bg"><div class="testi-glow1"></div><div class="testi-glow2"></div></div>
+  <div class="testi-inner reveal">
+    <span class="testi-qmark">"</span>
+    <p class="testi-quote">Avant Reputeo, je passais 2h par semaine à surveiller mes avis. Maintenant j'ouvre mon rapport le lundi et c'est fait en 10 minutes.</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <h2 class="cta-title reveal">Votre réputation<br>mérite mieux.</h2>
+    <p class="cta-sub reveal">Rejoignez les premiers utilisateurs. 14 jours gratuits, sans risque.</p>
+    <div class="reveal"><a href="https://buy.stripe.com/test_fZu28s0830Qr5Lg4j90VO00" target="_blank" class="btn-glow">Commencer gratuitement →</a></div>
+    <p style="font-size:0.78rem;color:var(--muted);margin-top:20px" class="reveal">Carte bancaire requise · Résiliation en 1 clic · Données 🇫🇷</p>
+  </div>
+</section>
+
+<footer>
+  <a href="#" class="logo">Repute<em>o</em></a>
+  <p>© 2026 Reputeo · Fait avec ☕ en France</p>
+</footer>
+
+<script>
+// PARTICLES
+const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d')
+let W,H,pts=[]
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+resize();window.addEventListener('resize',resize)
+function mkPt(){return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,r:Math.random()*1.5+0.5,o:Math.random()*0.4+0.1}}
+for(let i=0;i<80;i++)pts.push(mkPt())
+function drawPts(){
+  ctx.clearRect(0,0,W,H)
+  pts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy
+    if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2)
+    ctx.fillStyle=`rgba(79,110,247,${p.o})`;ctx.fill()
+  })
+  pts.forEach((a,i)=>{pts.slice(i+1).forEach(b=>{
+    const d=Math.hypot(a.x-b.x,a.y-b.y)
+    if(d<120){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=`rgba(79,110,247,${0.06*(1-d/120)})`;ctx.lineWidth=0.5;ctx.stroke()}
+  })})
+  requestAnimationFrame(drawPts)
+}
+drawPts()
+
+// NAV
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>60))
+
+// REVEAL
+const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')})},{threshold:0.12})
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el))
+
+// BENTO MOUSE GLOW
+document.querySelectorAll('.bento-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect()
+    card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%')
+    card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%')
+  })
+})
+
+// COUNTER ANIM
+function countTo(el,target,suffix,dur=2000){
+  const isFloat=target%1!==0
+  let start=null
+  function step(ts){
+    if(!start)start=ts
+    const p=Math.min((ts-start)/dur,1)
+    const ease=1-Math.pow(1-p,3)
+    const v=isFloat?(Math.round(ease*target*10)/10).toFixed(1):Math.round(ease*target)
+    el.textContent=v+suffix
+    if(p<1)requestAnimationFrame(step)
+  }
+  requestAnimationFrame(step)
+}
+const mo=new IntersectionObserver(es=>{es.forEach(e=>{
+  if(e.isIntersecting){
+    if(e.target.id==='m1')countTo(e.target,4.6,'★')
+    if(e.target.id==='m2')countTo(e.target,247,'')
+    mo.unobserve(e.target)
+  }
+})},{threshold:0.5})
+;['m1','m2'].forEach(id=>{const el=document.getElementById(id);if(el)mo.observe(el)})
+
+// TICKER SCROLL
+const tr=document.getElementById('tickerRow')
+if(tr){
+  let pos=0,animId
+  function scrollTicker(){pos+=0.5;if(pos>tr.scrollWidth/2)pos=0;tr.scrollLeft=pos;animId=requestAnimationFrame(scrollTicker)}
+  scrollTicker()
+  tr.addEventListener('mouseenter',()=>cancelAnimationFrame(animId))
+  tr.addEventListener('mouseleave',()=>{animId=requestAnimationFrame(scrollTicker)})
+}
+
+// DEMO LIMIT
+const MAX=3
+function updateLimit(){
+  const used=parseInt(localStorage.getItem('rpt_uses')||'0')
+  const left=Math.max(0,MAX-used)
+  const el=document.getElementById('demoCounter')
+  const lt=document.getElementById('limitTxt')
+  if(left===0){
+    el.innerHTML='🔒 Limite — <a href="https://buy.stripe.com/test_fZu28s0830Qr5Lg4j90VO00" target="_blank">S\'abonner</a>'
+    if(lt)lt.textContent='Limite atteinte'
+  }else{
+    el.textContent=`Démo — ${left} analyse${left>1?'s':''} restante${left>1?'s':''}`
+    if(lt)lt.textContent=`${left} analyse${left>1?'s':''} gratuite${left>1?'s':''}`
+  }
+}
+updateLimit()
+
+async function analyzeReview(){
+  const used=parseInt(localStorage.getItem('rpt_uses')||'0')
+  if(used>=MAX){
+    document.getElementById('resultContent').innerHTML=`<div style="text-align:center;padding:20px"><div style="font-size:2rem;margin-bottom:12px">🔒</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:8px">Limite de démo atteinte</div><div style="font-size:0.8rem;color:var(--muted);margin-bottom:20px">Abonnez-vous pour des analyses illimitées.</div><a href="https://buy.stripe.com/test_fZu28s0830Qr5Lg4j90VO00" target="_blank" class="btn-glow" style="display:inline-block;font-size:0.875rem;padding:12px 24px">Commencer — 29,99€/mois →</a></div>`
+    document.getElementById('analysisResult').style.display='block'
+    return
+  }
+  const review=document.getElementById('reviewInput').value.trim()
+  if(!review){document.getElementById('reviewInput').style.borderColor='rgba(239,68,68,0.4)';return}
+  document.getElementById('reviewInput').style.borderColor='var(--border)'
+  document.getElementById('analysisResult').style.display='none'
+  document.getElementById('loadingState').style.display='block'
+  document.getElementById('analyzeBtn').disabled=true
+  localStorage.setItem('rpt_uses',used+1)
+  try{
+    const res=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({review})})
+    const p=await res.json()
+    if(p.error)throw new Error(JSON.stringify(p))
+    const sc=p.score
+    const sc_color=sc>=7?'#34d399':sc>=4?'#f59e0b':'#f87171'
+    const bc=p.sentiment==='Positif'?'rpos':p.sentiment==='Négatif'?'rneg':'rneu'
+    document.getElementById('resultContent').innerHTML=`
+      <div class="r-top"><span class="r-badge ${bc}">${p.sentiment}</span><div class="r-score-box"><div class="r-score-lbl">Score</div><div class="r-score" style="color:${sc_color}">${sc}/10</div></div></div>
+      <div class="r-sec"><div class="r-lbl">Résumé</div><div class="r-txt">${p.resume}</div></div>
+      ${p.points_positifs.length?`<div class="r-sec"><div class="r-lbl">✅ Points positifs</div>${p.points_positifs.map(x=>`<div class="r-item">• ${x}</div>`).join('')}</div>`:''}
+      ${p.points_negatifs.length?`<div class="r-sec"><div class="r-lbl">⚠️ À améliorer</div>${p.points_negatifs.map(x=>`<div class="r-item">• ${x}</div>`).join('')}</div>`:''}
+      <div class="r-sug"><div class="r-sug-lbl">💡 Suggestion Reputeo</div><div class="r-sug-txt">${p.suggestion}</div></div>`
+    document.getElementById('loadingState').style.display='none'
+    document.getElementById('analysisResult').style.display='block'
+  }catch(e){
+    document.getElementById('loadingState').style.display='none'
+    document.getElementById('resultContent').innerHTML=`<div style="color:#f87171;font-size:0.82rem">${e.message}</div>`
+    document.getElementById('analysisResult').style.display='block'
+  }
+  document.getElementById('analyzeBtn').disabled=false
+  updateLimit()
+}
+</script>
+</body>
+</html>
