@@ -103,6 +103,7 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
   <div class="nav-section">Outils</div>
   <button class="nav-item" id="nav-analyzer" onclick="showPage('analyzer',this)">🤖 Analyseur IA</button>
   <button class="nav-item" id="nav-reports" onclick="showPage('reports',this)">📬 Rapports</button>
+  <button class="nav-item" id="nav-analyse" onclick="showPage('analyse',this)">🔍 Analyse IA</button>
   <button class="nav-item" id="nav-subscription" onclick="showPage('subscription',this)" style="display:none">💳 Abonnement</button>
   <div class="sidebar-bottom" style="position:relative">
     <div id="profilePopup" style="display:none;position:absolute;bottom:68px;left:0;right:0;background:#13132a;border:1px solid rgba(255,255,255,0.12);border-radius:12px;overflow:hidden;box-shadow:0 -8px 32px rgba(0,0,0,0.6);z-index:9999">
@@ -174,6 +175,15 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
         <div class="connect-desc">Importez les recommandations de votre page Facebook Business.</div>
         <span class="btn-soon">Bientôt disponible</span>
       </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-analyse">
+    <div class="page-title">Analyse IA</div>
+    <div class="page-sub">Détection automatique des thèmes récurrents dans vos avis.</div>
+    <div class="section-card" style="padding:32px">
+      <button onclick="runAnalyse()" class="btn-primary" id="btn-analyse">✨ Analyser mes avis</button>
+      <div id="analyse-result" style="margin-top:24px"></div>
     </div>
   </div>
 
@@ -348,6 +358,74 @@ function displayReviews(reviews) {
 
 
 const reviewsData = {}
+
+
+async function runAnalyse() {
+  const btn = document.getElementById('btn-analyse')
+  const result = document.getElementById('analyse-result')
+  
+  if (Object.keys(reviewsData).length === 0) {
+    result.innerHTML = '<div class="empty-text">Aucun avis à analyser. Connectez Google Business d\'abord.</div>'
+    return
+  }
+  
+  btn.textContent = '⏳ Analyse en cours...'
+  btn.disabled = true
+  result.innerHTML = ''
+  
+  const reviews = Object.values(reviewsData).map(r => `${r.rating}/5 — ${r.text}`).join('\n')
+  
+  const res = await fetch('/api/generate-reply', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      review_text: reviews,
+      rating: 5,
+      author: 'ANALYSE',
+      prompt_override: `Tu es un expert en analyse d'avis clients. Analyse ces avis et identifie les thèmes récurrents.
+
+Réponds UNIQUEMENT en JSON avec ce format exact:
+{
+  "positifs": [{"theme": "...", "count": N, "emoji": "..."}],
+  "negatifs": [{"theme": "...", "count": N, "emoji": "..."}]
+}
+
+Avis à analyser:
+${reviews}`
+    })
+  })
+  const data = await res.json()
+  
+  try {
+    const parsed = JSON.parse(data.reply)
+    let html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">'
+    
+    html += '<div><div style="font-size:0.8rem;font-weight:600;color:#10b981;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.1em">✅ Points forts</div>'
+    parsed.positifs.forEach(t => {
+      html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15);border-radius:10px;margin-bottom:8px">
+        <span style="font-size:1.2rem">${t.emoji}</span>
+        <div><div style="font-size:0.85rem;color:#f0f0ff">${t.theme}</div><div style="font-size:0.72rem;color:rgba(16,185,129,0.7)">Mentionné ${t.count} fois</div></div>
+      </div>`
+    })
+    html += '</div>'
+    
+    html += '<div><div style="font-size:0.8rem;font-weight:600;color:#ef4444;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.1em">⚠️ À améliorer</div>'
+    parsed.negatifs.forEach(t => {
+      html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);border-radius:10px;margin-bottom:8px">
+        <span style="font-size:1.2rem">${t.emoji}</span>
+        <div><div style="font-size:0.85rem;color:#f0f0ff">${t.theme}</div><div style="font-size:0.72rem;color:rgba(239,68,68,0.7)">Mentionné ${t.count} fois</div></div>
+      </div>`
+    })
+    html += '</div></div>'
+    
+    result.innerHTML = html
+  } catch(e) {
+    result.innerHTML = '<div style="color:rgba(255,255,255,0.5);font-size:0.85rem">' + data.reply + '</div>'
+  }
+  
+  btn.textContent = '✨ Analyser mes avis'
+  btn.disabled = false
+}
 
 async function generateReply(reviewId, btnEl) {
   const r = reviewsData[reviewId] || {}
