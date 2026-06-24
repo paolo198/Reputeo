@@ -103,9 +103,12 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
   <div class="nav-section">Outils</div>
   <button class="nav-item" id="nav-analyzer" onclick="showPage('analyzer',this)">🤖 Analyseur IA</button>
   <button class="nav-item" id="nav-reports" onclick="showPage('reports',this)">📬 Rapports</button>
+  <button class="nav-item" id="nav-subscription" onclick="showPage('subscription',this)" style="display:none">💳 Abonnement</button>
   <div class="sidebar-bottom" style="position:relative">
     <div id="profilePopup" style="display:none;position:absolute;bottom:68px;left:0;right:0;background:#13132a;border:1px solid rgba(255,255,255,0.12);border-radius:12px;overflow:hidden;box-shadow:0 -8px 32px rgba(0,0,0,0.6);z-index:9999">
       <button id="btnSettings" style="width:100%;padding:13px 16px;background:none;border:none;color:rgba(255,255,255,0.75);font-family:Inter,sans-serif;font-size:0.875rem;cursor:pointer;text-align:left">⚙️ Paramètres</button>
+      <div style="height:1px;background:rgba(255,255,255,0.08)"></div>
+      <button id="btnSubscription" style="width:100%;padding:13px 16px;background:none;border:none;color:rgba(255,255,255,0.75);font-family:Inter,sans-serif;font-size:0.875rem;cursor:pointer;text-align:left">💳 Abonnement</button>
       <div style="height:1px;background:rgba(255,255,255,0.08)"></div>
       <button id="btnLogout" style="width:100%;padding:13px 16px;background:none;border:none;color:#f87171;font-family:Inter,sans-serif;font-size:0.875rem;cursor:pointer;text-align:left">↪ Se déconnecter</button>
     </div>
@@ -195,6 +198,29 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
     </div>
   </div>
 
+  <div class="page" id="page-subscription">
+    <div class="page-title">Abonnement</div>
+    <div class="page-sub">Gérez votre abonnement Reputeo.</div>
+    <div class="section-card" style="padding:32px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid var(--border)">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:4px">Reputeo — Abonnement mensuel</div>
+          <div style="font-size:0.875rem;color:var(--muted)">29,99€ / mois · 14 jours d'essai gratuit</div>
+        </div>
+        <div id="subStatusBadge" style="font-size:0.78rem;font-weight:600;padding:6px 16px;border-radius:100px;background:rgba(16,185,129,0.1);color:#34d399;border:1px solid rgba(16,185,129,0.2)">Actif</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <button onclick="openPortal()" class="btn-primary" style="align-self:flex-start">Gérer mon abonnement →</button>
+        <p style="font-size:0.8rem;color:var(--muted)">Vous serez redirigé vers le portail Stripe pour gérer votre abonnement, changer votre carte bancaire ou annuler.</p>
+      </div>
+    </div>
+    <div class="section-card" style="padding:32px;margin-top:16px;border-color:rgba(239,68,68,0.15)">
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:8px;color:#f87171">Annuler l'abonnement</div>
+      <p style="font-size:0.875rem;color:var(--muted);margin-bottom:20px;line-height:1.6">Vous pouvez annuler à tout moment. Votre accès reste actif jusqu'à la fin de la période en cours.</p>
+      <button onclick="openPortal()" style="padding:10px 20px;background:rgba(239,68,68,0.08);color:#f87171;border:1px solid rgba(239,68,68,0.2);border-radius:100px;font-size:0.85rem;cursor:pointer;font-family:'Inter',sans-serif">Annuler mon abonnement</button>
+    </div>
+  </div>
+
   <div class="page" id="page-settings">
     <div class="page-title">Paramètres</div>
     <div class="page-sub">Gérez votre compte Reputeo.</div>
@@ -281,7 +307,7 @@ async function loadGoogleReviews() {
       }
     }
   } catch(e) {
-    console.log('Google API not available:', e.message)
+    // Google API not available, using Supabase data only
   }
 }
 
@@ -357,6 +383,25 @@ function updateStats(reviews) {
   document.getElementById('stat-week').textContent = reviews.filter(r => new Date(r.date) > weekAgo).length
 }
 
+async function openPortal() {
+  const btn = event.currentTarget
+  btn.textContent = 'Chargement...'
+  btn.disabled = true
+  const res = await fetch('/api/customer-portal', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: currentUser.id })
+  })
+  const data = await res.json()
+  if (data.url) {
+    window.location = data.url
+  } else {
+    showNotif('Erreur : ' + (data.error || 'Portail indisponible'), 'error')
+    btn.textContent = btn.id === 'btnLogout' ? 'Annuler mon abonnement' : 'Gérer mon abonnement →'
+    btn.disabled = false
+  }
+}
+
 function updateAnalyzerCounter(used) {
   const el = document.getElementById('analyzerCounter')
   if (!el) return
@@ -414,7 +459,7 @@ async function dashAnalyze() {
     document.getElementById('dashResult').style.display = 'block'
   } catch(e) {
     document.getElementById('dashLoading').style.display = 'none'
-    document.getElementById('dashResult').innerHTML = `<div style="color:#f87171;font-size:0.82rem">${e.message}</div>`
+    document.getElementById('dashResult').innerHTML = `<div style="color:#f87171;font-size:0.82rem">Erreur d'analyse. Réessayez.</div>`
     document.getElementById('dashResult').style.display = 'block'
   }
   document.getElementById('dashBtn').disabled = false
@@ -435,6 +480,11 @@ document.addEventListener('DOMContentLoaded', function() {
   btnSettings.addEventListener('click', function() {
     popup.style.display = 'none'
     showPage('settings', document.getElementById('nav-settings'))
+  })
+  
+  document.getElementById('btnSubscription').addEventListener('click', function() {
+    popup.style.display = 'none'
+    showPage('subscription', document.getElementById('nav-subscription'))
   })
   
   btnLogout.addEventListener('click', function() {
