@@ -181,7 +181,13 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
     <div class="page-title">Mes avis</div>
     <div class="page-sub">Tous vos avis centralisés et analysés par l'IA.</div>
     <div class="section-card">
-      <div class="section-header"><div class="section-title">Avis récents</div><span id="reviewCount" style="font-size:0.72rem;padding:4px 12px;border-radius:100px;background:rgba(79,110,247,0.1);color:rgba(79,110,247,0.8)">0 avis</span></div>
+      <div class="section-header">
+  <div class="section-title">Avis récents</div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="reviewCount" style="font-size:0.72rem;padding:4px 12px;border-radius:100px;background:rgba(79,110,247,0.1);color:rgba(79,110,247,0.8)">0 avis</span>
+    <button id="btn-masse" onclick="genererEnMasse()" style="display:none;font-size:0.75rem;padding:5px 14px;background:linear-gradient(135deg,rgba(79,110,247,0.2),rgba(124,58,237,0.2));border:1px solid rgba(79,110,247,0.3);border-radius:100px;color:rgba(79,110,247,0.9);cursor:pointer;font-family:Inter,sans-serif">✨ Générer les réponses (<span id="masse-count">0</span>)</button>
+  </div>
+</div>
       <div style="display:flex;gap:8px;padding:12px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap">
         <button onclick="filterReviews(0)" id="filter-0" class="filter-btn active-filter" style="font-size:0.75rem;padding:5px 14px;border-radius:100px;border:1px solid rgba(79,110,247,0.4);background:rgba(79,110,247,0.15);color:rgba(79,110,247,0.9);cursor:pointer;font-family:Inter,sans-serif">Tous</button>
         <button onclick="filterReviews(5)" id="filter-5" class="filter-btn" style="font-size:0.75rem;padding:5px 14px;border-radius:100px;border:1px solid rgba(255,255,255,0.08);background:none;color:rgba(255,255,255,0.5);cursor:pointer;font-family:Inter,sans-serif">★★★★★</button>
@@ -419,6 +425,7 @@ function renderReview(r) {
         </div>`
     return `<div class="review-row" style="flex-direction:column;align-items:flex-start">
       <div style="display:flex;align-items:center;gap:16px;width:100%">
+        <input type="checkbox" data-id="${r.id}" onchange="updateMasseSelection()" style="width:16px;height:16px;accent-color:#4f6ef7;cursor:pointer;flex-shrink:0">
         <div class="rev-src" style="background:rgba(66,133,244,0.15)">G</div>
         <div class="rev-body">
           <div class="rev-stars">${stars}</div>
@@ -719,6 +726,53 @@ async function sendReply(reviewId) {
     btn.textContent = 'Envoyer'
     btn.disabled = false
   }
+}
+
+
+function updateMasseSelection() {
+  const checked = document.querySelectorAll('input[data-id]:checked')
+  const btn = document.getElementById('btn-masse')
+  const count = document.getElementById('masse-count')
+  if (checked.length > 0) {
+    btn.style.display = 'block'
+    count.textContent = checked.length
+  } else {
+    btn.style.display = 'none'
+  }
+}
+
+async function genererEnMasse() {
+  const checked = document.querySelectorAll('input[data-id]:checked')
+  const btn = document.getElementById('btn-masse')
+  btn.textContent = '⏳ Génération en cours...'
+  btn.disabled = true
+  
+  for (const checkbox of checked) {
+    const id = checkbox.dataset.id
+    // Ouvrir le formulaire
+    const form = document.getElementById('reply-form-' + id)
+    if (form) form.style.display = 'block'
+    
+    const r = reviewsData[id] || {}
+    const res = await fetch('/api/generate-reply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ review_text: r.text || '', rating: r.rating || 5, author: r.author || '' })
+    })
+    const data = await res.json()
+    if (data.reply) {
+      const textarea = document.getElementById('reply-text-' + id)
+      if (textarea) {
+        textarea.value = data.reply
+        textarea.style.height = 'auto'
+        textarea.style.height = textarea.scrollHeight + 'px'
+      }
+    }
+  }
+  
+  showNotif(checked.length + ' réponses générées !', 'success')
+  btn.textContent = '✨ Générer les réponses (<span id="masse-count">' + checked.length + '</span>)'
+  btn.disabled = false
 }
 
 function updateStats(reviews) {
