@@ -253,17 +253,35 @@ async function connectGoogle() {
 }
 
 async function loadGoogleReviews() {
-  const { data: { session } } = await sb.auth.getSession()
-  const res = await fetch(`/api/google-reviews?user_id=${currentUser.id}`, {
-    headers: { Authorization: `Bearer ${session.access_token}` }
-  })
-  const data = await res.json()
-  if (!data.connected) return
-  document.getElementById('card-google').classList.add('connected')
-  document.getElementById('google-btn-wrap').innerHTML = '<span class="btn-connected">✓ Connecté</span>'
-  if (data.reviews?.length > 0) {
-    displayReviews(data.reviews)
-    updateStats(data.reviews)
+  // First try to load from Supabase directly
+  const { data: reviews, error } = await sb
+    .from('reviews')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .order('date', { ascending: false })
+
+  if (reviews && reviews.length > 0) {
+    displayReviews(reviews)
+    updateStats(reviews)
+  }
+
+  // Also try Google API if connected
+  try {
+    const { data: { session } } = await sb.auth.getSession()
+    const res = await fetch(`/api/google-reviews?user_id=${currentUser.id}`, {
+      headers: { Authorization: `Bearer ${session.access_token}` }
+    })
+    const data = await res.json()
+    if (data.connected) {
+      document.getElementById('card-google').classList.add('connected')
+      document.getElementById('google-btn-wrap').innerHTML = '<span class="btn-connected">✓ Connecté</span>'
+      if (data.reviews?.length > 0) {
+        displayReviews(data.reviews)
+        updateStats(data.reviews)
+      }
+    }
+  } catch(e) {
+    console.log('Google API not available:', e.message)
   }
 }
 
