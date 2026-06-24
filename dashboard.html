@@ -369,7 +369,11 @@ async function generateReply(reviewId, btnEl) {
   
   if (data.reply) {
     const textarea = document.getElementById('reply-text-' + reviewId)
-    if (textarea) textarea.value = data.reply
+    if (textarea) {
+      textarea.value = data.reply
+      textarea.style.height = 'auto'
+      textarea.style.height = textarea.scrollHeight + 'px'
+    }
     showNotif('Réponse générée !', 'success')
   } else {
     showNotif('Erreur lors de la génération', 'error')
