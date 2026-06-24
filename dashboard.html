@@ -466,20 +466,43 @@ ${reviews}`
         review_text: reviews,
         rating: 5,
         author: 'CONSEILS',
-        prompt_override: `Tu es un consultant expert en réputation d'entreprise. Analyse ces avis clients et rédige un paragraphe de conseils concrets et actionnables pour aider ce commerçant à améliorer sa réputation. Sois direct, précis et bienveillant. Maximum 4-5 phrases en français.
+        prompt_override: `Tu es un consultant expert en réputation d'entreprise. Analyse ces avis clients et identifie les 3 priorités d'amélioration les plus importantes.
+
+Réponds UNIQUEMENT en JSON avec ce format exact:
+{
+  "priorites": [
+    {"numero": 1, "titre": "...", "action": "..."},
+    {"numero": 2, "titre": "...", "action": "..."},
+    {"numero": 3, "titre": "...", "action": "..."}
+  ]
+}
 
 Avis:
-${reviews}`
+\${reviews}`
       })
     })
     const data2 = await res2.json()
     const conseils = document.getElementById('conseils-text')
     if (conseils) {
-      let text = data2.reply
-      text = text.replace(/## (.*)/g, '<strong style="font-size:0.9rem;color:#f0f0ff">$1</strong>')
-      text = text.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#f0f0ff">$1</strong>')
-      text = text.replace(/\n/g, '<br>')
-      conseils.innerHTML = text
+      try {
+        const cleaned2 = data2.reply.replace(/```json|```/g, '').trim()
+        const parsed2 = JSON.parse(cleaned2)
+        let html2 = ''
+        const emojis = ['🎯', '🎯', '🎯']
+        parsed2.priorites.forEach((p, i) => {
+          html2 += `<div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;margin-bottom:10px">
+            <div style="font-size:1.4rem;min-width:32px">🎯</div>
+            <div>
+              <div style="font-size:0.88rem;font-weight:600;color:#f0f0ff;margin-bottom:4px">Priorité ${p.numero} — ${p.titre}</div>
+              <div style="font-size:0.78rem;color:rgba(255,255,255,0.5)">${p.action}</div>
+            </div>
+          </div>`
+        })
+        html2 += `<button onclick="genererPlanAction()" class="btn-primary" style="margin-top:8px;width:100%;text-align:center">📋 Générer un plan d'action détaillé</button>`
+        conseils.innerHTML = html2
+      } catch(e) {
+        conseils.innerHTML = data2.reply
+      }
     }
     
   } catch(e) {
@@ -487,6 +510,46 @@ ${reviews}`
   }
   
   btn.textContent = '✨ Analyser mes avis'
+  btn.disabled = false
+}
+
+
+async function genererPlanAction() {
+  const btn = event.currentTarget
+  btn.textContent = '⏳ Génération...'
+  btn.disabled = true
+  
+  const reviews = Object.values(reviewsData).map(r => `${r.rating}/5 — ${r.text}`).join('\n')
+  
+  const res = await fetch('/api/generate-reply', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      review_text: reviews,
+      rating: 5,
+      author: 'PLAN',
+      prompt_override: `Tu es un consultant expert en réputation d'entreprise. Génère un plan d'action détaillé et concret sur 30 jours pour améliorer la réputation de ce commerçant basé sur ses avis clients. Organise-le en 3 semaines avec des actions précises et réalisables. Sois direct et pratique. En français.
+
+Avis:
+${reviews}`
+    })
+  })
+  const data = await res.json()
+  
+  // Ajouter le plan sous les priorités
+  const result = document.getElementById('analyse-result')
+  const planDiv = document.createElement('div')
+  planDiv.style.cssText = 'margin-top:16px;padding:20px;background:rgba(79,110,247,0.06);border:1px solid rgba(79,110,247,0.15);border-radius:12px'
+  
+  let text = data.reply
+  text = text.replace(/## (.*)/g, '<div style="font-size:0.9rem;font-weight:700;color:#f0f0ff;margin:16px 0 8px">$1</div>')
+  text = text.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#f0f0ff">$1</strong>')
+  text = text.replace(/\n/g, '<br>')
+  
+  planDiv.innerHTML = '<div style="font-size:0.8rem;font-weight:600;color:rgba(79,110,247,0.9);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px">📋 Plan d\'action 30 jours</div>' + text
+  result.appendChild(planDiv)
+  
+  btn.textContent = '📋 Générer un plan d\'action détaillé'
   btn.disabled = false
 }
 
