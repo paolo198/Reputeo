@@ -397,7 +397,8 @@ ${reviews}`
   const data = await res.json()
   
   try {
-    const parsed = JSON.parse(data.reply)
+    const cleaned = data.reply.replace(/```json|```/g, '').trim()
+    const parsed = JSON.parse(cleaned)
     let html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">'
     
     html += '<div><div style="font-size:0.8rem;font-weight:600;color:#10b981;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.1em">✅ Points forts</div>'
