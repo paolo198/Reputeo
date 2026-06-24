@@ -133,7 +133,7 @@ async function signup() {
   const { error } = await client.auth.signUp({
     email,
     password,
-    options: { emailRedirectTo: 'https://avisio-4b.vercel.app/dashboard.html' }
+    options: { emailRedirectTo: 'https://reputeo.app/dashboard.html' }
   })
   if (error) {
     showMsg('signupMsg', error.message, 'error')
@@ -148,7 +148,7 @@ async function loginGoogle() {
   const client = await getSB()
   const { error } = await client.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: 'https://avisio-4b.vercel.app/dashboard.html' }
+    options: { redirectTo: 'https://reputeo.app/dashboard.html' }
   })
   if (error) showMsg('loginMsg', error.message, 'error')
 }

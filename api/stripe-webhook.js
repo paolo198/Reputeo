@@ -55,7 +55,7 @@ export default async function handler(req, res) {
           const stripeClient2 = (await import('stripe')).default(process.env.STRIPE_SECRET_KEY)
           const customer = await stripeClient2.customers.retrieve(customerId)
           if (customer.email) {
-            await fetch(`${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'https://avisio-4b.vercel.app'}/api/send-email`, {
+            await fetch(`${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'https://reputeo.app'}/api/send-email`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({

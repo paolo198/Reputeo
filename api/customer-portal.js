@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     // Create portal session
     const session = await stripeClient.billingPortal.sessions.create({
       customer: sub.stripe_customer_id,
-      return_url: 'https://avisio-4b.vercel.app/dashboard.html'
+      return_url: 'https://reputeo.app/dashboard.html'
     })
 
     res.status(200).json({ url: session.url })

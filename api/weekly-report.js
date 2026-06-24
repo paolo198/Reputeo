@@ -70,7 +70,7 @@ export default async function handler(req, res) {
                 <div style="color:rgba(255,255,255,0.5);font-size:0.82rem">${(r.text||'').substring(0,100)}</div>
               </div>`).join('')}
             <div style="text-align:center;margin-top:28px">
-              <a href="https://avisio-4b.vercel.app/dashboard.html" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;text-decoration:none;border-radius:100px;font-weight:500">Voir tous mes avis →</a>
+              <a href="https://reputeo.app/dashboard.html" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;text-decoration:none;border-radius:100px;font-weight:500">Voir tous mes avis →</a>
             </div>
           </div>`
       })

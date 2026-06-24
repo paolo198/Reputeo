@@ -34,7 +34,7 @@ export default async function handler(req, res) {
             </ul>
           </div>
           <div style="text-align:center">
-            <a href="https://avisio-4b.vercel.app/dashboard.html" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;text-decoration:none;border-radius:100px;font-weight:500">
+            <a href="https://reputeo.app/dashboard.html" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;text-decoration:none;border-radius:100px;font-weight:500">
               Accéder à mon dashboard →
             </a>
           </div>
@@ -80,7 +80,7 @@ export default async function handler(req, res) {
               <p style="color:rgba(255,255,255,0.5);font-size:0.82rem;margin:0;line-height:1.5">${(r.text||'').substring(0,100)}</p>
             </div>`).join('')}
           <div style="text-align:center;margin-top:28px">
-            <a href="https://avisio-4b.vercel.app/dashboard.html" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;text-decoration:none;border-radius:100px;font-weight:500">
+            <a href="https://reputeo.app/dashboard.html" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;text-decoration:none;border-radius:100px;font-weight:500">
               Voir tous mes avis →
             </a>
           </div>

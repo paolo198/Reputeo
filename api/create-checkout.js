@@ -47,8 +47,8 @@ export default async function handler(req, res) {
       subscription_data: {
         trial_period_days: 14
       },
-      success_url: `https://avisio-4b.vercel.app/dashboard.html?paid=true`,
-      cancel_url: `https://avisio-4b.vercel.app/dashboard.html?cancelled=true`
+      success_url: `https://reputeo.app/dashboard.html?paid=true`,
+      cancel_url: `https://reputeo.app/dashboard.html?cancelled=true`
     })
 
     res.status(200).json({ url: session.url })

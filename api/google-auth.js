@@ -6,7 +6,7 @@ export default async function handler(req, res) {
 
   const CLIENT_ID = process.env.GOOGLE_CLIENT_ID
   const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
-  const REDIRECT_URI = 'https://avisio-4b.vercel.app/api/google-callback'
+  const REDIRECT_URI = 'https://reputeo.app/api/google-callback'
 
   if (req.method === 'GET' && req.query.action === 'auth-url') {
     const scopes = [
