@@ -474,7 +474,13 @@ ${reviews}`
     })
     const data2 = await res2.json()
     const conseils = document.getElementById('conseils-text')
-    if (conseils) conseils.innerHTML = data2.reply.replace(/\n/g, '<br>')
+    if (conseils) {
+      let text = data2.reply
+      text = text.replace(/## (.*)/g, '<strong style="font-size:0.9rem;color:#f0f0ff">$1</strong>')
+      text = text.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#f0f0ff">$1</strong>')
+      text = text.replace(/\n/g, '<br>')
+      conseils.innerHTML = text
+    }
     
   } catch(e) {
     result.innerHTML = '<div style="color:rgba(255,255,255,0.5);font-size:0.85rem">' + data.reply + '</div>'
