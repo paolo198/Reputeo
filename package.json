@@ -2,8 +2,9 @@
   "name": "reputeo",
   "version": "1.0.0",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.105.0",
     "@supabase/supabase-js": "^2.39.0",
-    "stripe": "^14.0.0",
-    "resend": "^3.0.0"
+    "resend": "^3.0.0",
+    "stripe": "^14.0.0"
   }
 }
