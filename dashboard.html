@@ -273,8 +273,61 @@ function displayReviews(reviews) {
     const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating)
     const bc = r.rating >= 4 ? 'b-pos' : r.rating <= 2 ? 'b-neg' : 'b-neu'
     const label = r.rating >= 4 ? 'Positif' : r.rating <= 2 ? 'Négatif' : 'Neutre'
-    return `<div class="review-row"><div class="rev-src" style="background:rgba(66,133,244,0.15)">G</div><div class="rev-body"><div class="rev-stars">${stars}</div><div class="rev-author">${r.author}</div><div class="rev-text">${(r.text||'').substring(0,100)}</div></div><span class="rev-badge ${bc}">${label}</span></div>`
+    const replySection = r.reply 
+      ? `<div style="margin-top:10px;padding:10px 14px;background:rgba(79,110,247,0.06);border-radius:8px;border-left:2px solid rgba(79,110,247,0.3)"><div style="font-size:0.65rem;color:rgba(79,110,247,0.6);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">Votre réponse</div><div style="font-size:0.78rem;color:rgba(255,255,255,0.6)">${r.reply}</div></div>`
+      : `<div style="margin-top:10px" id="reply-section-${r.id}">
+          <button onclick="toggleReply('${r.id}')" style="font-size:0.75rem;padding:6px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:100px;color:rgba(255,255,255,0.5);cursor:pointer;font-family:Inter,sans-serif">↩ Répondre</button>
+          <div id="reply-form-${r.id}" style="display:none;margin-top:10px">
+            <textarea id="reply-text-${r.id}" placeholder="Votre réponse..." style="width:100%;min-height:80px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 14px;font-family:Inter,sans-serif;font-size:0.82rem;color:#f0f0ff;resize:vertical;outline:none"></textarea>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button onclick="sendReply('${r.id}')" style="padding:8px 18px;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;border:none;border-radius:100px;font-size:0.78rem;cursor:pointer;font-family:Inter,sans-serif">Envoyer</button>
+              <button onclick="toggleReply('${r.id}')" style="padding:8px 14px;background:none;border:1px solid rgba(255,255,255,0.08);border-radius:100px;color:rgba(255,255,255,0.4);font-size:0.78rem;cursor:pointer;font-family:Inter,sans-serif">Annuler</button>
+            </div>
+          </div>
+        </div>`
+    return `<div class="review-row" style="flex-direction:column;align-items:flex-start">
+      <div style="display:flex;align-items:center;gap:16px;width:100%">
+        <div class="rev-src" style="background:rgba(66,133,244,0.15)">G</div>
+        <div class="rev-body">
+          <div class="rev-stars">${stars}</div>
+          <div class="rev-author">${r.author}</div>
+          <div class="rev-text">${(r.text||'').substring(0,120)}</div>
+        </div>
+        <span class="rev-badge ${bc}">${label}</span>
+      </div>
+      ${replySection}
+    </div>`
   }).join('')
+}
+
+function toggleReply(reviewId) {
+  const form = document.getElementById('reply-form-' + reviewId)
+  form.style.display = form.style.display === 'none' ? 'block' : 'none'
+}
+
+async function sendReply(reviewId) {
+  const text = document.getElementById('reply-text-' + reviewId).value.trim()
+  if (!text) return
+  const btn = document.querySelector(`#reply-form-${reviewId} button`)
+  btn.textContent = 'Envoi...'
+  btn.disabled = true
+  
+  const res = await fetch('/api/reply-review', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: currentUser.id, review_id: reviewId, reply_text: text })
+  })
+  const data = await res.json()
+  
+  if (data.success) {
+    showNotif('Réponse envoyée sur Google !', 'success')
+    const section = document.getElementById('reply-section-' + reviewId)
+    section.innerHTML = `<div style="margin-top:10px;padding:10px 14px;background:rgba(79,110,247,0.06);border-radius:8px;border-left:2px solid rgba(79,110,247,0.3)"><div style="font-size:0.65rem;color:rgba(79,110,247,0.6);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">Votre réponse</div><div style="font-size:0.78rem;color:rgba(255,255,255,0.6)">${text}</div></div>`
+  } else {
+    showNotif('Erreur : ' + data.error, 'error')
+    btn.textContent = 'Envoyer'
+    btn.disabled = false
+  }
 }
 
 function updateStats(reviews) {
