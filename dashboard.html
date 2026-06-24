@@ -613,6 +613,18 @@ Max 3 actions par semaine. 1 phrase max par action. En francais. Avis: ${reviews
 }
 
 
+
+function closeOnboarding() {
+  const modal = document.getElementById('onboarding-modal')
+  if (modal) modal.style.display = 'none'
+  localStorage.setItem('onboarding_done', '1')
+}
+
+function showOnboarding() {
+  const modal = document.getElementById('onboarding-modal')
+  if (modal) modal.style.display = 'flex'
+}
+
 function toggleGenerateMenu(btn) {
   // Fermer tous les autres menus ouverts
   document.querySelectorAll('.generate-menu').forEach(m => {
@@ -939,7 +951,7 @@ async function changePassword() {
   if (!onboardingDone) {
     setTimeout(() => showOnboarding(), 800)
   }
-})()'
+})()
 
 async function startCheckout() {
   const btn = document.querySelector('#premiumBanner button')
@@ -958,15 +970,3 @@ async function startCheckout() {
 </script>
 </body>
 </html>
-<script>
-function closeOnboarding() {
-  const modal = document.getElementById('onboarding-modal')
-  if (modal) modal.style.display = 'none'
-  localStorage.setItem('onboarding_done', '1')
-}
-
-function showOnboarding() {
-  const modal = document.getElementById('onboarding-modal')
-  if (modal) modal.style.display = 'flex'
-}
-</script>
