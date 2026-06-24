@@ -805,7 +805,9 @@ async function genererEnMasse(mode) {
   // Décocher toutes les cases
   document.querySelectorAll('input[data-id]:checked').forEach(cb => { cb.checked = false })
   
-  // Cacher le bouton masse
+  // Réinitialiser et cacher le bouton masse
+  const masseBtn = document.querySelector('#btn-masse button')
+  if (masseBtn) { masseBtn.textContent = '✨ Générer 0 réponses ▾'; masseBtn.disabled = false }
   document.getElementById('btn-masse').style.display = 'none'
   document.getElementById('masse-count').textContent = '0'
 }
