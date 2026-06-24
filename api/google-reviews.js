@@ -12,9 +12,10 @@ export default async function handler(req, res) {
 
   try {
     const { createClient } = await import('@supabase/supabase-js')
+    const { Resend } = await import('resend')
     const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
+    const resend = new Resend(process.env.RESEND_API_KEY)
 
-    // Get stored tokens
     const { data: conn, error: connErr } = await sb
       .from('google_connections')
       .select('*')
@@ -25,7 +26,6 @@ export default async function handler(req, res) {
       return res.status(200).json({ connected: false, reviews: [] })
     }
 
-    // Refresh token if expired
     let accessToken = conn.access_token
     if (new Date(conn.expires_at) < new Date()) {
       const refreshRes = await fetch('https://oauth2.googleapis.com/token', {
@@ -48,7 +48,6 @@ export default async function handler(req, res) {
       }
     }
 
-    // Get accounts
     const accountsRes = await fetch(
       'https://mybusinessaccountmanagement.googleapis.com/v1/accounts',
       { headers: { Authorization: `Bearer ${accessToken}` } }
@@ -61,7 +60,6 @@ export default async function handler(req, res) {
 
     const accountName = accountsData.accounts[0].name
 
-    // Get locations
     const locRes = await fetch(
       `https://mybusinessbusinessinformation.googleapis.com/v1/${accountName}/locations?readMask=name,title`,
       { headers: { Authorization: `Bearer ${accessToken}` } }
@@ -72,7 +70,6 @@ export default async function handler(req, res) {
       return res.status(200).json({ connected: true, reviews: [], message: 'Aucun établissement trouvé' })
     }
 
-    // Get reviews for first location
     const locationName = locData.locations[0].name
     const reviewsRes = await fetch(
       `https://mybusiness.googleapis.com/v4/${locationName}/reviews?pageSize=20`,
@@ -90,12 +87,53 @@ export default async function handler(req, res) {
       reply: r.reviewReply?.comment || null
     }))
 
-    // Save reviews to Supabase
     if (reviews.length > 0) {
+      // Récupérer les IDs déjà en base
+      const { data: existing } = await sb
+        .from('reviews')
+        .select('id')
+        .eq('user_id', userId)
+
+      const existingIds = new Set((existing || []).map(r => r.id))
+      const newReviews = reviews.filter(r => !existingIds.has(r.id))
+
       await sb.from('reviews').upsert(
         reviews.map(r => ({ ...r, user_id: userId })),
         { onConflict: 'id' }
       )
+
+      // Envoyer alertes pour les nouveaux avis
+      if (newReviews.length > 0) {
+        const { data: { users } } = await sb.auth.admin.listUsers()
+        const user = users?.find(u => u.id === userId)
+        if (user?.email) {
+          for (const r of newReviews) {
+            const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating)
+            const sentiment = r.rating >= 4 ? '🟢 Positif' : r.rating <= 2 ? '🔴 Négatif' : '🟡 Neutre'
+            await resend.emails.send({
+              from: 'Reputeo <onboarding@resend.dev>',
+              to: user.email,
+              subject: `${r.rating >= 4 ? '🌟' : '⚠️'} Nouvel avis de ${r.author} — ${stars}`,
+              html: `
+                <div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;background:#080810;color:#f0f0ff;padding:40px;border-radius:16px">
+                  <h1 style="font-size:1.8rem;font-weight:800;margin-bottom:4px">Reputeo</h1>
+                  <p style="color:rgba(255,255,255,0.4);margin-bottom:32px">Nouvel avis reçu</p>
+                  <div style="background:rgba(255,255,255,0.05);border-radius:12px;padding:24px;margin-bottom:24px">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                      <div style="font-weight:600">${r.author}</div>
+                      <div style="font-size:0.75rem;padding:4px 10px;background:rgba(255,255,255,0.08);border-radius:100px">${sentiment}</div>
+                    </div>
+                    <div style="font-size:1.2rem;margin-bottom:8px">${stars}</div>
+                    <div style="color:rgba(255,255,255,0.6);font-size:0.875rem">${r.text || 'Aucun commentaire'}</div>
+                  </div>
+                  <div style="text-align:center">
+                    <a href="https://reputeo.app/dashboard.html" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;text-decoration:none;border-radius:100px;font-weight:500">Répondre à cet avis →</a>
+                  </div>
+                </div>`
+            })
+          }
+        }
+      }
     }
 
     res.status(200).json({
