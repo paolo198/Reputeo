@@ -801,8 +801,13 @@ async function genererEnMasse(mode) {
   }
   
   showNotif(checked.length + ' réponses générées !', 'success')
-  const mainBtn = document.querySelector('#btn-masse button')
-  if (mainBtn) { mainBtn.textContent = '✨ Générer ' + checked.length + ' réponses ▾'; mainBtn.disabled = false }
+  
+  // Décocher toutes les cases
+  document.querySelectorAll('input[data-id]:checked').forEach(cb => { cb.checked = false })
+  
+  // Cacher le bouton masse
+  document.getElementById('btn-masse').style.display = 'none'
+  document.getElementById('masse-count').textContent = '0'
 }
 
 function updateStats(reviews) {
