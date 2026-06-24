@@ -184,6 +184,7 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
       <div class="section-header">
   <div class="section-title">Avis récents</div>
   <div style="display:flex;align-items:center;gap:10px">
+    <button onclick="toutCocher()" style="font-size:0.72rem;padding:4px 12px;background:none;border:1px solid rgba(255,255,255,0.08);border-radius:100px;color:rgba(255,255,255,0.35);cursor:pointer;font-family:Inter,sans-serif" id="btn-tout-cocher">☑ Tout cocher</button>
     <span id="reviewCount" style="font-size:0.72rem;padding:4px 12px;border-radius:100px;background:rgba(79,110,247,0.1);color:rgba(79,110,247,0.8)">0 avis</span>
     <div id="btn-masse" style="display:none;position:relative">
   <button onclick="toggleMasseMenu(this)" style="font-size:0.75rem;padding:5px 14px;background:linear-gradient(135deg,rgba(79,110,247,0.2),rgba(124,58,237,0.2));border:1px solid rgba(79,110,247,0.3);border-radius:100px;color:rgba(79,110,247,0.9);cursor:pointer;font-family:Inter,sans-serif">✨ Générer <span id="masse-count">0</span> réponses ▾</button>
@@ -747,6 +748,15 @@ function toggleMasseMenu(btn) {
       }
     })
   }, 100)
+}
+
+
+function toutCocher() {
+  const checkboxes = document.querySelectorAll('input[data-id]')
+  const allChecked = [...checkboxes].every(cb => cb.checked)
+  checkboxes.forEach(cb => { cb.checked = !allChecked })
+  document.getElementById('btn-tout-cocher').textContent = allChecked ? '☑ Tout cocher' : '☐ Tout décocher'
+  updateMasseSelection()
 }
 
 function updateMasseSelection() {
