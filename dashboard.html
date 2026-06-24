@@ -528,10 +528,29 @@ async function genererPlanAction() {
       review_text: reviews,
       rating: 5,
       author: 'PLAN',
-      prompt_override: `Tu es un consultant expert en réputation d'entreprise. Génère un plan d'action détaillé et concret sur 30 jours pour améliorer la réputation de ce commerçant basé sur ses avis clients. Organise-le en 3 semaines avec des actions précises et réalisables. Sois direct et pratique. En français.
+      prompt_override: `Tu es un consultant en reputation. Genere un plan action 30 jours TRES CONCIS. Format exact a respecter:
 
-Avis:
-${reviews}`
+SEMAINE 1 - [titre court]
+- Action courte 1
+- Action courte 2
+- Action courte 3
+
+SEMAINE 2 - [titre court]
+- Action courte 1
+- Action courte 2
+- Action courte 3
+
+SEMAINE 3 - [titre court]
+- Action courte 1
+- Action courte 2
+- Action courte 3
+
+SEMAINE 4 - [titre court]
+- Action courte 1
+- Action courte 2
+- Action courte 3
+
+Max 3 actions par semaine. 1 phrase max par action. En francais. Avis: ${reviews}`
     })
   })
   const data = await res.json()
