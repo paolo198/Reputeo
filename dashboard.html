@@ -466,7 +466,7 @@ ${reviews}`
         review_text: reviews,
         rating: 5,
         author: 'CONSEILS',
-        prompt_override: `Tu es un consultant expert en réputation d'entreprise. Analyse ces avis clients et identifie les 3 priorités d'amélioration les plus importantes.
+        prompt_override: `Tu es un consultant expert en reputation d entreprise. Analyse ces avis clients et identifie les 3 priorites d amelioration les plus importantes.
 
 Réponds UNIQUEMENT en JSON avec ce format exact:
 {
@@ -478,7 +478,7 @@ Réponds UNIQUEMENT en JSON avec ce format exact:
 }
 
 Avis:
-\${reviews}`
+${reviews}`
       })
     })
     const data2 = await res2.json()
