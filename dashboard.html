@@ -185,7 +185,14 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
   <div class="section-title">Avis récents</div>
   <div style="display:flex;align-items:center;gap:10px">
     <span id="reviewCount" style="font-size:0.72rem;padding:4px 12px;border-radius:100px;background:rgba(79,110,247,0.1);color:rgba(79,110,247,0.8)">0 avis</span>
-    <button id="btn-masse" onclick="genererEnMasse()" style="display:none;font-size:0.75rem;padding:5px 14px;background:linear-gradient(135deg,rgba(79,110,247,0.2),rgba(124,58,237,0.2));border:1px solid rgba(79,110,247,0.3);border-radius:100px;color:rgba(79,110,247,0.9);cursor:pointer;font-family:Inter,sans-serif">✨ Générer les réponses (<span id="masse-count">0</span>)</button>
+    <div id="btn-masse" style="display:none;position:relative">
+  <button onclick="toggleMasseMenu(this)" style="font-size:0.75rem;padding:5px 14px;background:linear-gradient(135deg,rgba(79,110,247,0.2),rgba(124,58,237,0.2));border:1px solid rgba(79,110,247,0.3);border-radius:100px;color:rgba(79,110,247,0.9);cursor:pointer;font-family:Inter,sans-serif">✨ Générer <span id="masse-count">0</span> réponses ▾</button>
+  <div id="masse-menu" style="display:none;position:absolute;top:110%;right:0;background:#1a1a2e;border:1px solid rgba(79,110,247,0.3);border-radius:10px;padding:6px;z-index:100;min-width:180px;box-shadow:0 8px 24px rgba(0,0,0,0.4)">
+    <button onclick="genererEnMasse('court')" style="display:block;width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:rgba(255,255,255,0.7);font-size:0.78rem;cursor:pointer;border-radius:6px;font-family:Inter,sans-serif" onmouseover="this.style.background='rgba(79,110,247,0.1)'" onmouseout="this.style.background='none'">📝 Court (2-3 phrases)</button>
+    <button onclick="genererEnMasse('standard')" style="display:block;width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:rgba(255,255,255,0.7);font-size:0.78rem;cursor:pointer;border-radius:6px;font-family:Inter,sans-serif" onmouseover="this.style.background='rgba(79,110,247,0.1)'" onmouseout="this.style.background='none'">💬 Standard (4-5 phrases)</button>
+    <button onclick="genererEnMasse('premium')" style="display:block;width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:rgba(255,255,255,0.7);font-size:0.78rem;cursor:pointer;border-radius:6px;font-family:Inter,sans-serif" onmouseover="this.style.background='rgba(79,110,247,0.1)'" onmouseout="this.style.background='none'">⭐ Premium (personnalisée)</button>
+  </div>
+</div>
   </div>
 </div>
       <div style="display:flex;gap:8px;padding:12px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap">
@@ -729,6 +736,19 @@ async function sendReply(reviewId) {
 }
 
 
+function toggleMasseMenu(btn) {
+  const menu = document.getElementById('masse-menu')
+  menu.style.display = menu.style.display === 'none' ? 'block' : 'none'
+  setTimeout(() => {
+    document.addEventListener('click', function close(e) {
+      if (!menu.contains(e.target) && e.target !== btn) {
+        menu.style.display = 'none'
+        document.removeEventListener('click', close)
+      }
+    })
+  }, 100)
+}
+
 function updateMasseSelection() {
   const checked = document.querySelectorAll('input[data-id]:checked')
   const btn = document.getElementById('btn-masse')
@@ -741,7 +761,8 @@ function updateMasseSelection() {
   }
 }
 
-async function genererEnMasse() {
+async function genererEnMasse(mode) {
+  document.getElementById('masse-menu').style.display = 'none'
   const checked = document.querySelectorAll('input[data-id]:checked')
   const btn = document.getElementById('btn-masse')
   btn.textContent = '⏳ Génération en cours...'
@@ -757,7 +778,16 @@ async function genererEnMasse() {
     const res = await fetch('/api/generate-reply', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ review_text: r.text || '', rating: r.rating || 5, author: r.author || '' })
+      body: JSON.stringify({
+        review_text: r.text || '',
+        rating: r.rating || 5,
+        author: r.author || '',
+        prompt_override: mode === 'court'
+          ? `Génère une réponse TRÈS COURTE (2-3 phrases max) à cet avis Google. Naturelle, professionnelle, en français. Auteur: ${r.author || 'Client'} Note: ${r.rating}/5 Avis: ${r.text} Réponds uniquement avec le texte.`
+          : mode === 'premium'
+          ? `Génère une réponse PREMIUM et très personnalisée à cet avis Google. Chaleureuse, détaillée. 5-6 phrases en français. Auteur: ${r.author || 'Client'} Note: ${r.rating}/5 Avis: ${r.text} Réponds uniquement avec le texte.`
+          : null
+      })
     })
     const data = await res.json()
     if (data.reply) {
@@ -771,8 +801,8 @@ async function genererEnMasse() {
   }
   
   showNotif(checked.length + ' réponses générées !', 'success')
-  btn.textContent = '✨ Générer les réponses (<span id="masse-count">' + checked.length + '</span>)'
-  btn.disabled = false
+  const mainBtn = document.querySelector('#btn-masse button')
+  if (mainBtn) { mainBtn.textContent = '✨ Générer ' + checked.length + ' réponses ▾'; mainBtn.disabled = false }
 }
 
 function updateStats(reviews) {
