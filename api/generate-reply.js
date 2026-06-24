@@ -4,8 +4,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
   
   const { review_text, rating, author } = req.body
-  if (!review_text) return res.status(400).json({ error: 'review_text requis' })
-
+  
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
   const tone = rating >= 4 ? 'chaleureux et reconnaissant' : rating <= 2 ? 'empathique et constructif' : 'professionnel et attentionné'
@@ -18,8 +17,8 @@ export default async function handler(req, res) {
       content: `Tu es un assistant qui aide les commerçants à répondre à leurs avis Google. Génère une réponse ${tone} à cet avis. La réponse doit être courte (2-3 phrases max), naturelle, personnalisée et en français. Ne commence pas par "Bonjour" générique, utilise le prénom si disponible.
 
 Auteur : ${author || 'Client'}
-Note : ${rating}/5
-Avis : ${review_text}
+Note : ${rating || 5}/5
+Avis : ${review_text || 'Très bon service'}
 
 Réponds uniquement avec le texte de la réponse, sans guillemets ni explication.`
     }]
