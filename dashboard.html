@@ -149,6 +149,14 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
     <div class="page-sub">Tous vos avis centralisés et analysés par l'IA.</div>
     <div class="section-card">
       <div class="section-header"><div class="section-title">Avis récents</div><span id="reviewCount" style="font-size:0.72rem;padding:4px 12px;border-radius:100px;background:rgba(79,110,247,0.1);color:rgba(79,110,247,0.8)">0 avis</span></div>
+      <div style="display:flex;gap:8px;padding:12px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap">
+        <button onclick="filterReviews(0)" id="filter-0" class="filter-btn active-filter" style="font-size:0.75rem;padding:5px 14px;border-radius:100px;border:1px solid rgba(79,110,247,0.4);background:rgba(79,110,247,0.15);color:rgba(79,110,247,0.9);cursor:pointer;font-family:Inter,sans-serif">Tous</button>
+        <button onclick="filterReviews(5)" id="filter-5" class="filter-btn" style="font-size:0.75rem;padding:5px 14px;border-radius:100px;border:1px solid rgba(255,255,255,0.08);background:none;color:rgba(255,255,255,0.5);cursor:pointer;font-family:Inter,sans-serif">★★★★★</button>
+        <button onclick="filterReviews(4)" id="filter-4" class="filter-btn" style="font-size:0.75rem;padding:5px 14px;border-radius:100px;border:1px solid rgba(255,255,255,0.08);background:none;color:rgba(255,255,255,0.5);cursor:pointer;font-family:Inter,sans-serif">★★★★</button>
+        <button onclick="filterReviews(3)" id="filter-3" class="filter-btn" style="font-size:0.75rem;padding:5px 14px;border-radius:100px;border:1px solid rgba(255,255,255,0.08);background:none;color:rgba(255,255,255,0.5);cursor:pointer;font-family:Inter,sans-serif">★★★</button>
+        <button onclick="filterReviews(2)" id="filter-2" class="filter-btn" style="font-size:0.75rem;padding:5px 14px;border-radius:100px;border:1px solid rgba(255,255,255,0.08);background:none;color:rgba(255,255,255,0.5);cursor:pointer;font-family:Inter,sans-serif">★★</button>
+        <button onclick="filterReviews(1)" id="filter-1" class="filter-btn" style="font-size:0.75rem;padding:5px 14px;border-radius:100px;border:1px solid rgba(255,255,255,0.08);background:none;color:rgba(255,255,255,0.5);cursor:pointer;font-family:Inter,sans-serif">★</button>
+      </div>
       <div id="reviewsList"><div class="empty"><div class="empty-icon">⭐</div><div class="empty-title">Aucun avis</div><div class="empty-text">Connectez vos plateformes pour importer vos avis.</div></div></div>
     </div>
   </div>
@@ -322,10 +330,38 @@ async function loadGoogleReviews() {
   }
 }
 
+
+let allReviews = []
+
+function filterReviews(stars) {
+  // Mettre à jour les boutons
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.style.background = 'none'
+    b.style.color = 'rgba(255,255,255,0.5)'
+    b.style.borderColor = 'rgba(255,255,255,0.08)'
+  })
+  const active = document.getElementById('filter-' + stars)
+  if (active) {
+    active.style.background = 'rgba(79,110,247,0.15)'
+    active.style.color = 'rgba(79,110,247,0.9)'
+    active.style.borderColor = 'rgba(79,110,247,0.4)'
+  }
+  
+  const filtered = stars === 0 ? allReviews : allReviews.filter(r => r.rating === stars)
+  document.getElementById('reviewCount').textContent = filtered.length + ' avis'
+  document.getElementById('reviewsList').innerHTML = filtered.length === 0
+    ? '<div class="empty"><div class="empty-icon">⭐</div><div class="empty-title">Aucun avis</div><div class="empty-text">Aucun avis avec cette note.</div></div>'
+    : filtered.map(r => renderReview(r)).join('')
+}
+
 function displayReviews(reviews) {
+  allReviews = reviews
   reviews.forEach(rv => { reviewsData[rv.id] = { text: rv.text||'', rating: rv.rating, author: rv.author } })
   document.getElementById('reviewCount').textContent = `${reviews.length} avis`
-  document.getElementById('reviewsList').innerHTML = reviews.map(r => {
+  document.getElementById('reviewsList').innerHTML = reviews.map(r => renderReview(r)).join('')
+}
+
+function renderReview(r) {
     const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating)
     const bc = r.rating >= 4 ? 'b-pos' : r.rating <= 2 ? 'b-neg' : 'b-neu'
     const label = r.rating >= 4 ? 'Positif' : r.rating <= 2 ? 'Négatif' : 'Neutre'
@@ -353,7 +389,6 @@ function displayReviews(reviews) {
       </div>
       ${replySection}
     </div>`
-  }).join('')
 }
 
 
