@@ -3,7 +3,7 @@ import Anthropic from '@anthropic-ai/sdk'
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
   
-  const { review_text, rating, author, prompt_override } = req.body
+  const { review_text, rating, author, prompt_override, max_tokens } = req.body
   
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
@@ -23,7 +23,7 @@ Réponds uniquement avec le texte de la réponse, sans guillemets ni explication
 
   const message = await client.messages.create({
     model: 'claude-sonnet-4-6',
-    max_tokens: 1000,
+    max_tokens: max_tokens || 1000,
     messages: [{ role: 'user', content: prompt }]
   })
 
