@@ -764,9 +764,9 @@ function updateMasseSelection() {
 async function genererEnMasse(mode) {
   document.getElementById('masse-menu').style.display = 'none'
   const checked = document.querySelectorAll('input[data-id]:checked')
-  const btn = document.getElementById('btn-masse')
-  btn.textContent = '⏳ Génération en cours...'
-  btn.disabled = true
+  const masseWrapper = document.getElementById('btn-masse')
+  const btn = masseWrapper ? masseWrapper.querySelector('button') : null
+  if (btn) { btn.textContent = '⏳ Génération en cours...'; btn.disabled = true }
   
   for (const checkbox of checked) {
     const id = checkbox.dataset.id
