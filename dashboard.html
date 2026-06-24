@@ -368,7 +368,14 @@ function renderReview(r) {
     const replySection = r.reply 
       ? `<div style="margin-top:10px;padding:10px 14px;background:rgba(79,110,247,0.06);border-radius:8px;border-left:2px solid rgba(79,110,247,0.3)"><div style="font-size:0.65rem;color:rgba(79,110,247,0.6);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">Votre réponse</div><div style="font-size:0.78rem;color:rgba(255,255,255,0.6)">${r.reply}</div></div>`
       : `<div style="margin-top:10px" id="reply-section-${r.id}">
-          <button onclick="toggleReply('${r.id}')" style="font-size:0.75rem;padding:6px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:100px;color:rgba(255,255,255,0.5);cursor:pointer;font-family:Inter,sans-serif">↩ Répondre</button><button data-review-id="${r.id}" onclick="generateReply(this.dataset.reviewId, this)" style="font-size:0.75rem;padding:6px 14px;margin-left:8px;background:linear-gradient(135deg,rgba(79,110,247,0.2),rgba(124,58,237,0.2));border:1px solid rgba(79,110,247,0.3);border-radius:100px;color:rgba(79,110,247,0.9);cursor:pointer;font-family:Inter,sans-serif">✨ Générer</button>
+          <button onclick="toggleReply('${r.id}')" style="font-size:0.75rem;padding:6px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:100px;color:rgba(255,255,255,0.5);cursor:pointer;font-family:Inter,sans-serif">↩ Répondre</button><div style="display:inline-block;position:relative;margin-left:8px">
+  <button data-review-id="${r.id}" onclick="toggleGenerateMenu(this)" style="font-size:0.75rem;padding:6px 14px;background:linear-gradient(135deg,rgba(79,110,247,0.2),rgba(124,58,237,0.2));border:1px solid rgba(79,110,247,0.3);border-radius:100px;color:rgba(79,110,247,0.9);cursor:pointer;font-family:Inter,sans-serif">✨ Générer ▾</button>
+  <div class="generate-menu" style="display:none;position:absolute;top:110%;left:0;background:#1a1a2e;border:1px solid rgba(79,110,247,0.3);border-radius:10px;padding:6px;z-index:100;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,0.4)">
+    <button onclick="generateReply('${r.id}','court',this)" style="display:block;width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:rgba(255,255,255,0.7);font-size:0.78rem;cursor:pointer;border-radius:6px;font-family:Inter,sans-serif" onmouseover="this.style.background='rgba(79,110,247,0.1)'" onmouseout="this.style.background='none'">📝 Court (2-3 phrases)</button>
+    <button onclick="generateReply('${r.id}','standard',this)" style="display:block;width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:rgba(255,255,255,0.7);font-size:0.78rem;cursor:pointer;border-radius:6px;font-family:Inter,sans-serif" onmouseover="this.style.background='rgba(79,110,247,0.1)'" onmouseout="this.style.background='none'">💬 Standard (4-5 phrases)</button>
+    <button onclick="generateReply('${r.id}','premium',this)" style="display:block;width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:rgba(255,255,255,0.7);font-size:0.78rem;cursor:pointer;border-radius:6px;font-family:Inter,sans-serif" onmouseover="this.style.background='rgba(79,110,247,0.1)'" onmouseout="this.style.background='none'">⭐ Premium (personnalisée)</button>
+  </div>
+</div>
           <div id="reply-form-${r.id}" style="display:none;margin-top:10px">
             <textarea id="reply-text-${r.id}" placeholder="Votre réponse..." style="width:100%;min-height:80px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 14px;font-family:Inter,sans-serif;font-size:0.82rem;color:#f0f0ff;resize:vertical;outline:none"></textarea>
             <div style="display:flex;gap:8px;margin-top:8px">
@@ -572,13 +579,37 @@ Max 3 actions par semaine. 1 phrase max par action. En francais. Avis: ${reviews
   btn.disabled = false
 }
 
-async function generateReply(reviewId, btnEl) {
+
+function toggleGenerateMenu(btn) {
+  // Fermer tous les autres menus ouverts
+  document.querySelectorAll('.generate-menu').forEach(m => {
+    if (m !== btn.nextElementSibling) m.style.display = 'none'
+  })
+  const menu = btn.nextElementSibling
+  menu.style.display = menu.style.display === 'none' ? 'block' : 'none'
+  
+  // Fermer si on clique ailleurs
+  setTimeout(() => {
+    document.addEventListener('click', function closeMenu(e) {
+      if (!menu.contains(e.target) && e.target !== btn) {
+        menu.style.display = 'none'
+        document.removeEventListener('click', closeMenu)
+      }
+    })
+  }, 100)
+}
+
+async function generateReply(reviewId, mode, btnEl) {
   const r = reviewsData[reviewId] || {}
   const text = r.text || ''
   const rating = r.rating || 5
   const author = r.author || ''
-  const btn = btnEl
-  if (btn) { btn.textContent = 'Generation...'; btn.disabled = true }
+  // Fermer le menu
+  const menu = btnEl?.closest('.generate-menu')
+  if (menu) menu.style.display = 'none'
+  const mainBtn = menu?.previousElementSibling
+  if (mainBtn) { mainBtn.textContent = 'Generation...'; mainBtn.disabled = true }
+  const btn = mainBtn
   
   // Ouvre le formulaire
   const form = document.getElementById('reply-form-' + reviewId)
@@ -587,7 +618,16 @@ async function generateReply(reviewId, btnEl) {
   const res = await fetch('/api/generate-reply', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ review_text: text, rating: rating, author: author })
+    body: JSON.stringify({
+      review_text: text,
+      rating: rating,
+      author: author,
+      prompt_override: mode === 'court'
+        ? `Génère une réponse TRÈS COURTE (2-3 phrases max) à cet avis Google. Naturelle, professionnelle, en français. Utilise le prénom si disponible. Auteur: ${author || 'Client'} Note: ${rating}/5 Avis: ${text} Réponds uniquement avec le texte.`
+        : mode === 'premium'
+        ? `Génère une réponse PREMIUM et très personnalisée à cet avis Google. Chaleureuse, détaillée, qui montre qu'on a vraiment lu l'avis. 5-6 phrases en français. Utilise le prénom. Auteur: ${author || 'Client'} Note: ${rating}/5 Avis: ${text} Réponds uniquement avec le texte.`
+        : null
+    })
   })
   const data = await res.json()
   
@@ -603,7 +643,7 @@ async function generateReply(reviewId, btnEl) {
     showNotif('Erreur lors de la génération', 'error')
   }
   
-  if (btn) { btn.textContent = '✨ Générer'; btn.disabled = false }
+  if (btn) { btn.textContent = '✨ Générer ▾'; btn.disabled = false }
 }
 
 function toggleReply(reviewId) {
