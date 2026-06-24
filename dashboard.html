@@ -455,6 +455,27 @@ ${reviews}`
     html += '</div></div>'
     
     result.innerHTML = html
+    
+    // Deuxième appel pour les conseils
+    result.innerHTML += '<div style="margin-top:24px;padding:20px;background:rgba(79,110,247,0.06);border:1px solid rgba(79,110,247,0.15);border-radius:12px"><div style="font-size:0.8rem;font-weight:600;color:rgba(79,110,247,0.9);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px">💡 Recommandations IA</div><div id="conseils-text" style="font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.6">Génération des conseils...</div></div>'
+    
+    const res2 = await fetch('/api/generate-reply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        review_text: reviews,
+        rating: 5,
+        author: 'CONSEILS',
+        prompt_override: `Tu es un consultant expert en réputation d'entreprise. Analyse ces avis clients et rédige un paragraphe de conseils concrets et actionnables pour aider ce commerçant à améliorer sa réputation. Sois direct, précis et bienveillant. Maximum 4-5 phrases en français.
+
+Avis:
+${reviews}`
+      })
+    })
+    const data2 = await res2.json()
+    const conseils = document.getElementById('conseils-text')
+    if (conseils) conseils.innerHTML = data2.reply.replace(/\n/g, '<br>')
+    
   } catch(e) {
     result.innerHTML = '<div style="color:rgba(255,255,255,0.5);font-size:0.85rem">' + data.reply + '</div>'
   }
