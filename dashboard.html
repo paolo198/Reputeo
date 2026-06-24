@@ -94,6 +94,39 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
 </head>
 <body>
 
+
+<div id="onboarding-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center">
+  <div style="background:#0d0d1a;border:1px solid rgba(79,110,247,0.3);border-radius:20px;padding:40px;max-width:520px;width:90%;position:relative">
+    <div style="text-align:center;margin-bottom:32px">
+      <div style="font-size:2rem;font-weight:800;background:linear-gradient(135deg,#4f6ef7,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px">Bienvenue sur Reputeo 🎉</div>
+      <div style="color:rgba(255,255,255,0.5);font-size:0.9rem">Suivez ces 3 étapes pour démarrer en 2 minutes</div>
+    </div>
+    <div style="display:flex;gap:16px;padding:16px;border-radius:12px;margin-bottom:12px;background:rgba(79,110,247,0.08);border:1px solid rgba(79,110,247,0.2)">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#4f6ef7,#7c3aed);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0">1</div>
+      <div>
+        <div style="font-weight:600;color:#f0f0ff;margin-bottom:4px">Connectez Google Business</div>
+        <div style="font-size:0.78rem;color:rgba(255,255,255,0.4);margin-bottom:10px">Importez automatiquement tous vos avis Google Maps</div>
+        <button onclick="closeOnboarding();showPage('connect',document.getElementById('nav-connect'))" style="padding:8px 18px;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;border:none;border-radius:100px;font-size:0.78rem;cursor:pointer;font-family:Inter,sans-serif">Connecter Google →</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:16px;padding:16px;border-radius:12px;margin-bottom:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)">
+      <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;color:rgba(255,255,255,0.4)">2</div>
+      <div>
+        <div style="font-weight:600;color:rgba(255,255,255,0.4);margin-bottom:4px">Consultez vos avis</div>
+        <div style="font-size:0.78rem;color:rgba(255,255,255,0.3)">Voir tous vos avis centralisés et analysés par l'IA</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:16px;padding:16px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)">
+      <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;color:rgba(255,255,255,0.4)">3</div>
+      <div>
+        <div style="font-weight:600;color:rgba(255,255,255,0.4);margin-bottom:4px">Générez vos premières réponses</div>
+        <div style="font-size:0.78rem;color:rgba(255,255,255,0.3)">Répondez à vos avis en 1 clic grâce à l'IA</div>
+      </div>
+    </div>
+    <button onclick="closeOnboarding()" style="display:block;width:100%;margin-top:20px;padding:10px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:0.78rem;cursor:pointer;font-family:Inter,sans-serif">Passer cette étape</button>
+  </div>
+</div>
+
 <aside class="sidebar">
   <a href="/" class="logo">Repute<em>o</em></a>
   <div class="nav-section">Principal</div>
@@ -900,7 +933,13 @@ async function changePassword() {
   }
   
   loadGoogleReviews()
-})()
+  
+  // Onboarding
+  const onboardingDone = localStorage.getItem('onboarding_done')
+  if (!onboardingDone) {
+    setTimeout(() => showOnboarding(), 800)
+  }
+})()'
 
 async function startCheckout() {
   const btn = document.querySelector('#premiumBanner button')
@@ -919,3 +958,15 @@ async function startCheckout() {
 </script>
 </body>
 </html>
+<script>
+function closeOnboarding() {
+  const modal = document.getElementById('onboarding-modal')
+  if (modal) modal.style.display = 'none'
+  localStorage.setItem('onboarding_done', '1')
+}
+
+function showOnboarding() {
+  const modal = document.getElementById('onboarding-modal')
+  if (modal) modal.style.display = 'flex'
+}
+</script>
