@@ -353,7 +353,7 @@ async function generateReply(reviewId, btnEl) {
   const text = r.text || ''
   const rating = r.rating || 5
   const author = r.author || ''
-  const btn = document.querySelector('[onclick="generateReply(\'' + reviewId + '\')"]')
+  const btn = btnEl
   if (btn) { btn.textContent = 'Generation...'; btn.disabled = true }
   
   // Ouvre le formulaire
