@@ -320,7 +320,7 @@ function displayReviews(reviews) {
     const replySection = r.reply 
       ? `<div style="margin-top:10px;padding:10px 14px;background:rgba(79,110,247,0.06);border-radius:8px;border-left:2px solid rgba(79,110,247,0.3)"><div style="font-size:0.65rem;color:rgba(79,110,247,0.6);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">Votre réponse</div><div style="font-size:0.78rem;color:rgba(255,255,255,0.6)">${r.reply}</div></div>`
       : `<div style="margin-top:10px" id="reply-section-${r.id}">
-          <button onclick="toggleReply('${r.id}')" style="font-size:0.75rem;padding:6px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:100px;color:rgba(255,255,255,0.5);cursor:pointer;font-family:Inter,sans-serif">↩ Répondre</button>
+          <button onclick="toggleReply('${r.id}')" style="font-size:0.75rem;padding:6px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:100px;color:rgba(255,255,255,0.5);cursor:pointer;font-family:Inter,sans-serif">↩ Répondre</button><button onclick="generateReply('${r.id}','${(r.text||'').substring(0,200)}',${r.rating},'${r.author}')" style="font-size:0.75rem;padding:6px 14px;margin-left:8px;background:linear-gradient(135deg,rgba(79,110,247,0.2),rgba(124,58,237,0.2));border:1px solid rgba(79,110,247,0.3);border-radius:100px;color:rgba(79,110,247,0.9);cursor:pointer;font-family:Inter,sans-serif">✨ Générer</button>
           <div id="reply-form-${r.id}" style="display:none;margin-top:10px">
             <textarea id="reply-text-${r.id}" placeholder="Votre réponse..." style="width:100%;min-height:80px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 14px;font-family:Inter,sans-serif;font-size:0.82rem;color:#f0f0ff;resize:vertical;outline:none"></textarea>
             <div style="display:flex;gap:8px;margin-top:8px">
@@ -342,6 +342,33 @@ function displayReviews(reviews) {
       ${replySection}
     </div>`
   }).join('')
+}
+
+
+async function generateReply(reviewId, text, rating, author) {
+  const btn = document.querySelector(`button[onclick*='generateReply(\\\"${reviewId}']`)
+  if (btn) { btn.textContent = '⏳ Génération...'; btn.disabled = true }
+  
+  // Ouvre le formulaire
+  const form = document.getElementById('reply-form-' + reviewId)
+  if (form) form.style.display = 'block'
+  
+  const res = await fetch('/api/generate-reply', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ review_text: text, rating: rating, author: author })
+  })
+  const data = await res.json()
+  
+  if (data.reply) {
+    const textarea = document.getElementById('reply-text-' + reviewId)
+    if (textarea) textarea.value = data.reply
+    showNotif('Réponse générée !', 'success')
+  } else {
+    showNotif('Erreur lors de la génération', 'error')
+  }
+  
+  if (btn) { btn.textContent = '✨ Générer'; btn.disabled = false }
 }
 
 function toggleReply(reviewId) {
