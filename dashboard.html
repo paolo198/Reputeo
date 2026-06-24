@@ -807,7 +807,8 @@ async function genererEnMasse(mode) {
   
   // Réinitialiser et cacher le bouton masse
   const masseBtn = document.querySelector('#btn-masse button')
-  if (masseBtn) { masseBtn.textContent = '✨ Générer ▾'; masseBtn.disabled = false }
+  const newCount = document.querySelectorAll('input[data-id]:checked').length
+  if (masseBtn) { masseBtn.innerHTML = '✨ Générer <span id="masse-count">' + newCount + '</span> réponses ▾'; masseBtn.disabled = false }
   document.getElementById('btn-masse').style.display = 'none'
   document.getElementById('masse-count').textContent = '0'
 }
