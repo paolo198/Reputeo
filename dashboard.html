@@ -161,6 +161,7 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
   <div class="nav-section">Outils</div>
   <button class="nav-item" id="nav-analyzer" onclick="showPage('analyzer',this)">🤖 Analyseur IA</button>
   <button class="nav-item" id="nav-reports" onclick="showPage('reports',this)">🛠️ Outils</button>
+  <button class="nav-item" id="nav-weekly" onclick="showPage('weekly',this)">📬 Rapports</button>
   <button class="nav-item" id="nav-analyse" onclick="showPage('analyse',this)">🔍 Analyse IA</button>
   <button class="nav-item" id="nav-subscription" onclick="showPage('subscription',this)" style="display:none">💳 Abonnement</button>
   <div class="sidebar-bottom" style="position:relative">
@@ -336,12 +337,17 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
       </div>
     </div>
 
+  </div>
+
+  <div class="page" id="page-weekly">
+    <div class="page-title">Rapports</div>
+    <div class="page-sub">Vos rapports hebdomadaires automatiques.</div>
     <div class="section-card" style="padding:32px">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
         <span style="font-size:1.4rem">📬</span>
         <div style="font-family:Syne,sans-serif;font-weight:700;font-size:1.1rem">Rapport hebdomadaire</div>
       </div>
-      <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">Votre rapport est envoyé automatiquement chaque lundi matin à votre adresse email.</div>
+      <div style="font-size:0.85rem;color:rgba(255,255,255,0.4);margin-bottom:0">Votre rapport est envoyé automatiquement chaque lundi matin à votre adresse email avec un résumé de vos avis, votre note et vos tendances.</div>
     </div>
   </div>
 
@@ -376,6 +382,7 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
       <div class="form-group"><label class="form-label">Prénom</label><input class="form-input" id="set-firstname" placeholder="Votre prénom"></div>
       <div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="set-lastname" placeholder="Votre nom"></div>
       <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="set-email" disabled style="opacity:0.5;cursor:not-allowed"></div>
+      <div class="form-group"><label class="form-label">Lien Google Maps de votre établissement</label><input class="form-input" id="set-google-link" placeholder="https://g.page/votre-etablissement/review"></div>
       <button class="btn-primary" onclick="saveSettings()">Enregistrer</button>
     </div>
     <div class="settings-card">
@@ -1383,6 +1390,8 @@ function updateTargetProgress() {
 async function saveSettings() {
   const firstname = document.getElementById('set-firstname').value.trim()
   const lastname = document.getElementById('set-lastname').value.trim()
+  const googleLink = document.getElementById('set-google-link').value.trim()
+  if (googleLink) localStorage.setItem('google_review_link', googleLink)
   const { error } = await sb.auth.updateUser({ data: { firstname, lastname } })
   if (error) showNotif('Erreur : ' + error.message, 'error')
   else showNotif('Paramètres enregistrés !', 'success')
@@ -1413,6 +1422,11 @@ async function changePassword() {
   document.getElementById('welcomeTitle').textContent = `Bonjour ${userDisplayName} 👋`
   document.getElementById('set-email').value = email
   if (meta.firstname) document.getElementById('set-firstname').value = meta.firstname
+  const savedLink = localStorage.getItem('google_review_link')
+  if (savedLink) {
+    if (document.getElementById('set-google-link')) document.getElementById('set-google-link').value = savedLink
+    if (document.getElementById('req-link')) document.getElementById('req-link').value = savedLink
+  }
   if (meta.lastname) document.getElementById('set-lastname').value = meta.lastname
   // Load avatar color
   const savedColor = localStorage.getItem('avatarColor')
