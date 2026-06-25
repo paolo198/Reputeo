@@ -1304,7 +1304,7 @@ function updateTargetProgress() {
   }
 }
 
-function saveSettings() {
+async function saveSettings() {
   const firstname = document.getElementById('set-firstname').value.trim()
   const lastname = document.getElementById('set-lastname').value.trim()
   const { error } = await sb.auth.updateUser({ data: { firstname, lastname } })
