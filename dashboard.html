@@ -1271,7 +1271,6 @@ function setAvatarColor(gradient) {
   showNotif('Avatar mis à jour !', 'success')
 }
 
-async 
 function saveTargetNote() {
   const target = parseFloat(document.getElementById('target-note').value)
   if (!target || target < 1 || target > 5) return showNotif('Note invalide (entre 1 et 5)', 'error')
