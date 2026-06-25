@@ -90,6 +90,17 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
 .premium-banner-title{font-family:"Syne",sans-serif;font-weight:700;font-size:1rem;margin-bottom:4px}
 .locked-overlay{position:relative}
 .locked-overlay::after{content:"🔒 Fonctionnalité premium";position:absolute;inset:0;background:rgba(8,8,16,0.85);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:0.875rem;color:rgba(255,255,255,0.5);backdrop-filter:blur(4px)}
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0 !important; padding: 20px !important; }
+  .hamburger { display: flex !important; }
+}
+.hamburger { display: none; position: fixed; top: 16px; left: 16px; z-index: 200; width: 40px; height: 40px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+.sidebar-overlay.open { display: block; }
+
 </style>
 </head>
 <body>
@@ -105,6 +116,9 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
     <button onclick="savePseudo()" style="width:100%;padding:14px;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;border:none;border-radius:100px;font-size:0.9rem;font-weight:500;cursor:pointer;font-family:Inter,sans-serif">Continuer →</button>
   </div>
 </div>
+
+<button class="hamburger" onclick="toggleSidebar()" id="hamburger">☰</button>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
 
 <div id="onboarding-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center">
   <div style="background:#0d0d1a;border:1px solid rgba(79,110,247,0.3);border-radius:20px;padding:40px;max-width:520px;width:90%;position:relative">
@@ -702,6 +716,16 @@ async function savePseudo() {
 function showPseudoModal() {
   const modal = document.getElementById('pseudo-modal')
   if (modal) modal.style.display = 'flex'
+}
+
+
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar')
+  const overlay = document.getElementById('sidebar-overlay')
+  const hamburger = document.getElementById('hamburger')
+  sidebar.classList.toggle('open')
+  overlay.classList.toggle('open')
+  hamburger.textContent = sidebar.classList.contains('open') ? '✕' : '☰'
 }
 
 function closeOnboarding() {
