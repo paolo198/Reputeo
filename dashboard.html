@@ -292,6 +292,23 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
     <div class="page-sub">Détection automatique des thèmes récurrents dans vos avis.</div>
     <div class="section-card" style="padding:32px">
       <button onclick="runAnalyse()" class="btn-primary" id="btn-analyse">✨ Analyser mes avis</button>
+      <div id="analyse-hint" style="margin-top:24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+        <div style="padding:20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-align:center">
+          <div style="font-size:1.5rem;margin-bottom:8px">🎯</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#f0f0ff;margin-bottom:4px">Points forts</div>
+          <div style="font-size:0.75rem;color:rgba(255,255,255,0.35)">Découvrez ce que vos clients adorent</div>
+        </div>
+        <div style="padding:20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-align:center">
+          <div style="font-size:1.5rem;margin-bottom:8px">⚠️</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#f0f0ff;margin-bottom:4px">Points à améliorer</div>
+          <div style="font-size:0.75rem;color:rgba(255,255,255,0.35)">Identifiez vos axes d'amélioration</div>
+        </div>
+        <div style="padding:20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-align:center">
+          <div style="font-size:1.5rem;margin-bottom:8px">📋</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#f0f0ff;margin-bottom:4px">Plan d'action</div>
+          <div style="font-size:0.75rem;color:rgba(255,255,255,0.35)">Un plan concret sur 30 jours</div>
+        </div>
+      </div>
       <div id="analyse-result" style="margin-top:24px"></div>
     </div>
   </div>
@@ -559,6 +576,8 @@ async function runAnalyse() {
   btn.textContent = '⏳ Analyse en cours...'
   btn.disabled = true
   result.innerHTML = ''
+  const hint = document.getElementById('analyse-hint')
+  if (hint) hint.style.display = 'none'
   
   const reviews = Object.values(reviewsData).map(r => `${r.rating}/5 — ${r.text}`).join('\n')
   
