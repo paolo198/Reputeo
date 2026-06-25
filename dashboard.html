@@ -1241,12 +1241,12 @@ async function changePassword() {
   if (!session) return window.location = '/login.html'
   currentUser = session.user
   const email = currentUser.email || ''
+  const meta = currentUser.user_metadata || {}
   const userDisplayName = meta.firstname || email.split('@')[0]
   document.getElementById('userEmail').textContent = userDisplayName
   document.getElementById('userAvatar').textContent = userDisplayName[0].toUpperCase()
   document.getElementById('welcomeTitle').textContent = `Bonjour ${userDisplayName} 👋`
   document.getElementById('set-email').value = email
-  const meta = currentUser.user_metadata || {}
   if (meta.firstname) document.getElementById('set-firstname').value = meta.firstname
   if (meta.lastname) document.getElementById('set-lastname').value = meta.lastname
   // Load avatar color
