@@ -317,6 +317,23 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
     <div class="page-title">Analyseur IA</div>
     <div class="page-sub">Analysez n'importe quel avis en quelques secondes.</div>
     <div class="section-card" style="padding:32px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px">
+        <div style="padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-align:center">
+          <div style="font-size:1.3rem;margin-bottom:6px">😊</div>
+          <div style="font-size:0.78rem;font-weight:600;color:#f0f0ff;margin-bottom:2px">Sentiment</div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.35)">Positif, négatif ou neutre</div>
+        </div>
+        <div style="padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-align:center">
+          <div style="font-size:1.3rem;margin-bottom:6px">🔑</div>
+          <div style="font-size:0.78rem;font-weight:600;color:#f0f0ff;margin-bottom:2px">Points clés</div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.35)">Ce que dit vraiment le client</div>
+        </div>
+        <div style="padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-align:center">
+          <div style="font-size:1.3rem;margin-bottom:6px">💬</div>
+          <div style="font-size:0.78rem;font-weight:600;color:#f0f0ff;margin-bottom:2px">Suggestion</div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.35)">Comment répondre</div>
+        </div>
+      </div>
       <textarea id="dashInput" placeholder="Collez un avis client ici..."></textarea>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:10px">
         <button class="btn-primary" onclick="dashAnalyze()" id="dashBtn">Analyser avec l'IA →</button>
