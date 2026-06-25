@@ -6,9 +6,20 @@
     }
   ],
   "rewrites": [
-    { "source": "/privacy", "destination": "/privacy.html" }
+    {
+      "source": "/privacy",
+      "destination": "/privacy.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/terms.html"
+    }
   ],
   "redirects": [
-    { "source": "/privacy.html", "destination": "/privacy", "permanent": true }
+    {
+      "source": "/privacy.html",
+      "destination": "/privacy",
+      "permanent": true
+    }
   ]
 }
