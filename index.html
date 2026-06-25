@@ -290,7 +290,7 @@ footer p{font-size:0.78rem;color:var(--muted)}
     <a href="#features" class="nav-link">Fonctionnalités</a>
     <a href="#demo" class="nav-link">Démo</a>
     <a href="#pricing" class="nav-link">Tarifs</a>
-    <a href="/login.html" class="nav-link">Connexion</a><a href="https://buy.stripe.com/test_fZu28s0830Qr5Lg4j90VO00" target="_blank" class="nav-cta">Essai gratuit →</a>
+    <a href="/login.html" class="nav-link">Connexion</a><a href="/login.html" target="_blank" class="nav-cta">Essai gratuit →</a>
   </div>
 </nav>
 
@@ -306,7 +306,7 @@ footer p{font-size:0.78rem;color:var(--muted)}
   </h1>
   <p class="hero-sub">Reputeo collecte tous vos avis Google, TripAdvisor et Facebook. L'IA les analyse automatiquement et vous envoie un rapport chaque semaine.</p>
   <div class="hero-actions">
-    <a href="https://buy.stripe.com/test_fZu28s0830Qr5Lg4j90VO00" target="_blank" class="btn-glow">Essai gratuit 14 jours →</a>
+    <a href="/login.html" target="_blank" class="btn-glow">Essai gratuit 14 jours →</a>
     <a href="#demo" class="btn-outline">Voir la démo ↓</a>
   </div>
   
@@ -514,7 +514,7 @@ footer p{font-size:0.78rem;color:var(--muted)}
         <li><span class="pck">✓</span>Tableau de bord illimité</li>
         <li><span class="pck">✓</span>Support email sous 24h</li>
       </ul>
-      <a href="https://buy.stripe.com/test_fZu28s0830Qr5Lg4j90VO00" target="_blank" class="btn-glow" style="display:block;text-align:center;">Commencer l'essai gratuit 14 jours</a>
+      <a href="/login.html" target="_blank" class="btn-glow" style="display:block;text-align:center;">Commencer l'essai gratuit 14 jours</a>
       <p class="price-note">Carte bancaire requise · Résiliation en 1 clic · Données 🇫🇷</p>
     </div>
   </div>
@@ -535,7 +535,7 @@ footer p{font-size:0.78rem;color:var(--muted)}
   <div class="cta-inner">
     <h2 class="cta-title reveal">Votre réputation<br>mérite mieux.</h2>
     <p class="cta-sub reveal">Rejoignez les premiers utilisateurs. 14 jours gratuits, sans risque.</p>
-    <div class="reveal"><a href="https://buy.stripe.com/test_fZu28s0830Qr5Lg4j90VO00" target="_blank" class="btn-glow">Commencer gratuitement →</a></div>
+    <div class="reveal"><a href="/login.html" target="_blank" class="btn-glow">Commencer gratuitement →</a></div>
     <p style="font-size:0.78rem;color:var(--muted);margin-top:20px" class="reveal">Carte bancaire requise · Résiliation en 1 clic · Données 🇫🇷</p>
   </div>
 </section>
@@ -626,7 +626,7 @@ function updateLimit(){
   const el=document.getElementById('demoCounter')
   const lt=document.getElementById('limitTxt')
   if(left===0){
-    el.innerHTML='🔒 Limite — <a href="https://buy.stripe.com/test_fZu28s0830Qr5Lg4j90VO00" target="_blank">S\'abonner</a>'
+    el.innerHTML='🔒 Limite — <a href="/login.html" target="_blank">S\'abonner</a>'
     if(lt)lt.textContent='Limite atteinte'
   }else{
     el.textContent=`Démo — ${left} analyse${left>1?'s':''} restante${left>1?'s':''}`
@@ -638,7 +638,7 @@ updateLimit()
 async function analyzeReview(){
   const used=parseInt(localStorage.getItem('rpt_uses')||'0')
   if(used>=MAX){
-    document.getElementById('resultContent').innerHTML=`<div style="text-align:center;padding:20px"><div style="font-size:2rem;margin-bottom:12px">🔒</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:8px">Limite de démo atteinte</div><div style="font-size:0.8rem;color:var(--muted);margin-bottom:20px">Abonnez-vous pour des analyses illimitées.</div><a href="https://buy.stripe.com/test_fZu28s0830Qr5Lg4j90VO00" target="_blank" class="btn-glow" style="display:inline-block;font-size:0.875rem;padding:12px 24px">Commencer — 29,99€/mois →</a></div>`
+    document.getElementById('resultContent').innerHTML=`<div style="text-align:center;padding:20px"><div style="font-size:2rem;margin-bottom:12px">🔒</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:8px">Limite de démo atteinte</div><div style="font-size:0.8rem;color:var(--muted);margin-bottom:20px">Abonnez-vous pour des analyses illimitées.</div><a href="/login.html" target="_blank" class="btn-glow" style="display:inline-block;font-size:0.875rem;padding:12px 24px">Commencer — 29,99€/mois →</a></div>`
     document.getElementById('analysisResult').style.display='block'
     return
   }
