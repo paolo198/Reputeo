@@ -343,6 +343,15 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
       <div class="form-group"><label class="form-label">Confirmer</label><input class="form-input" type="password" id="set-confirm" placeholder="••••••••"></div>
       <button class="btn-primary" onclick="changePassword()">Changer le mot de passe</button>
     </div>
+    <div class="settings-card">
+      <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:8px">🎯 Objectif de note</h3>
+      <p style="font-size:0.82rem;color:rgba(255,255,255,0.4);margin-bottom:16px">Fixez une note cible et suivez votre progression.</p>
+      <div style="display:flex;align-items:center;gap:12px">
+        <input type="number" id="target-note" min="1" max="5" step="0.1" placeholder="Ex: 4.5" style="width:100px;padding:10px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;color:#f0f0ff;font-family:Inter,sans-serif;font-size:0.9rem;outline:none">
+        <span style="color:rgba(255,255,255,0.4);font-size:0.85rem">/ 5 ★</span>
+        <button class="btn-primary" onclick="saveTargetNote()" style="padding:10px 20px">Enregistrer</button>
+      </div>
+    </div>
     <div class="settings-card" style="border-color:rgba(239,68,68,0.2)">
       <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:8px;color:#f87171">Zone de danger</h3>
       <p style="font-size:0.85rem;color:rgba(255,255,255,0.38);margin-bottom:20px">Ces actions sont irréversibles.</p>
@@ -1131,6 +1140,7 @@ function updateStats(reviews) {
   const scoreLabelEl = document.getElementById('stat-score-label')
   if (scoreEl) scoreEl.textContent = score + ' / 100'
   drawChart(reviews, chartPeriod)
+  updateTargetProgress()
   
   if (scoreLabelEl) {
     if (score >= 80) { scoreLabelEl.textContent = '🟢 Excellente réputation' }
@@ -1261,7 +1271,40 @@ function setAvatarColor(gradient) {
   showNotif('Avatar mis à jour !', 'success')
 }
 
-async function saveSettings() {
+async 
+function saveTargetNote() {
+  const target = parseFloat(document.getElementById('target-note').value)
+  if (!target || target < 1 || target > 5) return showNotif('Note invalide (entre 1 et 5)', 'error')
+  localStorage.setItem('target_note', target)
+  showNotif('Objectif enregistré !', 'success')
+  updateTargetProgress()
+}
+
+function updateTargetProgress() {
+  const target = parseFloat(localStorage.getItem('target_note'))
+  const current = parseFloat(document.getElementById('stat-note').textContent)
+  const progress = document.getElementById('target-progress')
+  
+  if (!target || isNaN(current)) return
+  
+  progress.style.display = 'block'
+  document.getElementById('target-current').textContent = current.toFixed(1)
+  document.getElementById('target-goal').textContent = target.toFixed(1)
+  document.getElementById('target-note').value = target
+  
+  const pct = Math.min(100, Math.round((current / target) * 100))
+  document.getElementById('target-bar').style.width = pct + '%'
+  
+  const remaining = (target - current).toFixed(1)
+  if (current >= target) {
+    document.getElementById('target-label').textContent = '🎉 Objectif atteint !'
+    document.getElementById('target-label').style.color = '#10b981'
+  } else {
+    document.getElementById('target-label').textContent = `${pct}% — encore +${remaining}★`
+  }
+}
+
+function saveSettings() {
   const firstname = document.getElementById('set-firstname').value.trim()
   const lastname = document.getElementById('set-lastname').value.trim()
   const { error } = await sb.auth.updateUser({ data: { firstname, lastname } })
