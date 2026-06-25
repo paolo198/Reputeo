@@ -579,6 +579,28 @@ ${reviews}`
             </div>
           </div>`
         })
+        // Calcul estimation impact
+        const currentAvg = parseFloat(document.getElementById('stat-note').textContent)
+        const negCount = parsed2.priorites.length
+        const estimatedGain = (negCount * 0.15).toFixed(1)
+        const estimatedNote = Math.min(5, (currentAvg + parseFloat(estimatedGain))).toFixed(1)
+        
+        html2 += `<div style="margin:16px 0;padding:20px;background:linear-gradient(135deg,rgba(79,110,247,0.1),rgba(124,58,237,0.1));border:1px solid rgba(79,110,247,0.25);border-radius:12px;text-align:center">
+          <div style="font-size:0.72rem;font-weight:600;color:rgba(79,110,247,0.8);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px">🎯 Impact estimé si vous agissez</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:16px">
+            <div>
+              <div style="font-size:2rem;font-weight:800;color:rgba(255,255,255,0.4)">${currentAvg}★</div>
+              <div style="font-size:0.72rem;color:rgba(255,255,255,0.3)">Note actuelle</div>
+            </div>
+            <div style="font-size:1.5rem;color:rgba(79,110,247,0.6)">→</div>
+            <div>
+              <div style="font-size:2rem;font-weight:800;background:linear-gradient(135deg,#4f6ef7,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent">${estimatedNote}★</div>
+              <div style="font-size:0.72rem;color:rgba(79,110,247,0.6)">Note estimée</div>
+            </div>
+          </div>
+          <div style="font-size:0.78rem;color:rgba(255,255,255,0.4);margin-top:10px">En résolvant vos ${negCount} priorités identifiées</div>
+        </div>`
+        
         html2 += `<button onclick="genererPlanAction()" class="btn-primary" style="margin-top:8px;width:100%;text-align:center">📋 Générer un plan d'action détaillé</button>`
         conseils.innerHTML = html2
       } catch(e) {
