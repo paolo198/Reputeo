@@ -160,7 +160,7 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
   <button class="nav-item" id="nav-connect" onclick="showPage('connect',this)">🔗 Connexions</button>
   <div class="nav-section">Outils</div>
   <button class="nav-item" id="nav-analyzer" onclick="showPage('analyzer',this)">🤖 Analyseur IA</button>
-  <button class="nav-item" id="nav-reports" onclick="showPage('reports',this)">📬 Rapports</button>
+  <button class="nav-item" id="nav-reports" onclick="showPage('reports',this)">🛠️ Outils</button>
   <button class="nav-item" id="nav-analyse" onclick="showPage('analyse',this)">🔍 Analyse IA</button>
   <button class="nav-item" id="nav-subscription" onclick="showPage('subscription',this)" style="display:none">💳 Abonnement</button>
   <div class="sidebar-bottom" style="position:relative">
@@ -310,10 +310,38 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
   </div>
 
   <div class="page" id="page-reports">
-    <div class="page-title">Rapports</div>
-    <div class="page-sub">Vos rapports hebdomadaires automatiques.</div>
-    <div class="section-card">
-      <div class="empty"><div class="empty-icon">📬</div><div class="empty-title">Aucun rapport généré</div><div class="empty-text">Votre premier rapport sera envoyé le lundi suivant votre connexion.</div></div>
+    <div class="page-title">Outils</div>
+    <div class="page-sub">Boostez votre réputation avec ces outils.</div>
+    
+    <div class="section-card" style="padding:32px;margin-bottom:24px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <span style="font-size:1.4rem">⭐</span>
+        <div style="font-family:Syne,sans-serif;font-weight:700;font-size:1.1rem">Demande d'avis automatique</div>
+      </div>
+      <div style="font-size:0.85rem;color:rgba(255,255,255,0.4);margin-bottom:24px">Envoyez un email personnalisé à vos clients pour les inviter à laisser un avis Google.</div>
+      <div style="display:flex;flex-direction:column;gap:12px;max-width:480px">
+        <div>
+          <label style="font-size:0.78rem;color:rgba(255,255,255,0.5);margin-bottom:6px;display:block">Prénom du client</label>
+          <input id="req-firstname" type="text" placeholder="Ex: Marie" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#f0f0ff;font-family:Inter,sans-serif;font-size:0.875rem;outline:none">
+        </div>
+        <div>
+          <label style="font-size:0.78rem;color:rgba(255,255,255,0.5);margin-bottom:6px;display:block">Email du client</label>
+          <input id="req-email" type="email" placeholder="client@email.com" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#f0f0ff;font-family:Inter,sans-serif;font-size:0.875rem;outline:none">
+        </div>
+        <div>
+          <label style="font-size:0.78rem;color:rgba(255,255,255,0.5);margin-bottom:6px;display:block">Lien Google Maps de votre établissement</label>
+          <input id="req-link" type="url" placeholder="https://g.page/votre-etablissement/review" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#f0f0ff;font-family:Inter,sans-serif;font-size:0.875rem;outline:none">
+        </div>
+        <button onclick="sendReviewRequest()" class="btn-primary" id="btn-req-avis" style="width:100%;margin-top:8px">✉️ Envoyer la demande d'avis</button>
+      </div>
+    </div>
+
+    <div class="section-card" style="padding:32px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <span style="font-size:1.4rem">📬</span>
+        <div style="font-family:Syne,sans-serif;font-weight:700;font-size:1.1rem">Rapport hebdomadaire</div>
+      </div>
+      <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">Votre rapport est envoyé automatiquement chaque lundi matin à votre adresse email.</div>
     </div>
   </div>
 
@@ -1282,6 +1310,42 @@ function setAvatarColor(gradient) {
   document.getElementById('userAvatar').style.background = style
   localStorage.setItem('avatarColor', gradient)
   showNotif('Avatar mis à jour !', 'success')
+}
+
+
+async function sendReviewRequest() {
+  const firstname = document.getElementById('req-firstname').value.trim()
+  const email = document.getElementById('req-email').value.trim()
+  const link = document.getElementById('req-link').value.trim()
+  const btn = document.getElementById('btn-req-avis')
+  
+  if (!email || !link) return showNotif('Email et lien Google requis', 'error')
+  
+  btn.textContent = '⏳ Envoi...'
+  btn.disabled = true
+  
+  const res = await fetch('/api/request-review', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      client_firstname: firstname,
+      client_email: email,
+      google_link: link,
+      business_name: currentUser?.user_metadata?.firstname || ''
+    })
+  })
+  const data = await res.json()
+  
+  if (data.success) {
+    showNotif('Demande d\'avis envoyée !', 'success')
+    document.getElementById('req-firstname').value = ''
+    document.getElementById('req-email').value = ''
+  } else {
+    showNotif('Erreur : ' + data.error, 'error')
+  }
+  
+  btn.textContent = '✉️ Envoyer la demande d\'avis'
+  btn.disabled = false
 }
 
 function saveTargetNote() {
