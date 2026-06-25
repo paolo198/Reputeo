@@ -95,6 +95,17 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
 <body>
 
 
+
+<div id="pseudo-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:2000;align-items:center;justify-content:center">
+  <div style="background:#0d0d1a;border:1px solid rgba(79,110,247,0.3);border-radius:20px;padding:40px;max-width:420px;width:90%;text-align:center">
+    <div style="font-size:1.8rem;margin-bottom:8px">👋</div>
+    <div style="font-family:Syne,sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:8px">Bienvenue sur Reputeo !</div>
+    <div style="color:rgba(255,255,255,0.5);font-size:0.875rem;margin-bottom:28px">Comment voulez-vous être appelé ?</div>
+    <input id="pseudo-input" type="text" placeholder="Votre prénom ou pseudo..." style="width:100%;padding:12px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;color:#f0f0ff;font-family:Inter,sans-serif;font-size:0.9rem;outline:none;margin-bottom:16px">
+    <button onclick="savePseudo()" style="width:100%;padding:14px;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;border:none;border-radius:100px;font-size:0.9rem;font-weight:500;cursor:pointer;font-family:Inter,sans-serif">Continuer →</button>
+  </div>
+</div>
+
 <div id="onboarding-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center">
   <div style="background:#0d0d1a;border:1px solid rgba(79,110,247,0.3);border-radius:20px;padding:40px;max-width:520px;width:90%;position:relative">
     <div style="text-align:center;margin-bottom:32px">
@@ -643,6 +654,33 @@ Max 3 actions par semaine. 1 phrase max par action. En francais. Avis: ${reviews
 }
 
 
+
+
+async function savePseudo() {
+  const pseudo = document.getElementById('pseudo-input').value.trim()
+  if (!pseudo) return
+  
+  // Sauvegarder dans Supabase
+  await sb.auth.updateUser({ data: { firstname: pseudo } })
+  
+  // Mettre à jour l'affichage
+  document.getElementById('welcomeTitle').textContent = `Bonjour ${pseudo} 👋`
+  
+  // Fermer le modal
+  document.getElementById('pseudo-modal').style.display = 'none'
+  localStorage.setItem('pseudo_set', '1')
+  
+  // Montrer l'onboarding si première fois
+  const onboardingDone = localStorage.getItem('onboarding_done')
+  if (!onboardingDone) {
+    setTimeout(() => showOnboarding(), 300)
+  }
+}
+
+function showPseudoModal() {
+  const modal = document.getElementById('pseudo-modal')
+  if (modal) modal.style.display = 'flex'
+}
 
 function closeOnboarding() {
   const modal = document.getElementById('onboarding-modal')
@@ -1257,9 +1295,15 @@ async function changePassword() {
   loadGoogleReviews()
   
   // Onboarding
-  const onboardingDone = localStorage.getItem('onboarding_done')
-  if (!onboardingDone) {
-    setTimeout(() => showOnboarding(), 800)
+  const pseudoSet = localStorage.getItem('pseudo_set')
+  const meta2 = currentUser.user_metadata || {}
+  if (!pseudoSet && !meta2.firstname) {
+    setTimeout(() => showPseudoModal(), 500)
+  } else {
+    const onboardingDone = localStorage.getItem('onboarding_done')
+    if (!onboardingDone) {
+      setTimeout(() => showOnboarding(), 800)
+    }
   }
 })()
 
