@@ -93,7 +93,7 @@ export default async function handler(req, res) {
     if (!subject) return res.status(400).json({ error: 'Unknown email type' })
 
     const result = await resend.emails.send({
-      from: 'Reputeo <onboarding@resend.dev>',
+      from: 'Reputeo <noreply@reputeo.app>',
       to,
       subject,
       html

@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   const resend = new Resend(process.env.RESEND_API_KEY)
 
   const { error } = await resend.emails.send({
-    from: 'Reputeo <onboarding@resend.dev>',
+    from: 'Reputeo <noreply@reputeo.app>',
     to: client_email,
     subject: `${client_firstname ? client_firstname + ', votre' : 'Votre'} avis compte beaucoup pour nous ⭐`,
     html: `

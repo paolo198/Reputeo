@@ -111,7 +111,7 @@ export default async function handler(req, res) {
             const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating)
             const sentiment = r.rating >= 4 ? '🟢 Positif' : r.rating <= 2 ? '🔴 Négatif' : '🟡 Neutre'
             await resend.emails.send({
-              from: 'Reputeo <onboarding@resend.dev>',
+              from: 'Reputeo <noreply@reputeo.app>',
               to: user.email,
               subject: `${r.rating >= 4 ? '🌟' : '⚠️'} Nouvel avis de ${r.author} — ${stars}`,
               html: `

@@ -43,7 +43,7 @@ export default async function handler(req, res) {
       const negative = reviews.filter(r => r.rating <= 2).length
 
       await resend.emails.send({
-        from: 'Reputeo <onboarding@resend.dev>',
+        from: 'Reputeo <noreply@reputeo.app>',
         to: user.email,
         subject: `📊 Votre rapport Reputeo — Semaine du ${new Date().toLocaleDateString('fr-FR')}`,
         html: `
