@@ -47,6 +47,7 @@ export default async function handler(req, res) {
       subscription_data: {
         trial_period_days: 14
       },
+      allow_promotion_codes: true,
       success_url: `https://reputeo.app/dashboard.html?paid=true`,
       cancel_url: `https://reputeo.app/dashboard.html?cancelled=true`
     })
