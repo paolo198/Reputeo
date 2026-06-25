@@ -4,5 +4,8 @@
       "path": "/api/weekly-report",
       "schedule": "0 8 * * 1"
     }
+  ],
+  "rewrites": [
+    { "source": "/privacy", "destination": "/privacy.html" }
   ]
 }
