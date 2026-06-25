@@ -159,7 +159,7 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
   <div class="page active" id="page-overview">
     <div class="page-title" id="welcomeTitle">Bonjour 👋</div>
     <div class="page-sub">Voici l'état de votre réputation en ligne.</div>
-    <div class="stats-grid">
+    <div class="stats-grid" style="grid-template-columns:repeat(5,1fr)">
       <div class="stat-card"><div class="stat-label">Note globale</div><div class="stat-value" id="stat-note">—</div><div class="stat-delta" id="stat-note-delta">Connectez une plateforme</div></div>
       <div class="stat-card"><div class="stat-label">Avis cette semaine</div><div class="stat-value" id="stat-week">0</div><div class="stat-delta">En attente</div></div>
       <div class="stat-card"><div class="stat-label">Avis positifs</div><div class="stat-value" id="stat-pos">0%</div><div class="stat-delta" id="stat-pos-delta">—</div></div>
@@ -1205,7 +1205,8 @@ async function changePassword() {
   const email = currentUser.email || ''
   document.getElementById('userEmail').textContent = email
   document.getElementById('userAvatar').textContent = email[0].toUpperCase()
-  document.getElementById('welcomeTitle').textContent = `Bonjour ${email.split('@')[0]} 👋`
+  const displayName = meta.firstname || email.split('@')[0]
+  document.getElementById('welcomeTitle').textContent = `Bonjour ${displayName} 👋`
   document.getElementById('set-email').value = email
   const meta = currentUser.user_metadata || {}
   if (meta.firstname) document.getElementById('set-firstname').value = meta.firstname
