@@ -160,9 +160,9 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
     <div class="page-title" id="welcomeTitle">Bonjour 👋</div>
     <div class="page-sub">Voici l'état de votre réputation en ligne.</div>
     <div class="stats-grid">
-      <div class="stat-card"><div class="stat-label">Note globale</div><div class="stat-value" id="stat-note">—</div><div class="stat-delta">Connectez une plateforme</div></div>
+      <div class="stat-card"><div class="stat-label">Note globale</div><div class="stat-value" id="stat-note">—</div><div class="stat-delta" id="stat-note-delta">Connectez une plateforme</div></div>
       <div class="stat-card"><div class="stat-label">Avis cette semaine</div><div class="stat-value" id="stat-week">0</div><div class="stat-delta">En attente</div></div>
-      <div class="stat-card"><div class="stat-label">Avis positifs</div><div class="stat-value" id="stat-pos">0%</div><div class="stat-delta">—</div></div>
+      <div class="stat-card"><div class="stat-label">Avis positifs</div><div class="stat-value" id="stat-pos">0%</div><div class="stat-delta" id="stat-pos-delta">—</div></div>
       <div class="stat-card"><div class="stat-label">À répondre</div><div class="stat-value" id="stat-reply">0</div><div class="stat-delta">—</div></div>
       <div class="stat-card" style="border-color:rgba(79,110,247,0.3)"><div class="stat-label">Score Reputeo</div><div class="stat-value" id="stat-score" style="background:linear-gradient(135deg,#4f6ef7,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent">—</div><div class="stat-delta" id="stat-score-label">En attente</div></div>
     </div>
@@ -1009,6 +1009,30 @@ function updateStats(reviews) {
   const pos = Math.round(reviews.filter(r => r.rating >= 4).length / reviews.length * 100)
   const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
   document.getElementById('stat-note').textContent = avg + ' ★'
+  
+  // Evolution note sur 7 jours
+  const weekAgo2 = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+  const oldReviews = reviews.filter(r => new Date(r.date) < weekAgo2)
+  const noteDelta = document.getElementById('stat-note-delta')
+  const posDelta = document.getElementById('stat-pos-delta')
+  if (oldReviews.length > 0) {
+    const oldAvg = (oldReviews.reduce((s, r) => s + r.rating, 0) / oldReviews.length).toFixed(1)
+    const diff = (parseFloat(avg) - parseFloat(oldAvg)).toFixed(1)
+    if (noteDelta) {
+      if (diff > 0) { noteDelta.textContent = '↑ +' + diff + ' vs semaine dernière'; noteDelta.style.color = '#10b981' }
+      else if (diff < 0) { noteDelta.textContent = '↓ ' + diff + ' vs semaine dernière'; noteDelta.style.color = '#ef4444' }
+      else { noteDelta.textContent = '→ Stable vs semaine dernière'; noteDelta.style.color = '' }
+    }
+    const oldPos = Math.round(oldReviews.filter(r => r.rating >= 4).length / oldReviews.length * 100)
+    const posDiff = pos - oldPos
+    if (posDelta) {
+      if (posDiff > 0) { posDelta.textContent = '↑ +' + posDiff + '% vs semaine dernière'; posDelta.style.color = '#10b981' }
+      else if (posDiff < 0) { posDelta.textContent = '↓ ' + posDiff + '% vs semaine dernière'; posDelta.style.color = '#ef4444' }
+      else { posDelta.textContent = '→ Stable vs semaine dernière'; posDelta.style.color = '' }
+    }
+  } else {
+    if (noteDelta) noteDelta.textContent = 'Pas assez de données'
+  }
   document.getElementById('stat-pos').textContent = pos + '%'
   document.getElementById('stat-week').textContent = reviews.filter(r => new Date(r.date) > weekAgo).length
   const noReply = reviews.filter(r => !r.reply).length
