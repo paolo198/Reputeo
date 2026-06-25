@@ -160,7 +160,7 @@ textarea:focus{border-color:rgba(79,110,247,0.4)}
   <button class="nav-item" id="nav-connect" onclick="showPage('connect',this)">🔗 Connexions</button>
   <div class="nav-section">Outils</div>
   <button class="nav-item" id="nav-analyzer" onclick="showPage('analyzer',this)">🤖 Analyseur IA</button>
-  <button class="nav-item" id="nav-reports" onclick="showPage('reports',this)">🛠️ Outils</button>
+  <button class="nav-item" id="nav-reports" onclick="showPage('reports',this);prefillGoogleLink()">🛠️ Outils</button>
   <button class="nav-item" id="nav-weekly" onclick="showPage('weekly',this)">📬 Rapports</button>
   <button class="nav-item" id="nav-analyse" onclick="showPage('analyse',this)">🔍 Analyse IA</button>
   <button class="nav-item" id="nav-subscription" onclick="showPage('subscription',this)" style="display:none">💳 Abonnement</button>
@@ -1353,6 +1353,15 @@ async function sendReviewRequest() {
   
   btn.textContent = '✉️ Envoyer la demande d\'avis'
   btn.disabled = false
+}
+
+
+function prefillGoogleLink() {
+  const savedLink = localStorage.getItem('google_review_link')
+  if (savedLink) {
+    const input = document.getElementById('req-link')
+    if (input) input.value = savedLink
+  }
 }
 
 function saveTargetNote() {
