@@ -10,6 +10,7 @@ export default async function handler(req, res) {
 
   try {
     const stripe = (await import('stripe')).default
+    console.log("STRIPE KEY PREFIX:", process.env.STRIPE_SECRET_KEY?.substring(0, 10))
     const stripeClient = stripe(process.env.STRIPE_SECRET_KEY)
     const { createClient } = await import('@supabase/supabase-js')
     const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
