@@ -32,6 +32,28 @@ export default async function handler(req, res) {
   try {
     const sub = event.data.object
 
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object
+      if (session.mode === 'subscription' && session.subscription && session.customer) {
+        const stripeClient = (await import('stripe')).default(process.env.STRIPE_SECRET_KEY)
+        const subscription = await stripeClient.subscriptions.retrieve(session.subscription)
+        const isActive = ['active', 'trialing'].includes(subscription.status)
+        const { data: record } = await sb
+          .from('subscriptions')
+          .select('user_id')
+          .eq('stripe_customer_id', session.customer)
+          .maybeSingle()
+
+        if (record) {
+          await sb.from('subscriptions').update({
+            stripe_subscription_id: subscription.id,
+            status: isActive ? 'active' : 'inactive',
+            trial_ends_at: subscription.trial_end ? new Date(subscription.trial_end * 1000).toISOString() : null
+          }).eq('user_id', record.user_id)
+        }
+      }
+    }
+
     if (event.type === 'customer.subscription.created' || event.type === 'customer.subscription.updated') {
       const isActive = ['active', 'trialing'].includes(sub.status)
       const customerId = sub.customer
@@ -57,7 +79,7 @@ export default async function handler(req, res) {
           if (customer.email) {
             await fetch(`${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'https://reputeo.app'}/api/send-email`, {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 'Content-Type': 'application/json', 'x-reputeo-internal-secret': process.env.STRIPE_WEBHOOK_SECRET },
               body: JSON.stringify({
                 type: 'welcome',
                 to: customer.email,
@@ -73,6 +95,30 @@ export default async function handler(req, res) {
       await sb.from('subscriptions').update({
         status: 'inactive'
       }).eq('stripe_customer_id', sub.customer)
+    }
+
+    // Stripe sends this only after a successful collection. The first invoice
+    // of a free trial has an amount of zero, so it is intentionally excluded.
+    if (event.type === 'invoice.paid' && sub.amount_paid > 0) {
+      const stripeClient = (await import('stripe')).default(process.env.STRIPE_SECRET_KEY)
+      const customer = await stripeClient.customers.retrieve(sub.customer)
+      if (customer?.email) {
+        const amount = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: String(sub.currency || 'eur').toUpperCase() }).format(sub.amount_paid / 100)
+        await fetch(`${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'https://reputeo.app'}/api/send-email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-reputeo-internal-secret': process.env.STRIPE_WEBHOOK_SECRET },
+          body: JSON.stringify({
+            type: 'payment_receipt',
+            to: customer.email,
+            data: {
+              amount,
+              date: new Date(sub.status_transitions?.paid_at ? sub.status_transitions.paid_at * 1000 : Date.now()).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }),
+              invoiceUrl: sub.hosted_invoice_url || 'https://reputeo.app/dashboard.html',
+              idempotencyKey: `payment-receipt/${sub.id}`
+            }
+          })
+        })
+      }
     }
 
     res.status(200).json({ received: true })

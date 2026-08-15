@@ -1,13 +1,39 @@
+import { requireUser } from '../lib/session.js'
+import { requirePremiumAccess } from '../lib/access.js'
+
+function text(value, maxLength = 600) {
+  return String(value || '').replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, maxLength)
+}
+
+function textList(value) {
+  if (!Array.isArray(value)) return []
+  return value.map(item => text(item, 240)).filter(Boolean).slice(0, 6)
+}
+
+function cleanAnalysis(value) {
+  const sentiment = ['Positif', 'Négatif', 'Neutre'].includes(value?.sentiment) ? value.sentiment : 'Neutre'
+  const rawScore = Number(value?.score)
+  const score = Number.isFinite(rawScore) ? Math.max(1, Math.min(10, Math.round(rawScore))) : 5
+
+  return {
+    sentiment,
+    score,
+    points_positifs: textList(value?.points_positifs),
+    points_negatifs: textList(value?.points_negatifs),
+    resume: text(value?.resume, 700),
+    suggestion: text(value?.suggestion, 700)
+  }
+}
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  const user = await requireUser(req, res)
+  if (!user) return
+  if (!await requirePremiumAccess(user, res)) return
 
-  const { review } = req.body;
+  const review = String(req.body?.review || '').trim()
   if (!review) return res.status(400).json({ error: 'Avis manquant' });
+  if (review.length > 6000) return res.status(400).json({ error: 'L’avis est trop long (6 000 caractères maximum).' })
 
   try {
     const response = await fetch("https://api.anthropic.com/v1/messages", {
@@ -39,9 +65,9 @@ export default async function handler(req, res) {
     }
     const raw = data.content[0].text.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(raw);
-    res.status(200).json(parsed);
+    res.status(200).json(cleanAnalysis(parsed));
   } catch (e) {
-    console.error('Erreur complète:', e);
-    res.status(500).json({ error: e.message, stack: e.stack });
+    console.error('Analyse IA error:', e);
+    res.status(502).json({ error: 'L’analyse est momentanément indisponible. Réessayez dans quelques instants.' });
   }
 }
