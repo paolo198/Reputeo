@@ -3,14 +3,82 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Reputeo — Ma fiche Google</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    *{box-sizing:border-box}body{margin:0;background:#080810;color:#f0f0ff;font-family:Inter,Arial,sans-serif;min-height:100vh;display:flex}.side{width:240px;background:#0d0d1a;border-right:1px solid rgba(255,255,255,.07);padding:30px 16px}.logo{font:800 22px Syne,sans-serif;letter-spacing:-.06em;margin:0 10px 40px}.logo span{background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:transparent;background-clip:text}.small{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:rgba(255,255,255,.34);margin:22px 10px 8px}.nav{padding:11px 12px;border-radius:10px;color:rgba(255,255,255,.46);font-size:14px;margin:3px 0}.nav.active{background:rgba(79,110,247,.13);color:#fff}.main{flex:1;padding:48px;max-width:1120px}.title{font:800 34px Syne,sans-serif;letter-spacing:-.05em;margin:0 0 6px}.sub{color:rgba(255,255,255,.42);margin:0 0 36px}.card{background:#0d0d1a;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:34px;max-width:850px}.steps{display:flex;gap:10px;align-items:center;font-size:12px;color:rgba(255,255,255,.42);margin-bottom:28px}.dot{width:25px;height:25px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:white}.notice{padding:16px 18px;background:rgba(79,110,247,.08);border:1px solid rgba(79,110,247,.2);border-radius:12px;color:rgba(255,255,255,.62);font-size:13px;line-height:1.6;margin-bottom:26px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{margin-bottom:4px}.field label{display:block;color:rgba(255,255,255,.43);font-size:12px;margin-bottom:8px}.input{width:100%;padding:13px 15px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:rgba(255,255,255,.55);font:14px Inter}.text{height:110px;line-height:1.6}.check{display:flex;gap:10px;margin:24px 0;color:rgba(255,255,255,.54);font-size:12px;line-height:1.5}.button{display:inline-block;padding:13px 23px;border:0;border-radius:100px;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;font:500 14px Inter}.badge{display:inline-block;margin-left:13px;color:#34d399;font-size:12px}@media(max-width:700px){.side{display:none}.main{padding:28px 18px}.grid{grid-template-columns:1fr}.card{padding:22px}.title{font-size:29px}}
-  </style>
+  <meta name="theme-color" content="#0f766e">
+  <title>Reputeo — Aperçu de la fiche Google</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/profile-preview.css">
 </head>
-<body>
-  <aside class="side"><div class="logo">Repute<span>o</span></div><div class="small">Principal</div><div class="nav">📊 Vue d’ensemble</div><div class="nav">⭐ Mes avis</div><div class="nav">🔗 Connexions</div><div class="nav active">🏪 Ma fiche Google</div><div class="small">Outils</div><div class="nav">🤖 Analyseur IA</div><div class="nav">📬 Rapports</div></aside>
-  <main class="main"><h1 class="title">Ma fiche Google</h1><p class="sub">Créez ou complétez votre fiche Google Business sans quitter Reputeo.</p><section class="card"><div class="steps"><span class="dot">1</span> Informations réelles <span>→</span> 2 Vérification Google <span>→</span> 3 Création</div><div class="notice">Pour les entreprises de service comme le nettoyage : la fiche peut être créée sans afficher d’adresse publique. Google demandera ensuite au propriétaire de vérifier l’entreprise.</div><div class="grid"><div class="field"><label>Nom réel de l’entreprise</label><div class="input">Ex. Propreté Martin</div></div><div class="field"><label>Catégorie principale</label><div class="input">Entreprise de nettoyage</div></div><div class="field"><label>Téléphone</label><div class="input">03 20 00 00 00</div></div><div class="field"><label>Site web <span style="opacity:.6">(facultatif)</span></label><div class="input">https://proprete-martin.fr</div></div></div><div class="field" style="margin-top:16px"><label>Description de l’entreprise</label><div class="input text">Entreprise de nettoyage professionnel intervenant auprès des bureaux, commerces et copropriétés dans la métropole lilloise.</div></div><div class="check">☑ <span>Je confirme que ces informations décrivent mon entreprise réelle et que je suis autorisé à créer cette fiche.</span></div><button class="button">Vérifier avec Google →</button><span class="badge">La création reste bloquée jusqu’à la validation.</span></section></main>
+<body class="profile-preview-page">
+  <a class="skip-link" href="#preview-content">Aller au contenu</a>
+  <aside class="preview-sidebar" aria-label="Aperçu de la navigation Reputeo">
+    <a class="preview-brand" href="/" aria-label="Reputeo, accueil"><img src="/favicon.svg" alt=""><span>Repute<em>o</em></span></a>
+    <div class="preview-nav-label">Réputation</div>
+    <nav class="preview-nav">
+      <span class="preview-nav-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20V7"/></svg>Vue d’ensemble</span>
+      <span class="preview-nav-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg>Avis</span>
+      <span class="preview-nav-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM4 7l8 6 8-6"/></svg>Demandes d’avis</span>
+    </nav>
+    <div class="preview-nav-label">Google Business</div>
+    <nav class="preview-nav">
+      <span class="preview-nav-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1.2 1.2M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1.2-1.2"/></svg>Connexions</span>
+      <span class="preview-nav-item is-active" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V8l8-5 8 5v13M9 21v-7h6v7M3 21h18"/></svg>Ma fiche Google</span>
+    </nav>
+    <div class="preview-sidebar-note"><small>Aperçu produit</small><strong>Aucune donnée n’est envoyée</strong></div>
+  </aside>
+
+  <main class="preview-main" id="preview-content">
+    <div class="preview-contextbar"><i aria-hidden="true"></i>Aperçu sécurisé</div>
+    <div class="preview-content">
+      <header class="preview-header">
+        <span class="preview-kicker">Google Business · Prévisualisation</span>
+        <h1>Une fiche fidèle à votre activité.</h1>
+        <p>Rassemblez les informations essentielles avant de poursuivre la vérification directement auprès de Google.</p>
+      </header>
+
+      <div class="preview-layout">
+        <section class="preview-card" aria-labelledby="profile-preview-title">
+          <div class="preview-card-head">
+            <h2 id="profile-preview-title">Informations de l’entreprise</h2>
+            <p>Cet aperçu illustre le parcours. Rien n’est transmis depuis cette page.</p>
+          </div>
+          <div class="preview-form">
+            <div class="preview-progress" aria-label="Étapes de création">
+              <span class="is-current"><b>1</b>Informations réelles</span>
+              <span><b>2</b>Vérification Google</span>
+              <span><b>3</b>Création</span>
+            </div>
+            <div class="preview-notice"><strong>Bon à savoir</strong><span>Une entreprise de service peut masquer son adresse publique et préciser uniquement sa zone d’intervention.</span></div>
+            <div class="preview-fields">
+              <div class="preview-field"><label>Nom réel de l’entreprise</label><div class="preview-value">Propreté Martin</div></div>
+              <div class="preview-field"><label>Catégorie principale</label><div class="preview-value">Entreprise de nettoyage</div></div>
+              <div class="preview-field"><label>Téléphone</label><div class="preview-value">03 20 00 00 00</div></div>
+              <div class="preview-field"><label>Site web <span class="sr-only">facultatif</span></label><div class="preview-value">proprete-martin.fr</div></div>
+              <div class="preview-field is-wide"><label>Description de l’entreprise</label><div class="preview-value is-textarea">Entreprise de nettoyage professionnel intervenant auprès des bureaux, commerces et copropriétés dans la métropole lilloise.</div></div>
+            </div>
+            <div class="preview-check"><i aria-hidden="true">✓</i><span>Je confirme que ces informations décrivent mon entreprise réelle et que je suis autorisé à créer cette fiche.</span></div>
+            <div class="preview-actions"><button class="preview-primary" type="button">Continuer avec Google <span aria-hidden="true">→</span></button><span>La création reste soumise à la validation de Google.</span></div>
+          </div>
+        </section>
+
+        <aside class="preview-aside" aria-label="Résumé de l’aperçu">
+          <section class="preview-card preview-status">
+            <div class="preview-status-icon" aria-hidden="true">G</div>
+            <small>Étape actuelle</small>
+            <h3>Informations à relire</h3>
+            <p>Vérifiez que le nom, la catégorie et la zone d’activité correspondent exactement à votre entreprise.</p>
+          </section>
+          <section class="preview-card preview-detail">
+            <div><span>Adresse publique</span><strong>Masquée</strong></div>
+            <div><span>Zone desservie</span><strong>Métropole lilloise</strong></div>
+            <div><span>Publication</span><strong>Après validation</strong></div>
+          </section>
+        </aside>
+      </div>
+    </div>
+  </main>
 </body>
 </html>

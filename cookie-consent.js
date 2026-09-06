@@ -4,7 +4,9 @@
   var STORAGE_KEY = 'reputeo_google_consent';
   var TAG_ID = 'AW-18389262632';
   var GA4_TAG_ID = 'G-DGH5J2HRJB';
+  var SIGN_UP_CONVERSION = 'AW-18389262632/TR-SCJi7yOEcEKjC18BE';
   var tagLoaded = false;
+  var trackedConversions = {};
 
   window.dataLayer = window.dataLayer || [];
   window.gtag = window.gtag || function () {
@@ -75,6 +77,31 @@
     return true;
   };
 
+  // Conversion Google Ads : seulement après la création effective d'un compte,
+  // jamais à la simple visite de la page. L'identifiant Supabase évite les doublons.
+  window.reputeoTrackSignUpConversion = function (userId) {
+    if (!userId || getChoice() !== 'granted') {
+      return false;
+    }
+
+    var storageKey = 'reputeo_google_ads_signup_' + userId;
+    try {
+      if (window.sessionStorage.getItem(storageKey) || trackedConversions[storageKey]) {
+        return false;
+      }
+      window.sessionStorage.setItem(storageKey, '1');
+    } catch (error) {
+      if (trackedConversions[storageKey]) {
+        return false;
+      }
+    }
+
+    trackedConversions[storageKey] = true;
+    enableGoogleTag();
+    window.gtag('event', 'conversion', { send_to: SIGN_UP_CONVERSION });
+    return true;
+  };
+
   function addStyles() {
     if (document.getElementById('reputeo-cookie-styles')) {
       return;
@@ -83,16 +110,22 @@
     var style = document.createElement('style');
     style.id = 'reputeo-cookie-styles';
     style.textContent = [
-      '#reputeo-cookie-banner{position:fixed;z-index:2147483647;left:24px;bottom:24px;width:min(520px,calc(100vw - 48px));box-sizing:border-box;padding:28px 30px 26px;border:1px solid rgba(20,34,57,.17);border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.99),rgba(246,250,250,.98));box-shadow:0 24px 64px rgba(15,29,50,.22);font-family:inherit;color:#142239}',
+      '#reputeo-cookie-banner{position:fixed;z-index:2147483647;left:24px;bottom:24px;width:min(500px,calc(100vw - 48px));box-sizing:border-box;padding:24px;border:1px solid #cfdad7;border-radius:16px;background:#fff;box-shadow:0 24px 64px rgba(21,35,31,.2);font-family:inherit;color:#172033;animation:reputeoCookieIn .24s cubic-bezier(.2,.8,.2,1) both}',
       '#reputeo-cookie-banner.is-hidden{display:none}',
-      '#reputeo-cookie-banner h2{margin:0 0 10px;font-size:23px;line-height:1.12;letter-spacing:-.04em}',
-      '#reputeo-cookie-banner p{max-width:440px;margin:0;color:#5f6f87;font-size:15px;line-height:1.55}',
-      '#reputeo-cookie-actions{display:flex;align-items:center;gap:12px;margin-top:24px}',
-      '#reputeo-cookie-actions button{min-height:44px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,background .18s ease}',
-      '#reputeo-cookie-actions button:hover{transform:translateY(-1px)}',
-      '#reputeo-cookie-accept{border:1px solid #0f6f69;border-radius:999px;padding:11px 20px;background:#0e8279;color:#fff;box-shadow:0 9px 20px rgba(14,130,121,.22)}',
-      '#reputeo-cookie-reject{border:1px solid #cbd5df;border-radius:999px;padding:11px 18px;background:rgba(255,255,255,.72);color:#142239}',
-      '@media(max-width:640px){#reputeo-cookie-banner{left:14px;bottom:14px;width:calc(100vw - 28px);padding:24px 22px;border-radius:20px}#reputeo-cookie-banner h2{font-size:21px}#reputeo-cookie-actions{flex-direction:column-reverse;align-items:stretch}#reputeo-cookie-actions button{width:100%}}'
+      '#reputeo-cookie-banner h2{margin:0 0 9px;font:700 20px/1.18 Manrope,DM Sans,sans-serif;letter-spacing:-.045em}',
+      '#reputeo-cookie-banner p{max-width:450px;margin:0;color:#667085;font-size:14px;line-height:1.6}',
+      '#reputeo-cookie-banner p a{color:#0b5f58;font-weight:700;text-underline-offset:3px}',
+      '#reputeo-cookie-actions{display:flex;align-items:center;justify-content:flex-end;gap:9px;margin-top:21px}',
+      '#reputeo-cookie-actions button{min-height:42px;padding:9px 15px;border-radius:9px;font:700 13px DM Sans,sans-serif;cursor:pointer;transition:transform .1s ease,box-shadow .16s ease,background .16s ease,border-color .16s ease}',
+      '#reputeo-cookie-actions button:focus-visible{outline:3px solid rgba(25,138,128,.28);outline-offset:2px}',
+      '#reputeo-cookie-actions button:active{transform:scale(.985)}',
+      '#reputeo-cookie-accept{border:1px solid #0b5f58;background:#0b5f58;color:#fff;box-shadow:0 7px 16px rgba(11,95,88,.15)}',
+      '#reputeo-cookie-accept:hover{background:#084b47}',
+      '#reputeo-cookie-reject{border:1px solid #c8d4d1;background:#fff;color:#25364b}',
+      '#reputeo-cookie-reject:hover{border-color:#9fb7b1;background:#f7faf9;color:#0b5f58}',
+      '@keyframes reputeoCookieIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}',
+      '@media(max-width:640px){#reputeo-cookie-banner{left:12px;bottom:12px;width:calc(100vw - 24px);padding:21px 18px calc(18px + env(safe-area-inset-bottom));border-radius:14px}#reputeo-cookie-banner h2{font-size:19px}#reputeo-cookie-actions{display:grid;grid-template-columns:1fr 1fr}#reputeo-cookie-actions button{width:100%}}',
+      '@media(prefers-reduced-motion:reduce){#reputeo-cookie-banner{animation:none}}'
     ].join('');
     document.head.appendChild(style);
   }
@@ -103,13 +136,23 @@
     var banner = document.createElement('aside');
     banner.id = 'reputeo-cookie-banner';
     banner.setAttribute('role', 'dialog');
-    banner.setAttribute('aria-label', 'Préférences de confidentialité');
-    banner.innerHTML = '<h2>Votre vie privée compte.</h2><p>Reputeo utilise des cookies de mesure uniquement avec votre accord, pour comprendre les inscriptions et améliorer nos campagnes.</p><div id="reputeo-cookie-actions"><button id="reputeo-cookie-reject" type="button">Refuser</button><button id="reputeo-cookie-accept" type="button">Accepter les cookies</button></div>';
+    banner.setAttribute('aria-labelledby', 'reputeo-cookie-title');
+    banner.setAttribute('aria-describedby', 'reputeo-cookie-description');
+    banner.innerHTML = '<h2 id="reputeo-cookie-title">Vos préférences, simplement.</h2><p id="reputeo-cookie-description">Les cookies essentiels maintiennent Reputeo opérationnel. Avec votre accord, Google Analytics et Google Ads nous aident à mesurer les inscriptions. <a href="/privacy">En savoir plus</a>.</p><div id="reputeo-cookie-actions"><button id="reputeo-cookie-reject" type="button">Refuser la mesure</button><button id="reputeo-cookie-accept" type="button">Accepter la mesure</button></div>';
 
     document.body.appendChild(banner);
 
     function hideBanner() {
       banner.classList.add('is-hidden');
+    }
+
+    function showBanner() {
+      banner.classList.remove('is-hidden');
+      window.setTimeout(function () {
+        var currentChoice = getChoice();
+        var focusTarget = document.getElementById(currentChoice === 'granted' ? 'reputeo-cookie-accept' : 'reputeo-cookie-reject');
+        if (focusTarget) focusTarget.focus();
+      }, 0);
     }
 
     function choose(choice) {
@@ -120,6 +163,7 @@
         updateConsent(false);
       }
       hideBanner();
+      window.dispatchEvent(new CustomEvent('reputeo:consent', { detail: { choice: choice } }));
     }
 
     document.getElementById('reputeo-cookie-accept').addEventListener('click', function () {
@@ -128,6 +172,7 @@
     document.getElementById('reputeo-cookie-reject').addEventListener('click', function () {
       choose('denied');
     });
+    window.reputeoOpenCookiePreferences = showBanner;
     var choice = getChoice();
     if (choice === 'granted') {
       enableGoogleTag();

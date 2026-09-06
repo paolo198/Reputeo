@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Politique de confidentialité — Reputeo</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root { --bg: #0d0d0d; --surface: #161616; --border: #2a2a2a; --text: #f0f0f0; --muted: #888; --accent: #7C3AED; --accent-light: #a78bfa; }
@@ -26,63 +29,78 @@
     .contact-box h2 { margin-top: 0; }
     footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--border); }
   </style>
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/legal.css">
 </head>
-<body>
-<header><a href="https://reputeo.app" class="logo">Repute<span>o</span></a></header>
+<body class="legal-page">
+<a class="skip-link" href="#contenu">Aller au contenu</a>
+<header><div class="legal-header"><a href="/" class="logo" aria-label="Reputeo, accueil"><img src="/favicon.svg" alt=""><span class="legal-logo-word">Repute<span>o</span></span></a><nav class="legal-nav" aria-label="Navigation"><a href="/terms">Conditions</a><a class="legal-cta" href="/login.html">Mon espace</a></nav></div></header>
 <main>
-  <p class="eyebrow">Legal</p>
-  <h1>Politique de confidentialite</h1>
-  <p class="meta">Derniere mise a jour : 26 juin 2026</p>
-  <p>Reputeo (reputeo.app) est un service de gestion de reputation en ligne pour les petites entreprises. Cette politique decrit comment nous collectons, utilisons et protegeeons vos donnees personnelles.</p>
-  <h2>1. Donnees collectees</h2>
-  <p>Lors de l utilisation de Reputeo, nous collectons les informations suivantes :</p>
+  <p class="eyebrow">CONFIDENTIALITÉ</p>
+  <h1 id="contenu">Politique de confidentialité</h1>
+  <p class="meta">Dernière mise à jour : 5 septembre 2026</p>
+  <p class="legal-intro">Reputeo est un service de gestion de réputation en ligne destiné aux professionnels et petites entreprises. Cette politique explique de façon transparente quelles données sont utilisées, pourquoi elles le sont et quels choix restent à votre disposition.</p>
+  <h2>1. Données collectées</h2>
+  <p>Selon les fonctionnalités que vous utilisez, Reputeo peut traiter :</p>
   <ul>
-    <li>Nom, prenom et adresse e-mail (via l inscription ou Google OAuth)</li>
-    <li>Informations de votre compte Google Business Profile (avis, notes, informations d etablissement) uniquement avec votre consentement explicite</li>
-    <li>Donnees de paiement traitees par Stripe (nous ne stockons pas les informations de carte)</li>
-    <li>Donnees d utilisation du service (pages consultees, fonctionnalites utilisees)</li>
+    <li>votre nom, prénom, adresse e-mail et informations de profil professionnel ;</li>
+    <li>les informations autorisées de votre compte Google Business Profile, notamment les avis, notes et informations d’établissement ;</li>
+    <li>les coordonnées des clients auxquelles vous choisissez d’envoyer une demande d’avis ;</li>
+    <li>les informations techniques nécessaires au fonctionnement, à la sécurité et au diagnostic du service ;</li>
+    <li>des données de mesure d’audience et de conversion uniquement lorsque vous acceptez les cookies correspondants.</li>
   </ul>
-  <h2>2. Utilisation des donnees</h2>
-  <p>Vos donnees sont utilisees pour :</p>
+  <p>Les informations de carte bancaire sont traitées directement par Stripe. Reputeo ne stocke pas les numéros de carte.</p>
+  <h2>2. Utilisation des données</h2>
+  <p>Ces données sont utilisées pour :</p>
   <ul>
-    <li>Fournir et ameliorer les fonctionnalites du service</li>
-    <li>Envoyer des notifications liees a votre compte (alertes nouveaux avis, rapports hebdomadaires)</li>
-    <li>Gerer votre abonnement et les paiements via Stripe</li>
-    <li>Assurer la securite et le bon fonctionnement de la plateforme</li>
+    <li>créer et sécuriser votre compte ;</li>
+    <li>afficher vos avis et publier les réponses que vous validez ;</li>
+    <li>générer des propositions de réponse, analyses et recommandations lorsque vous demandez ces fonctions ;</li>
+    <li>programmer les demandes d’avis que vous configurez et suivre les clics sur leur lien ;</li>
+    <li>gérer votre essai, votre abonnement et vos paiements ;</li>
+    <li>envoyer les e-mails de service et les rapports hebdomadaires disponibles ;</li>
+    <li>améliorer le service et mesurer les inscriptions, avec votre accord lorsque ce consentement est requis.</li>
   </ul>
-  <p>Nous ne vendons, ne louons, et ne partageons jamais vos donnees personnelles avec des tiers a des fins commerciales.</p>
+  <p>Reputeo ne vend ni ne loue vos données personnelles.</p>
   <h2>3. Google OAuth et Google Business Profile</h2>
-  <p>Reputeo utilise l API Google pour acceder a vos avis Google Business Profile. Cet acces necessite votre autorisation explicite via Google OAuth. Vous pouvez revoquer cet acces a tout moment depuis les parametres de votre compte Google.</p>
-  <h2>4. Sous-traitants</h2>
+  <p>La connexion à votre compte Reputeo avec Google et la connexion à Google Business Profile sont deux autorisations distinctes. L’accès aux données Business Profile nécessite votre action explicite. Vous pouvez déconnecter Reputeo depuis l’application et révoquer l’autorisation depuis les paramètres de votre compte Google.</p>
+  <p>Reputeo ne publie aucune réponse à un avis sans votre validation explicite.</p>
+  <h2>4. Intelligence artificielle</h2>
+  <p>Lorsque vous lancez une génération ou une analyse, le texte concerné et le contexte nécessaire peuvent être transmis à Anthropic pour produire le résultat demandé. Une image n’est transmise que si vous la joignez volontairement à l’assistant. Ces contenus ne sont pas utilisés par Reputeo pour publier automatiquement une réponse.</p>
+  <h2>5. Prestataires techniques</h2>
   <ul>
-    <li>Supabase - hebergement de la base de donnees</li>
-    <li>Vercel - hebergement de l application</li>
-    <li>Stripe - traitement des paiements</li>
-    <li>Resend - envoi d emails transactionnels</li>
-    <li>Anthropic - generation de reponses IA</li>
+    <li>Supabase : authentification et stockage des données ;</li>
+    <li>Vercel : hébergement de l’application ;</li>
+    <li>Stripe : gestion des paiements et de l’abonnement ;</li>
+    <li>Resend : envoi des e-mails de service et demandes d’avis ;</li>
+    <li>Anthropic : génération de réponses et analyses assistées ;</li>
+    <li>Google : authentification, Business Profile et, après consentement, mesure d’audience ou de conversion.</li>
   </ul>
-  <h2>5. Conservation des donnees</h2>
-  <p>Vos donnees sont conservees tant que votre compte est actif. En cas de suppression, vos donnees sont effacees dans un delai de 30 jours.</p>
-  <h2>6. Vos droits (RGPD)</h2>
+  <h2>6. Demandes d’avis et désinscription</h2>
+  <p>Vous devez disposer d’un fondement valable avant d’envoyer une demande d’avis à un client. Chaque e-mail automatisé prévoit un lien permettant au destinataire de ne plus recevoir ces demandes de la part de l’entreprise concernée. Reputeo enregistre alors une empreinte non réversible de l’adresse afin d’empêcher les envois futurs.</p>
+  <h2>7. Conservation et suppression</h2>
+  <p>Les données sont conservées pendant la durée nécessaire à la fourniture du service et à l’exécution des obligations applicables. La suppression du compte peut être demandée depuis l’application. Certaines informations peuvent être conservées temporairement lorsqu’une obligation légale, comptable ou de sécurité l’exige.</p>
+  <h2>8. Vos droits</h2>
   <ul>
-    <li>Acces - demander une copie de vos donnees</li>
-    <li>Rectification - corriger des donnees inexactes</li>
-    <li>Suppression - demander l effacement de vos donnees</li>
-    <li>Portabilite - recevoir vos donnees dans un format lisible</li>
-    <li>Opposition - vous opposer a certains traitements</li>
+    <li>accéder à vos données ;</li>
+    <li>faire rectifier des informations inexactes ;</li>
+    <li>demander leur suppression dans les limites applicables ;</li>
+    <li>demander leur portabilité lorsque ce droit s’applique ;</li>
+    <li>vous opposer à certains traitements ou retirer votre consentement.</li>
   </ul>
-  <h2>7. Cookies</h2>
-  <p>Reputeo utilise des cookies essentiels au fonctionnement du service. Aucun cookie publicitaire ou de tracking tiers n est utilise.</p>
-  <h2>8. Securite</h2>
-  <p>Nous mettons en oeuvre des mesures techniques appropriees : chiffrement HTTPS, acces restreint aux bases de donnees, authentification securisee.</p>
-  <h2>9. Modifications</h2>
-  <p>Cette politique peut etre mise a jour. En cas de modification substantielle, vous serez informe par email ou via l application.</p>
+  <h2>9. Cookies et mesure</h2>
+  <p>Les fonctions essentielles d’authentification et de sécurité ne dépendent pas de cookies publicitaires. Google Analytics et la mesure de conversion Google Ads ne sont activés qu’après votre accord dans le bandeau de confidentialité. Vous pouvez modifier ce choix à tout moment.</p>
+  <p><button type="button" class="cookie-settings-link" onclick="window.reputeoOpenCookiePreferences && window.reputeoOpenCookiePreferences()">Gérer mes préférences de cookies</button></p>
+  <h2>10. Sécurité</h2>
+  <p>Reputeo met en œuvre des mesures techniques adaptées, notamment le chiffrement HTTPS, la validation des sessions côté serveur et des accès restreints aux services administratifs. Aucun système ne pouvant garantir un risque nul, ces mesures sont réévaluées avec l’évolution du service.</p>
+  <h2>11. Modifications</h2>
+  <p>Cette politique peut être mise à jour pour suivre l’évolution du produit ou des obligations applicables. En cas de modification substantielle, une information sera présentée par e-mail ou dans l’application.</p>
   <div class="contact-box">
     <h2>Contact</h2>
-    <p>Reputeo<br>Email : contact@reputeo.app<br>Site : reputeo.app</p>
+    <p>Reputeo<br>E-mail : <a href="mailto:contact@reputeo.app">contact@reputeo.app</a><br>Site : <a href="https://reputeo.app">reputeo.app</a></p>
   </div>
 </main>
-<footer>2026 Reputeo - reputeo.app</footer>
+<footer>© 2026 Reputeo · <a href="/terms">Conditions d’utilisation</a> · <a href="/">Accueil</a></footer>
   <script src="/cookie-consent.js" defer></script>
 </body>
 </html>

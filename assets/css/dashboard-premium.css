@@ -1,0 +1,694 @@
+/* Reputeo application — premium trust-first visual system.
+   This layer intentionally sits after the legacy styles while the product is
+   migrated feature by feature. */
+
+:root {
+  --bg: var(--rp-canvas);
+  --bg2: var(--rp-surface);
+  --border: var(--rp-line);
+  --text: var(--rp-ink-900);
+  --muted: var(--rp-ink-600);
+  --accent: var(--rp-pine-600);
+  --accent2: var(--rp-pine-700);
+  --green: var(--rp-success-700);
+  --red: var(--rp-danger-700);
+  --gold: var(--rp-gold-600);
+}
+
+body.reputeo-app {
+  min-width: 320px;
+  background: var(--rp-canvas);
+  color: var(--rp-ink-900);
+  font-family: var(--rp-font-ui);
+}
+
+.app-boot {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  background: var(--rp-canvas);
+  color: var(--rp-ink-600);
+  transition: opacity 220ms ease, visibility 220ms ease;
+}
+.app-boot__brand { display: flex; align-items: center; gap: 10px; color: var(--rp-ink-900); font: 800 1.2rem var(--rp-font-display); letter-spacing: -.07em; }
+.app-boot__brand img { width: 32px; height: 32px; }
+.app-boot__brand span span { color: var(--rp-pine-600); }
+.app-boot__line { width: 150px; height: 3px; overflow: hidden; margin-top: 24px; border-radius: 99px; background: #dce5e2; }
+.app-boot__line i { display: block; width: 45%; height: 100%; border-radius: inherit; background: var(--rp-pine-600); animation: appBootLine 1s var(--rp-ease) infinite alternate; }
+.app-boot p { margin-top: 12px; font-size: .76rem; }
+body:not(.app-booting) .app-boot { opacity: 0; visibility: hidden; pointer-events: none; }
+.app-boot.is-error { padding: 30px; text-align: center; }
+.app-boot.is-error .app-boot__line { display: none; }
+.app-boot.is-error p { max-width: 390px; margin: 18px 0; font-size: .88rem; line-height: 1.6; }
+.app-boot.is-error button { min-height: 44px; padding: 10px 16px; border: 0; border-radius: 10px; background: var(--rp-pine-700); color: #fff; font-weight: 700; cursor: pointer; }
+@keyframes appBootLine { from { transform: translateX(-110%); } to { transform: translateX(225%); } }
+
+/* Shell */
+.reputeo-app .sidebar {
+  width: 260px;
+  padding: 18px 14px 16px;
+  overflow-y: auto;
+  border-right: 1px solid #26354a !important;
+  background: var(--rp-ink-900) !important;
+  color: #fff;
+  scrollbar-width: thin;
+  scrollbar-color: #3a485c transparent;
+}
+.reputeo-app .sidebar .logo { min-height: 46px; gap: 10px; margin: 0 4px 20px; padding: 7px 8px; color: #fff !important; font-family: var(--rp-font-display); font-size: 1.16rem; }
+.reputeo-app .sidebar .logo-mark { width: 29px; height: 29px; }
+.reputeo-app .sidebar .logo em { color: #8bd9ca; }
+.reputeo-app .nav-section { margin: 20px 10px 7px; padding: 0; color: #748499 !important; font-size: .58rem; font-weight: 800; letter-spacing: .14em; }
+.reputeo-app .nav-item {
+  position: relative;
+  min-height: 39px;
+  gap: 10px;
+  margin: 2px 0;
+  padding: 9px 10px;
+  border-radius: 8px;
+  color: #acb8c7;
+  font-size: .79rem;
+  font-weight: 600;
+  transition: background 140ms ease, color 140ms ease, transform 100ms ease;
+}
+.reputeo-app .nav-item:hover { background: rgba(255,255,255,.065); color: #fff; }
+.reputeo-app .nav-item:active { transform: scale(.99); }
+.reputeo-app .nav-item.active { background: rgba(112,203,187,.13); color: #d4f5ef; font-weight: 700; }
+.reputeo-app .nav-item.active::before { content: ""; position: absolute; left: -8px; top: 11px; bottom: 11px; width: 3px; border-radius: 4px; background: var(--rp-mint-400); }
+.reputeo-app .nav-item.locked { color: #78879a; }
+.reputeo-app .nav-item.locked::after { content: ""; width: 5px; height: 5px; margin-left: auto; border-radius: 50%; background: #7d8b9d; }
+.reputeo-app .nav-icon { width: 17px; height: 17px; flex-basis: 17px; }
+.reputeo-app .sidebar-bottom { padding-top: 16px; }
+.reputeo-app .subscription-nav {
+  margin: 17px 0 3px;
+  padding: 11px;
+  border: 1px solid #3a4a60;
+  border-radius: 10px;
+  background: rgba(255,255,255,.035);
+  color: #c4cfdb;
+}
+.reputeo-app .subscription-nav:hover,
+.reputeo-app .subscription-nav.active { border-color: #618078; background: rgba(112,203,187,.1); }
+.reputeo-app .subscription-nav.active { border-color: #b9ddd6 !important; background: var(--rp-mint-100) !important; color: var(--rp-pine-700) !important; }
+.reputeo-app .subscription-nav.active .subscription-nav-copy small,
+.reputeo-app .subscription-nav.active .subscription-nav-copy strong,
+.reputeo-app .subscription-nav.active .subscription-nav-arrow { color: var(--rp-pine-700) !important; }
+.reputeo-app .subscription-nav.active .subscription-nav-icon { border-color: #b9ddd6; background: #fff; color: var(--rp-pine-700); }
+.reputeo-app .subscription-nav-icon { background: rgba(112,203,187,.12); color: #a7e2d7; }
+.reputeo-app .subscription-nav-copy small { color: #7e8ca0; }
+.reputeo-app .subscription-nav-copy strong { color: #e6edf4; }
+
+.reputeo-app .account-trigger { padding: 11px; border: 1px solid #344258; border-radius: 11px; background: rgba(255,255,255,.035); }
+.reputeo-app .account-trigger:hover { border-color: #526177; background: rgba(255,255,255,.055); }
+.reputeo-app .account-avatar,
+.reputeo-app .account-menu-avatar { background: var(--rp-pine-600) !important; color: #fff; box-shadow: none; }
+.reputeo-app .account-name { color: #f2f6f8; }
+.reputeo-app .account-copy small { color: #8190a3; }
+.reputeo-app .account-chevron { stroke: #8190a3; }
+.reputeo-app .account-menu {
+  bottom: 67px;
+  border: 1px solid #d5dfdc;
+  border-radius: 13px;
+  background: #fff;
+  color: var(--rp-ink-900);
+  box-shadow: var(--rp-shadow-overlay);
+}
+.reputeo-app .account-menu-head { background: var(--rp-surface-soft); }
+.reputeo-app .account-menu-head strong { color: var(--rp-ink-900); }
+.reputeo-app .account-menu-head span { color: var(--rp-ink-600); }
+.reputeo-app .account-menu-separator { background: var(--rp-line); }
+.reputeo-app .account-menu-action { color: var(--rp-ink-700); }
+.reputeo-app .account-menu-action:hover { background: var(--rp-mint-50); color: var(--rp-pine-700); }
+.reputeo-app .account-menu-action.danger:hover { background: var(--rp-danger-100); color: var(--rp-danger-700); }
+.reputeo-app .account-menu-action svg { stroke: currentColor; }
+
+.reputeo-app .main {
+  width: calc(100% - 260px);
+  max-width: none;
+  margin-left: 260px;
+  padding: 30px 48px 80px;
+  background: var(--rp-canvas);
+}
+.app-contextbar { width: min(100%,1280px); min-height: 36px; display: flex; align-items: center; justify-content: flex-end; gap: 14px; margin: 0 auto 29px; color: var(--rp-ink-500); font-size: .69rem; }
+.app-contextbar__signal { display: inline-flex; align-items: center; gap: 7px; }
+.app-contextbar__signal i { width: 6px; height: 6px; border-radius: 50%; background: #34a982; box-shadow: 0 0 0 4px rgba(52,169,130,.1); }
+.app-contextbar button { padding: 5px 0; border: 0; border-bottom: 1px solid #a9b8b4; background: none; color: var(--rp-ink-600); font-size: .69rem; font-weight: 700; cursor: pointer; }
+.app-contextbar button:hover { border-color: var(--rp-pine-600); color: var(--rp-pine-700); }
+.reputeo-app .page { width: min(100%,1280px); margin-inline: auto; }
+.reputeo-app .page.active { display: block; animation: pageIn 250ms var(--rp-ease) both; }
+@keyframes pageIn { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+.reputeo-app .page-title,
+.reputeo-app .connections-heading,
+.reputeo-app .subscription-heading h1 {
+  margin: 0;
+  color: var(--rp-ink-950) !important;
+  font-family: var(--rp-font-display) !important;
+  font-size: clamp(2.35rem,4vw,4rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -.075em !important;
+  line-height: 1 !important;
+}
+.reputeo-app .page-sub,
+.reputeo-app .connections-intro {
+  max-width: 670px;
+  margin: 13px 0 38px !important;
+  padding: 0 !important;
+  color: var(--rp-ink-600) !important;
+  font-size: .91rem !important;
+  line-height: 1.65 !important;
+}
+.welcome-name { margin-left: .23em !important; }
+.welcome-dot { display: inline-block; width: .18em; height: .18em; margin-left: .15em; border-radius: 50%; background: var(--rp-mint-400); vertical-align: .14em; }
+
+/* Core controls */
+.reputeo-app .btn-primary,
+.reputeo-app .btn-connect {
+  min-height: 43px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px !important;
+  border: 1px solid var(--rp-pine-700) !important;
+  border-radius: 9px !important;
+  background: var(--rp-pine-700) !important;
+  color: #fff !important;
+  font: 700 .79rem var(--rp-font-ui) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  box-shadow: none !important;
+  transition: background 150ms ease, border-color 150ms ease, box-shadow 150ms ease, transform 100ms ease;
+}
+.reputeo-app .btn-primary:hover,
+.reputeo-app .btn-connect:hover { border-color: var(--rp-pine-800) !important; background: var(--rp-pine-800) !important; box-shadow: 0 8px 18px rgba(11,95,88,.14) !important; transform: none !important; }
+.reputeo-app .btn-primary:active,
+.reputeo-app .btn-connect:active { transform: scale(.985) !important; }
+.reputeo-app button:disabled { cursor: not-allowed !important; opacity: .58; transform: none !important; box-shadow: none !important; }
+.reputeo-app .form-group { margin-bottom: 19px; }
+.reputeo-app .form-label { margin-bottom: 7px; color: var(--rp-ink-700) !important; font-size: .73rem; font-weight: 700; }
+.reputeo-app .form-input,
+.reputeo-app textarea,
+.reputeo-app select {
+  min-height: 45px;
+  border: 1px solid var(--rp-line-strong) !important;
+  border-radius: 9px !important;
+  background: #fff !important;
+  color: var(--rp-ink-900) !important;
+  font-family: var(--rp-font-ui) !important;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+.reputeo-app .form-input { padding: 11px 13px; }
+.reputeo-app textarea { padding: 14px; line-height: 1.65; }
+.reputeo-app .form-input:hover,
+.reputeo-app textarea:hover,
+.reputeo-app select:hover { border-color: #adbfbb !important; }
+.reputeo-app .form-input:focus,
+.reputeo-app textarea:focus,
+.reputeo-app select:focus { border-color: var(--rp-pine-500) !important; outline: 0; box-shadow: 0 0 0 4px rgba(25,138,128,.1) !important; }
+.reputeo-app .form-check { color: var(--rp-ink-600); font-size: .76rem; line-height: 1.55; }
+.reputeo-app input[type="checkbox"] { accent-color: var(--rp-pine-600) !important; }
+
+.reputeo-app .section-card,
+.reputeo-app .stat-card {
+  border: 1px solid var(--rp-line) !important;
+  border-radius: var(--rp-radius-lg) !important;
+  background: #fff !important;
+  box-shadow: var(--rp-shadow-xs) !important;
+}
+.reputeo-app .section-card { overflow: hidden; margin-bottom: 24px; }
+.reputeo-app .section-header { padding: 19px 22px !important; border-bottom: 1px solid var(--rp-line) !important; }
+.reputeo-app .section-title { color: var(--rp-ink-900) !important; font-family: var(--rp-font-display) !important; font-size: .96rem; font-weight: 700; }
+
+/* Overview */
+#page-overview .page-title { font-size: clamp(2.35rem,4vw,3.7rem) !important; }
+#page-overview .page-sub { margin-bottom: 38px !important; }
+#page-overview .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5,minmax(0,1fr)) !important;
+  gap: 11px !important;
+  margin-bottom: 28px;
+  border: 0 !important;
+  background: transparent !important;
+}
+#page-overview .stat-card {
+  min-height: 142px;
+  padding: 19px !important;
+  border: 1px solid var(--rp-line) !important;
+  border-radius: 13px !important;
+  background: #fff !important;
+  transition: border-color 150ms ease, background 150ms ease !important;
+}
+#page-overview .stat-card:hover { border-color: #b3c9c3 !important; background: var(--rp-surface-soft) !important; transform: none !important; }
+#page-overview .stat-label { min-height: 30px; margin-bottom: 19px !important; color: var(--rp-ink-500) !important; font-size: .61rem !important; font-weight: 800; letter-spacing: .11em !important; line-height: 1.45; }
+#page-overview .stat-value { color: var(--rp-ink-950) !important; font: 650 2.3rem/1 var(--rp-font-display) !important; letter-spacing: -.075em !important; }
+#page-overview .stat-value small { margin-left: 5px; color: var(--rp-gold-600); font-size: .78rem; letter-spacing: 0; vertical-align: .55em; }
+#page-overview .stat-delta { margin-top: 10px !important; color: var(--rp-ink-500) !important; font-size: .68rem !important; }
+#page-overview .stat-card.score-card { overflow: visible !important; border-color: var(--rp-ink-900) !important; background: var(--rp-ink-900) !important; box-shadow: none !important; }
+#page-overview .score-card:hover { border-color: var(--rp-ink-900) !important; background: var(--rp-ink-900) !important; }
+#page-overview .score-card .stat-label { color: #adbdca !important; }
+#page-overview .score-number { margin-top: 0; color: #e9fffb; font-size: 2.3rem; }
+#page-overview .score-card .stat-delta { color: #9fded2 !important; }
+#page-overview .score-card .stat-delta::before { animation: none !important; }
+.score-info { border-color: #617085; background: transparent; }
+.score-tooltip { width: 300px; border-radius: 11px; background: #0d1928; box-shadow: var(--rp-shadow-overlay); }
+
+.reputeo-app .action-center { margin-bottom: 24px !important; padding: 26px !important; border: 1px solid var(--rp-line) !important; border-radius: var(--rp-radius-lg) !important; background: #fff !important; box-shadow: var(--rp-shadow-xs) !important; }
+.reputeo-app .action-center-head { margin-bottom: 18px !important; }
+.reputeo-app .action-center-title { color: var(--rp-ink-900); font-family: var(--rp-font-display); font-size: 1.07rem; }
+.reputeo-app .action-center-sub { color: var(--rp-ink-600); }
+.reputeo-app .action-list { gap: 9px !important; }
+.reputeo-app .action-row { min-height: 68px; padding: 15px 16px !important; border: 1px solid var(--rp-line) !important; border-radius: 10px !important; background: var(--rp-surface-soft) !important; }
+.reputeo-app .action-row:hover { border-color: #b8ccc7 !important; background: var(--rp-mint-50) !important; transform: none !important; }
+.reputeo-app .action-row-title { color: var(--rp-ink-900); }
+.reputeo-app .action-row-sub { color: var(--rp-ink-600); }
+.reputeo-app .action-arrow { color: var(--rp-pine-600); }
+
+.reputeo-app .reputation-chart-card {
+  margin-bottom: 24px;
+  overflow: hidden !important;
+  border: 1px solid var(--rp-line) !important;
+  border-radius: var(--rp-radius-lg) !important;
+  background: #fff !important;
+  box-shadow: var(--rp-shadow-xs) !important;
+}
+.reputeo-app .reputation-chart-head { padding: 22px 24px; border-color: var(--rp-line); }
+.reputeo-app .reputation-chart-kicker { color: var(--rp-pine-600); }
+.reputeo-app .reputation-chart-title { color: var(--rp-ink-900); font-size: 1.28rem; }
+.reputeo-app .reputation-chart-periods { border-color: var(--rp-line); background: var(--rp-canvas); }
+.reputeo-app .chart-period-btn { border-radius: 7px !important; }
+.reputeo-app .chart-period-btn.active-period { background: var(--rp-ink-900) !important; }
+.reputeo-app .reputation-chart-score { border-color: var(--rp-line); background: linear-gradient(155deg,#fbfcfc,#f1f7f5); }
+.reputeo-app .reputation-chart-footer { border-color: var(--rp-line); }
+#page-overview #overviewCard .empty { padding: 42px 24px !important; }
+#page-overview #overviewCard .empty-icon { display: grid !important; width: 42px; height: 42px; margin: 0 auto 15px; place-items: center; border-radius: 12px; background: var(--rp-mint-100); color: var(--rp-pine-700); font-size: 1.1rem; opacity: 1; }
+#page-overview #overviewCard .empty-title { color: var(--rp-ink-900) !important; font-size: 1.15rem !important; }
+
+/* Reviews */
+#page-reviews .page-title { font-size: clamp(2.7rem,5vw,4.8rem) !important; }
+#page-reviews .page-sub { margin-bottom: 30px !important; }
+#page-reviews .target-progress-card { border-radius: var(--rp-radius-lg); box-shadow: var(--rp-shadow-sm); }
+#page-reviews .section-card { overflow: visible; }
+#page-reviews .section-header { align-items: flex-end; gap: 18px; }
+.reviews-kicker { color: var(--rp-pine-600) !important; }
+.reviews-toolbar { gap: 7px; }
+#page-reviews #btn-tout-cocher,
+#page-reviews #btn-envoyer-tout,
+#page-reviews #btn-masse > button,
+#page-reviews .filter-btn {
+  min-height: 34px;
+  padding: 7px 11px !important;
+  border: 1px solid var(--rp-line-strong) !important;
+  border-radius: 8px !important;
+  background: #fff !important;
+  color: var(--rp-ink-700) !important;
+  font: 700 .69rem var(--rp-font-ui) !important;
+  box-shadow: none !important;
+}
+#page-reviews #btn-envoyer-tout { border-color: #a9d6c8 !important; background: var(--rp-success-100) !important; color: var(--rp-success-700) !important; }
+#page-reviews #btn-masse > button { border-color: #a9d6c8 !important; background: var(--rp-mint-100) !important; color: var(--rp-pine-700) !important; }
+#page-reviews .filter-btn.active-filter { border-color: var(--rp-ink-900) !important; background: var(--rp-ink-900) !important; color: #fff !important; }
+#page-reviews #reviewCount { padding: 7px 10px !important; border-radius: 7px !important; background: var(--rp-canvas) !important; color: var(--rp-ink-600) !important; }
+.reputeo-app .reviews-filters { gap: 7px; padding: 15px 20px !important; border-color: var(--rp-line) !important; background: var(--rp-surface-soft) !important; }
+.reputeo-app .reviews-sort { min-height: 34px; margin-left: auto; padding: 7px 31px 7px 10px; border-radius: 8px !important; font-size: .7rem; }
+.reputeo-app .generate-menu,
+#page-reviews #masse-menu { min-width: 190px !important; padding: 6px !important; border: 1px solid #d5dfdc !important; border-radius: 10px !important; background: #fff !important; box-shadow: var(--rp-shadow-md) !important; }
+.reputeo-app .generate-menu button,
+#page-reviews #masse-menu button { padding: 9px 10px !important; border: 0 !important; border-radius: 7px !important; background: #fff !important; color: var(--rp-ink-700) !important; font-family: var(--rp-font-ui) !important; font-size: .73rem !important; }
+.reputeo-app .generate-menu button:hover,
+#page-reviews #masse-menu button:hover { background: var(--rp-mint-50) !important; color: var(--rp-pine-700) !important; }
+.reputeo-app .review-row { align-items: stretch !important; gap: 0; padding: 0 !important; border-color: var(--rp-line); background: #fff; }
+.reputeo-app .review-row:hover { background: #fff; }
+.reputeo-app .review-head { width: 100%; display: grid; grid-template-columns: 18px 36px minmax(0,1fr) auto; align-items: start; gap: 13px; padding: 21px 22px; }
+.reputeo-app .review-head > input { width: 16px !important; height: 16px !important; margin-top: 3px; }
+.reputeo-app .rev-src { width: 36px; height: 36px; border: 1px solid #d7e2df; border-radius: 10px; background: #fff; color: #4285f4; font-weight: 800; }
+.reputeo-app .rev-stars { margin-bottom: 4px; color: var(--rp-gold-600); font-size: .67rem; letter-spacing: .025em; }
+.reputeo-app .rev-author { color: var(--rp-ink-900); font-size: .83rem; font-weight: 700; }
+.reputeo-app .rev-date { margin-top: 2px; color: var(--rp-ink-500); font-size: .67rem; }
+.reputeo-app .rev-text { max-width: 790px; margin-top: 9px; color: var(--rp-ink-700); font-size: .83rem; line-height: 1.62; }
+.reputeo-app .review-meta { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+.reputeo-app .rev-badge,
+.reputeo-app .review-status { min-height: 25px; display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 7px; font-size: .62rem; font-weight: 800; }
+.reputeo-app .b-pos { background: var(--rp-success-100); color: var(--rp-success-700); }
+.reputeo-app .b-neg { background: var(--rp-danger-100); color: var(--rp-danger-700); }
+.reputeo-app .b-neu { background: var(--rp-info-100); color: var(--rp-info-700); }
+.reputeo-app .review-status.done { background: var(--rp-mint-100); color: var(--rp-pine-700); }
+.reputeo-app .review-status.pending { background: var(--rp-warning-100); color: var(--rp-warning-700); }
+.reputeo-app .review-actions { width: auto !important; margin: 0 22px 21px 89px !important; padding: 14px !important; border: 1px solid #d8e7e3 !important; border-left: 3px solid var(--rp-pine-600) !important; border-radius: 9px !important; background: var(--rp-mint-50) !important; }
+.reputeo-app .review-actions button { min-height: 34px; padding: 7px 11px !important; border: 1px solid var(--rp-line-strong) !important; border-radius: 8px !important; background: #fff !important; color: var(--rp-ink-700) !important; font: 700 .7rem var(--rp-font-ui) !important; }
+.reputeo-app .review-actions button[data-review-id] { border-color: #a8d1c7 !important; color: var(--rp-pine-700) !important; }
+.reputeo-app .review-reply { width: 100%; }
+.reputeo-app .review-generate { position: relative; display: inline-block; }
+#page-reviews #reviewsList .review-generate .generate-menu { position: absolute; z-index: 120; top: calc(100% + 6px) !important; bottom: auto !important; left: 0; }
+.reputeo-app .review-answer-label { margin-bottom: 6px; color: var(--rp-pine-700); font-size: .61rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
+.reputeo-app .review-answer-copy { color: var(--rp-ink-700); font-size: .8rem; line-height: 1.6; }
+.reputeo-app .review-reply-form { margin: 0 22px 21px 89px; padding: 16px; border: 1px solid var(--rp-line); border-radius: 10px; background: var(--rp-surface-soft); }
+.reputeo-app .review-reply-form[hidden] { display: none !important; }
+.reputeo-app .review-reply-form label { display: block; margin-bottom: 7px; color: var(--rp-ink-700); font-size: .7rem; font-weight: 700; }
+.reputeo-app .review-reply-form textarea { width: 100%; min-height: 105px; background: #fff !important; }
+.reputeo-app .review-reply-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 9px; }
+.reputeo-app .review-reply-buttons > button:not(.btn-primary) { min-height: 41px; padding: 9px 13px; border: 1px solid var(--rp-line-strong); border-radius: 9px; background: #fff; color: var(--rp-ink-700); font-weight: 700; cursor: pointer; }
+.reputeo-app .review-head > input:disabled { opacity: .3; cursor: not-allowed; }
+.reputeo-app [id^="reply-form-"] textarea { min-height: 112px !important; background: #fff !important; color: var(--rp-ink-900) !important; }
+.reputeo-app [id^="reply-form-"] button:first-child { border-color: var(--rp-pine-700) !important; background: var(--rp-pine-700) !important; color: #fff !important; }
+.review-skeleton { display: grid; gap: 1px; background: var(--rp-line); }
+.review-skeleton i { display: block; height: 132px; background: linear-gradient(90deg,#fff 0%,#f4f7f6 48%,#fff 100%); background-size: 220% 100%; animation: skeletonMove 1.4s ease-in-out infinite; }
+@keyframes skeletonMove { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+
+/* Connections and Google profile */
+.reputeo-app .connections-editorial { max-width: 1120px; }
+.reputeo-app .connections-eyebrow,
+.reputeo-app .trends-eyebrow,
+.reputeo-app .analyzer-eyebrow { margin-bottom: 14px; color: var(--rp-pine-700); font-size: .65rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.reputeo-app .connections-eyebrow::before { background: var(--rp-pine-600); }
+.reputeo-app .google-connection-card { overflow: hidden; border: 1px solid var(--rp-line-strong); border-radius: var(--rp-radius-lg); box-shadow: var(--rp-shadow-xs); }
+.reputeo-app .google-connection-aside { padding: 34px; background: var(--rp-ink-900); }
+.reputeo-app .google-brand-mark { border-radius: 12px; }
+.reputeo-app .google-connection-main { padding: 32px; }
+.reputeo-app .connection-status-row { border-color: var(--rp-line); }
+.reputeo-app .connection-state { border-radius: 7px; }
+.reputeo-app .connection-actions .btn-connect,
+.reputeo-app .connection-actions .btn-connected { border-radius: 9px !important; }
+.reputeo-app .upcoming-connections { gap: 12px; }
+.reputeo-app .upcoming-connection { border-color: var(--rp-line); border-radius: 12px; }
+
+#page-profile #profile-setup-card { min-height: 330px; padding: 30px !important; border: 1px solid var(--rp-line) !important; border-top: 1px solid var(--rp-line) !important; border-radius: var(--rp-radius-lg) !important; box-shadow: var(--rp-shadow-xs) !important; }
+#page-profile #profile-wizard > div:first-child { color: var(--rp-ink-600) !important; }
+#page-profile #profile-wizard > div:first-child > span:first-child { background: var(--rp-pine-700) !important; }
+#page-profile #profile-wizard > div:nth-child(2) { border-color: #cfe3de !important; background: var(--rp-mint-50) !important; color: var(--rp-ink-700) !important; }
+#page-profile #profile-wizard > label { color: var(--rp-ink-700) !important; }
+#page-profile #profile-form-message { color: var(--rp-ink-600) !important; }
+#page-profile #profile-existing-name { color: var(--rp-ink-900) !important; font-family: var(--rp-font-display) !important; }
+
+/* Analyses */
+.reputeo-app .trends-shell,
+.reputeo-app .analyzer-shell { overflow: hidden; border: 1px solid var(--rp-line); border-radius: var(--rp-radius-lg); background: #fff; box-shadow: var(--rp-shadow-xs); }
+.reputeo-app .trends-workbench,
+.reputeo-app .analyzer-workbench { background: #fff; }
+.reputeo-app .trends-workbench-head,
+.reputeo-app .analyzer-workbench-head { border-color: var(--rp-line); color: var(--rp-ink-500); }
+.reputeo-app .trends-controls { border-color: var(--rp-line); }
+.reputeo-app .review-count-filter { border-color: var(--rp-line-strong); border-radius: 9px; background: var(--rp-surface-soft); color: var(--rp-ink-700); }
+.reputeo-app .review-count-filter select { min-height: 0; border: 0 !important; background: transparent !important; box-shadow: none !important; }
+.reputeo-app .trends-preview { border-color: var(--rp-line); }
+.reputeo-app .trends-preview-item { border-color: var(--rp-line); }
+.reputeo-app .trends-preview-item > span { color: var(--rp-pine-600); }
+.reputeo-app .trends-preview-item strong,
+.reputeo-app .analyzer-point strong { color: var(--rp-ink-900); }
+.reputeo-app .trends-preview-item p,
+.reputeo-app .analyzer-point p { color: var(--rp-ink-600); }
+.reputeo-app .trends-aside,
+.reputeo-app .analyzer-aside { background: var(--rp-ink-900); }
+.reputeo-app .trends-aside-kicker,
+.reputeo-app .analyzer-aside-kicker { color: #9ee0d3; }
+.reputeo-app .trends-aside p,
+.reputeo-app .trends-aside-list,
+.reputeo-app .analyzer-aside p { color: #b9c7d2; }
+.reputeo-app #dashInput { min-height: 210px; border: 0 !important; border-bottom: 1px solid var(--rp-line) !important; border-radius: 0 !important; box-shadow: none !important; }
+.reputeo-app .analyzer-footer { border-color: var(--rp-line); }
+.reputeo-app .analyzer-counter { color: var(--rp-ink-500); }
+.reputeo-app .analyzer-loading { color: var(--rp-pine-700); }
+.reputeo-app #dashResult { margin-top: 20px; border: 1px solid var(--rp-line) !important; border-radius: 11px !important; background: var(--rp-surface-soft) !important; color: var(--rp-ink-700) !important; box-shadow: none !important; }
+.reputeo-app #analyse-result { color: var(--rp-ink-700) !important; }
+.reputeo-app #analyse-result [style*="color:rgba(255,255,255"],
+.reputeo-app #dashResult [style*="color:rgba(255,255,255"],
+.reputeo-app #analyse-result [style*="color:#f0f0ff"] { color: var(--rp-ink-700) !important; }
+.reputeo-app #analyse-result [style*="background:rgba(79,110,247"],
+.reputeo-app #dashResult [style*="background:rgba(79,110,247"] { border-color: var(--rp-line) !important; border-radius: 10px !important; background: var(--rp-mint-50) !important; }
+.reputeo-app .trend-theme-group,
+.reputeo-app .trend-action-plan { border-color: var(--rp-line); border-radius: 11px; background: #fff; }
+.reputeo-app .trend-theme-heading { color: var(--rp-ink-900); }
+.reputeo-app .trend-theme-item { border-color: var(--rp-line); }
+.reputeo-app .trend-action-week { border-color: var(--rp-line); background: var(--rp-surface-soft); }
+
+/* Reports, automation and support */
+#page-reports .section-card,
+#page-weekly .section-card { max-width: 850px; padding: 28px !important; }
+#page-reports .section-card > div:first-child,
+#page-weekly .section-card > div:first-child { margin: 0 0 19px !important; padding: 0 0 17px !important; border-bottom: 1px solid var(--rp-line) !important; border-radius: 0 !important; background: transparent !important; color: var(--rp-ink-900) !important; }
+#page-reports .section-card > div:first-child [style*="font-family"],
+#page-weekly .section-card > div:first-child [style*="font-family"] { color: var(--rp-ink-900) !important; font-family: var(--rp-font-display) !important; }
+#page-reports .section-card [style*="color:rgba(255,255,255"],
+#page-weekly .section-card [style*="color:rgba(255,255,255"] { color: var(--rp-ink-600) !important; }
+
+.reputeo-app .automation-guide { border: 1px solid #cae1db; border-radius: 10px; background: var(--rp-mint-50); color: var(--rp-ink-700); }
+.reputeo-app .automation-guide > span:first-child { background: var(--rp-pine-700); color: #fff; }
+.reputeo-app .automation-grid { gap: 14px; }
+.reputeo-app .automation-card,
+.reputeo-app .completion-card,
+.reputeo-app .campaign-card,
+.reputeo-app .request-history { border: 1px solid var(--rp-line) !important; border-radius: var(--rp-radius-lg) !important; background: #fff !important; box-shadow: var(--rp-shadow-xs) !important; }
+.reputeo-app .automation-card { padding: 26px !important; }
+.reputeo-app .automation-card h3,
+.reputeo-app .completion-card h2,
+.reputeo-app .campaign-card h2,
+.reputeo-app .request-history h2 { color: var(--rp-ink-900) !important; font-family: var(--rp-font-display) !important; }
+.reputeo-app .automation-card > p,
+.reputeo-app .completion-card p,
+.reputeo-app .campaign-card p,
+.reputeo-app .request-history-head span { color: var(--rp-ink-600) !important; }
+.reputeo-app .automation-status { border-radius: 8px; background: var(--rp-canvas); color: var(--rp-ink-700); }
+.reputeo-app .automation-step { border-color: var(--rp-line); }
+.reputeo-app .automation-step > span { background: var(--rp-mint-100); color: var(--rp-pine-700); }
+.reputeo-app .automation-note { border-color: #cce2dc; border-radius: 9px; background: var(--rp-mint-50); color: var(--rp-ink-700); }
+.reputeo-app .completion-card { margin: 18px 0; padding: 27px !important; }
+.reputeo-app .completion-step,
+.reputeo-app .campaign-kicker { color: var(--rp-pine-700) !important; }
+.reputeo-app .campaign-card { padding: 28px !important; }
+.reputeo-app .campaign-upload { min-height: 42px; display: inline-flex; align-items: center; border-color: var(--rp-line-strong); border-radius: 9px; background: #fff; color: var(--rp-ink-700); }
+.reputeo-app .campaign-upload:hover { border-color: #9dbab3; color: var(--rp-pine-700); }
+.reputeo-app .campaign-caption { color: var(--rp-ink-500) !important; }
+.reputeo-app .request-history { overflow: hidden; }
+.reputeo-app .request-history-head { padding: 25px 27px; border-color: var(--rp-line); }
+.reputeo-app .request-stats { gap: 0; border-bottom: 1px solid var(--rp-line); background: var(--rp-surface-soft); }
+.reputeo-app .request-stat { border-right: 1px solid var(--rp-line); }
+.reputeo-app .request-stat:last-child { border-right: 0; }
+.reputeo-app .request-stat-value { color: var(--rp-ink-900); font-family: var(--rp-font-display); }
+.reputeo-app .request-history-row { border-color: var(--rp-line); }
+.reputeo-app .request-badge { border-radius: 7px; }
+.reputeo-app .cancel-request { border-color: #e1aaa5; border-radius: 7px; color: var(--rp-danger-700); }
+
+.reputeo-app .support-hero,
+.reputeo-app .support-grid { overflow: hidden; border-color: var(--rp-line); border-radius: var(--rp-radius-lg); box-shadow: var(--rp-shadow-xs); }
+.reputeo-app .support-hero-main { padding: 31px; }
+.reputeo-app .support-hero-aside { background: var(--rp-ink-900); }
+.reputeo-app .support-link { border-color: var(--rp-line); }
+.reputeo-app .support-link:hover { background: var(--rp-mint-50); }
+.reputeo-app .support-faq { border-color: var(--rp-line-strong); }
+.reputeo-app .support-faq details { border-color: var(--rp-line); }
+
+/* Subscription */
+#page-subscription.subscription-page { max-width: 980px; padding-top: 0; }
+.reputeo-app .subscription-heading { margin-bottom: 35px; }
+.reputeo-app .subscription-hero-card { padding: 27px 29px; border-radius: var(--rp-radius-lg); background: var(--rp-ink-900); }
+.reputeo-app .subscription-mark { background: var(--rp-mint-100); color: var(--rp-pine-700); }
+.reputeo-app .subscription-status { border-radius: 7px; }
+.reputeo-app .subscription-details-card { padding: 31px 3px; border-color: var(--rp-line-strong); }
+.reputeo-app .subscription-primary-action { min-height: 45px; border-radius: 9px; background: var(--rp-pine-700); }
+.reputeo-app .subscription-primary-action:hover { background: var(--rp-pine-800); transform: none; }
+.reputeo-app .subscription-cancel-card { border-color: var(--rp-line); }
+
+/* Settings */
+#page-settings { max-width: 1040px; }
+.reputeo-app .settings-layout { grid-template-columns: 210px minmax(0,1fr); gap: 17px; }
+.reputeo-app .settings-tabs { position: sticky; top: 30px; padding: 7px; border: 1px solid var(--rp-line); border-radius: 12px; background: #fff; box-shadow: var(--rp-shadow-xs); }
+.reputeo-app .settings-tab-btn { min-height: 41px; color: var(--rp-ink-600); border-radius: 8px; }
+.reputeo-app .settings-tab-btn:hover { background: var(--rp-surface-soft); color: var(--rp-ink-900); }
+.reputeo-app .settings-tab-btn.active { background: var(--rp-mint-100); color: var(--rp-pine-700); }
+.reputeo-app .settings-card { padding: 28px !important; border-color: var(--rp-line) !important; border-radius: var(--rp-radius-lg) !important; box-shadow: var(--rp-shadow-xs) !important; }
+.reputeo-app .settings-card h3 { color: var(--rp-ink-900) !important; font-family: var(--rp-font-display) !important; }
+.reputeo-app .settings-card [style*="color:rgba(255,255,255"] { color: var(--rp-ink-600) !important; }
+#target-note { border-color: var(--rp-line-strong) !important; border-radius: 9px !important; background: #fff !important; color: var(--rp-ink-900) !important; font-family: var(--rp-font-ui) !important; }
+
+/* Modals */
+.reputeo-app .completion-modal,
+#pseudo-modal,
+#onboarding-modal { background: rgba(13,27,24,.52) !important; backdrop-filter: blur(5px) !important; }
+.reputeo-app .completion-modal.open { animation: modalBackdrop 170ms ease both; }
+@keyframes modalBackdrop { from { opacity: 0; } to { opacity: 1; } }
+.reputeo-app .completion-dialog,
+#pseudo-modal > div,
+#onboarding-modal > div {
+  max-height: min(88vh,760px);
+  overflow-y: auto;
+  border: 1px solid #d5e0dd !important;
+  border-radius: var(--rp-radius-xl) !important;
+  background: #fff !important;
+  box-shadow: var(--rp-shadow-overlay) !important;
+  animation: modalContent 230ms var(--rp-ease) both;
+}
+@keyframes modalContent { from { opacity: 0; transform: translateY(9px) scale(.988); } to { opacity: 1; transform: none; } }
+.reputeo-app .completion-dialog h2 { color: var(--rp-ink-900); font-family: var(--rp-font-display); }
+.reputeo-app .completion-dialog > p { color: var(--rp-ink-600); }
+.reputeo-app .completion-actions { border-color: var(--rp-line); }
+.reputeo-app .completion-cancel { min-height: 41px; padding: 9px 14px; border: 1px solid var(--rp-line-strong); border-radius: 9px; background: #fff; color: var(--rp-ink-700); font-weight: 700; }
+.reputeo-app .completion-cancel:hover { border-color: #a5bab5; background: var(--rp-surface-soft); }
+.confirm-action-dialog { width: min(100%,440px) !important; text-align: center; }
+.confirm-action-icon { width: 44px; height: 44px; display: grid; place-items: center; margin: 0 auto 16px; border-radius: 13px; background: var(--rp-mint-100); color: var(--rp-pine-700); font: 800 1.1rem var(--rp-font-display); }
+.confirm-action-dialog .completion-actions { justify-content: center; }
+.confirm-action-dialog.is-danger .confirm-action-icon { background: var(--rp-danger-100); color: var(--rp-danger-700); }
+.confirm-action-dialog.is-danger #confirm-action-submit { border-color: var(--rp-danger-700) !important; background: var(--rp-danger-700) !important; }
+
+/* Feedback and assistant */
+.reputeo-app .notif {
+  top: 20px;
+  right: 20px;
+  max-width: 390px;
+  min-height: 50px;
+  padding: 14px 17px 14px 43px;
+  border: 1px solid var(--rp-line-strong);
+  border-radius: 11px;
+  background: #fff;
+  color: var(--rp-ink-700);
+  box-shadow: var(--rp-shadow-md);
+}
+.reputeo-app .notif::before { content: "i"; position: absolute; left: 16px; top: 14px; width: 19px; height: 19px; display: grid; place-items: center; border-radius: 50%; background: var(--rp-info-100); color: var(--rp-info-700); font-size: .68rem; font-weight: 800; }
+.reputeo-app .notif.success { border-color: #bddfce; color: var(--rp-success-700); }
+.reputeo-app .notif.success::before { content: "✓"; background: var(--rp-success-100); color: var(--rp-success-700); }
+.reputeo-app .notif.error { border-color: #efc5c1; color: var(--rp-danger-700); }
+.reputeo-app .notif.error::before { content: "!"; background: var(--rp-danger-100); color: var(--rp-danger-700); }
+.reputeo-app .premium-banner { margin: 0 auto 25px; padding: 16px 18px; border: 1px solid #c4d6d1; border-radius: 11px; background: #fff; animation: none !important; }
+.reputeo-app .premium-banner::before { width: 4px; border-radius: 11px 0 0 11px; background: var(--rp-pine-600); animation: none !important; }
+
+.reputeo-app .ai-assistant { right: 22px; bottom: 20px; }
+.reputeo-app .ai-assistant-toggle { min-height: 44px; padding: 10px 14px; border: 1px solid #314157; border-radius: 10px; background: var(--rp-ink-900); color: #fff; box-shadow: 0 12px 28px rgba(21,35,31,.18); }
+.reputeo-app .ai-assistant-toggle:hover { background: #223148; transform: none; }
+.reputeo-app .ai-assistant-dot { background: var(--rp-mint-400); box-shadow: 0 0 0 4px rgba(112,203,187,.12); }
+.reputeo-app .ai-assistant-panel { overflow: hidden; border: 1px solid #d0dcd8; border-radius: 15px; background: #fff; box-shadow: var(--rp-shadow-overlay); }
+.reputeo-app .ai-assistant-head { background: var(--rp-ink-900); }
+.reputeo-app .ai-assistant-title { color: #fff; }
+.reputeo-app .ai-assistant-head p { color: #adbdc9; }
+.reputeo-app .ai-assistant-messages { background: var(--rp-surface-soft); }
+.reputeo-app .ai-message.assistant { border-color: var(--rp-line); background: #fff; color: var(--rp-ink-700); }
+.reputeo-app .ai-message.user { background: var(--rp-pine-700); color: #fff; }
+.reputeo-app .ai-suggestions { border-color: var(--rp-line); background: #fff; }
+.reputeo-app .ai-suggestion { border-color: var(--rp-line); background: var(--rp-surface-soft); color: var(--rp-ink-700); }
+.reputeo-app .ai-suggestion:hover { border-color: #a9c5be; background: var(--rp-mint-50); color: var(--rp-pine-700); }
+.reputeo-app .ai-assistant-form { border-color: var(--rp-line); background: #fff; }
+.reputeo-app .ai-assistant-input { min-height: 38px; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
+.reputeo-app .ai-assistant-send { background: var(--rp-pine-700); }
+
+.reputeo-app .empty { padding: 48px 24px; }
+.reputeo-app .empty-icon { width: 44px; height: 44px; display: grid; place-items: center; margin: 0 auto 15px; border-radius: 13px; background: var(--rp-mint-100); color: var(--rp-pine-700); font-size: 1.15rem; opacity: 1; }
+.reputeo-app .empty-title { color: var(--rp-ink-900) !important; font-family: var(--rp-font-display) !important; font-size: 1.08rem; }
+.reputeo-app .empty-text { max-width: 490px; margin: 7px auto 20px; color: var(--rp-ink-600) !important; line-height: 1.6; }
+
+.reputeo-app .sidebar-overlay { background: rgba(13,27,24,.52); backdrop-filter: blur(2px); }
+.reputeo-app .hamburger { border-color: var(--rp-line-strong); background: #fff; color: var(--rp-ink-900); box-shadow: var(--rp-shadow-sm); }
+.reputeo-app .hamburger span,
+.reputeo-app .hamburger::before,
+.reputeo-app .hamburger::after { content: ""; display: block; width: 18px; height: 1.5px; margin: 4px auto; border-radius: 2px; background: currentColor; transition: transform 180ms var(--rp-ease), opacity 180ms var(--rp-ease); }
+.reputeo-app .hamburger[aria-expanded="true"] span { opacity: 0; }
+.reputeo-app .hamburger[aria-expanded="true"]::before { transform: translateY(5.5px) rotate(45deg); }
+.reputeo-app .hamburger[aria-expanded="true"]::after { transform: translateY(-5.5px) rotate(-45deg); }
+
+@media (max-width: 1180px) {
+  #page-overview .stats-grid { grid-template-columns: repeat(3,minmax(0,1fr)) !important; }
+  #page-overview .score-card { grid-column: span 2; }
+  .reputeo-app .main { padding-inline: 35px; }
+}
+
+@media (max-width: 900px) {
+  .reputeo-app .automation-grid,
+  .reputeo-app .trends-shell,
+  .reputeo-app .analyzer-shell,
+  .reputeo-app .support-hero { grid-template-columns: 1fr !important; }
+  .reputeo-app .trends-aside,
+  .reputeo-app .analyzer-aside { padding: 27px !important; }
+  .reputeo-app .settings-layout { grid-template-columns: 1fr; }
+  .reputeo-app .settings-tabs { position: static; display: flex; overflow-x: auto; }
+  .reputeo-app .settings-tab-btn { width: auto; flex: 0 0 auto; }
+  .reputeo-app .support-grid { grid-template-columns: repeat(2,1fr); }
+  .reputeo-app .support-link:nth-child(n) { border-right: 1px solid var(--rp-line); border-bottom: 1px solid var(--rp-line); }
+  .reputeo-app .support-link:nth-child(2n) { border-right: 0; }
+}
+
+@media (max-width: 768px) {
+  body.reputeo-app { display: block; }
+  .reputeo-app .sidebar { width: min(300px,86vw); padding-top: 72px; transform: translateX(-105%); box-shadow: var(--rp-shadow-overlay); }
+  .reputeo-app .sidebar.open { transform: translateX(0); }
+  .reputeo-app .hamburger { top: 13px; left: 14px; z-index: 210; display: block !important; width: 42px; height: 42px; padding: 7px; font-size: 0; }
+  .reputeo-app .main { width: 100%; margin-left: 0 !important; padding: 20px 18px 86px !important; }
+  .app-contextbar { min-height: 35px; margin-bottom: 24px; padding-left: 52px; }
+  .app-contextbar__signal { display: none; }
+  .reputeo-app .page-title { padding-left: 0 !important; font-size: clamp(2.15rem,10vw,3.2rem) !important; }
+  .reputeo-app .page-sub { margin-bottom: 29px !important; padding-left: 0 !important; }
+  #page-overview .stats-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 9px !important; }
+  #page-overview .score-card { grid-column: span 2; }
+  #page-overview .stat-card { min-height: 132px; }
+  .reputeo-app .reputation-chart-head { align-items: flex-start; flex-direction: column; gap: 15px; }
+  .reputeo-app .reputation-chart-main { grid-template-columns: 1fr; }
+  .reputeo-app .reputation-chart-score { border-right: 0; border-bottom: 1px solid var(--rp-line); }
+  #page-reviews .section-header { align-items: flex-start; flex-direction: column; }
+  .reviews-toolbar { width: 100%; }
+  .reputeo-app .reviews-filters { overflow-x: auto; flex-wrap: nowrap; }
+  .reputeo-app .reviews-sort { margin-left: 0; flex: 0 0 auto; }
+  .reputeo-app .review-head { grid-template-columns: 18px 34px minmax(0,1fr); padding: 18px 16px; }
+  .reputeo-app .review-meta { grid-column: 2/-1; justify-content: flex-start; }
+  .reputeo-app .review-actions { margin: 0 16px 18px 68px !important; }
+  .reputeo-app .review-reply-form { margin: 0 16px 18px 68px; }
+  #page-profile #profile-wizard > div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; gap: 0 !important; }
+  .reputeo-app .google-connection-card { grid-template-columns: 1fr; }
+  .reputeo-app .connection-assurances { grid-template-columns: 1fr; }
+  .reputeo-app .upcoming-connections { grid-template-columns: 1fr; }
+  .reputeo-app .request-stats { grid-template-columns: repeat(2,1fr); }
+  .reputeo-app .request-stat:nth-child(2) { border-right: 0; }
+  .reputeo-app .request-stat:nth-child(-n+2) { border-bottom: 1px solid var(--rp-line); }
+  .reputeo-app .completion-card,
+  .reputeo-app .campaign-actions,
+  .reputeo-app .subscription-hero-card,
+  .reputeo-app .subscription-cancel-card { align-items: flex-start; flex-direction: column; }
+  .reputeo-app .subscription-details-card { display: flex; align-items: stretch; flex-direction: column; gap: 23px; }
+  .reputeo-app .subscription-action-area { width: 100%; min-width: 0; }
+  .reputeo-app .ai-assistant { right: 14px; bottom: 13px; }
+}
+
+@media (max-width: 560px) {
+  .reputeo-app .main { padding-inline: 14px !important; }
+  .app-contextbar { margin-bottom: 22px; }
+  #page-overview .stats-grid { grid-template-columns: 1fr 1fr !important; }
+  #page-overview .score-card { grid-column: 1/-1; }
+  #page-overview .stat-card { min-height: 125px; padding: 16px !important; }
+  #page-overview .stat-label { margin-bottom: 14px !important; }
+  .reputeo-app .action-center { padding: 18px !important; }
+  .reputeo-app .action-row { padding: 14px !important; }
+  .reputeo-app .reputation-chart-area { padding-inline: 12px; }
+  .reputeo-app .reputation-chart-footer { padding-inline: 16px; }
+  .reputeo-app .review-head { grid-template-columns: 18px minmax(0,1fr); }
+  .reputeo-app .rev-src { display: none; }
+  .reputeo-app .review-meta { grid-column: 2; }
+  .reputeo-app .review-actions { margin-left: 49px !important; }
+  .reputeo-app .review-reply-form { margin-left: 49px; }
+  .reputeo-app .google-connection-aside,
+  .reputeo-app .google-connection-main,
+  #page-profile #profile-setup-card,
+  .reputeo-app .automation-card,
+  .reputeo-app .campaign-card,
+  .reputeo-app .support-hero-main,
+  .reputeo-app .support-hero-aside,
+  .reputeo-app .settings-card { padding: 22px !important; }
+  .reputeo-app .support-grid { grid-template-columns: 1fr; }
+  .reputeo-app .support-link:nth-child(n) { border-right: 0; }
+  .reputeo-app .request-history-row { align-items: flex-start; flex-direction: column; }
+  .reputeo-app .request-history-state { width: 100%; justify-content: space-between; }
+  .reputeo-app .ai-assistant-panel { position: fixed; inset: 66px 10px 10px; width: auto; max-height: none; border-radius: 14px; }
+  .reputeo-app .ai-assistant.open .ai-assistant-toggle { display: none; }
+  .reputeo-app .notif { top: 12px; right: 12px; left: 12px; max-width: none; }
+  .reputeo-app .completion-modal,
+  #pseudo-modal,
+  #onboarding-modal { align-items: flex-end !important; padding: 0 !important; }
+  .reputeo-app .completion-dialog,
+  #pseudo-modal > div,
+  #onboarding-modal > div { width: 100% !important; max-width: none !important; max-height: 91vh; border-radius: 20px 20px 0 0 !important; padding: 25px 20px calc(24px + env(safe-area-inset-bottom)) !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reputeo-app .page.active,
+  .review-skeleton i,
+  .app-boot__line i,
+  .reputeo-app .completion-modal.open,
+  .reputeo-app .completion-dialog,
+  #pseudo-modal > div,
+  #onboarding-modal > div { animation: none !important; }
+}
