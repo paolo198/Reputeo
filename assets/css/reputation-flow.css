@@ -1,0 +1,793 @@
+/*
+ * Reputeo reputation flow
+ * A scroll-led story that turns scattered reviews into clear actions.
+ */
+
+/* The previous dashboard mock competed with the new narrative. */
+.landing-page .demo-card {
+  display: none !important;
+}
+
+.landing-page .hero {
+  min-height: calc(100vh - 72px);
+  min-height: calc(100svh - 72px);
+  display: flex;
+  align-items: center;
+  padding: 96px 0 112px;
+  background:
+    radial-gradient(circle at 50% 100%, rgba(112, 203, 187, .14), transparent 35%),
+    linear-gradient(180deg, #fff 0%, #f8fbfa 100%);
+}
+
+.landing-page .hero::before {
+  width: 690px;
+  height: 690px;
+  right: calc(50% - 345px);
+  top: -570px;
+  border-color: rgba(15, 118, 110, .1);
+  box-shadow: 0 0 0 92px rgba(15, 118, 110, .018), 0 0 0 184px rgba(15, 118, 110, .012);
+}
+
+.landing-page .hero-grid {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  text-align: center;
+}
+
+.landing-page .hero-grid > div:first-child {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.landing-page .hero h1 {
+  max-width: 1040px;
+  margin: 30px auto 27px;
+  font-size: clamp(4rem, 7.4vw, 7.4rem);
+  line-height: .91;
+  letter-spacing: -.087em;
+}
+
+.landing-page .hero h1 em {
+  position: relative;
+  display: inline-block;
+}
+
+.landing-page .hero h1 em::after {
+  content: "";
+  position: absolute;
+  right: .03em;
+  bottom: -.07em;
+  left: .08em;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(15, 118, 110, .42), transparent);
+}
+
+.landing-page .hero p {
+  max-width: 720px;
+  margin-inline: auto;
+  font-size: clamp(1rem, 1.5vw, 1.16rem);
+}
+
+.landing-page .hero-actions {
+  justify-content: center;
+}
+
+.landing-page .fine-print {
+  max-width: 720px;
+  text-align: center;
+}
+
+.reputation-flow {
+  --flow-ink: #061a17;
+  --flow-ink-soft: #0b2521;
+  --flow-paper: #eef9f6;
+  --flow-muted: #92aaa4;
+  --flow-line: rgba(187, 234, 224, .15);
+  position: relative;
+  z-index: 1;
+  height: 340vh;
+  height: 340svh;
+  background: var(--flow-ink);
+  color: var(--flow-paper);
+}
+
+.reputation-flow__sticky {
+  position: sticky;
+  top: 72px;
+  height: calc(100vh - 72px);
+  height: calc(100svh - 72px);
+  min-height: 620px;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 74% 44%, rgba(37, 145, 130, .13), transparent 30%),
+    radial-gradient(circle at 51% 120%, rgba(88, 193, 173, .08), transparent 40%),
+    var(--flow-ink);
+}
+
+.reputation-flow__sticky::before,
+.reputation-flow__sticky::after {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  border: 1px solid rgba(161, 231, 216, .08);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.reputation-flow__sticky::before {
+  width: 760px;
+  height: 760px;
+  right: -450px;
+  top: -470px;
+  box-shadow: 0 0 0 90px rgba(140, 222, 204, .013), 0 0 0 180px rgba(140, 222, 204, .009);
+}
+
+.reputation-flow__sticky::after {
+  width: 520px;
+  height: 520px;
+  left: -390px;
+  bottom: -380px;
+  box-shadow: 0 0 0 72px rgba(140, 222, 204, .012), 0 0 0 144px rgba(140, 222, 204, .008);
+}
+
+.reputation-flow__atmosphere {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  opacity: .32;
+  background-image: radial-gradient(rgba(205, 244, 235, .15) .55px, transparent .65px);
+  background-size: 5px 5px;
+  mask-image: radial-gradient(circle at 66% 48%, #000 0, transparent 64%);
+  pointer-events: none;
+}
+
+.reputation-flow__topbar {
+  position: relative;
+  z-index: 4;
+  height: 74px;
+  display: grid;
+  grid-template-columns: 1fr minmax(180px, 420px) 1fr;
+  align-items: center;
+  gap: 28px;
+  border-bottom: 1px solid var(--flow-line);
+  color: #77938c;
+  font-size: .63rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.reputation-flow__topbar > :last-child {
+  justify-self: end;
+  color: #b6cbc6;
+  font-variant-numeric: tabular-nums;
+}
+
+.reputation-flow__progress {
+  height: 1px;
+  overflow: hidden;
+  background: rgba(186, 234, 223, .11);
+}
+
+.reputation-flow__progress i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #5cc9b5, #c1f7eb);
+  box-shadow: 0 0 12px rgba(105, 219, 197, .6);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.reputation-flow__layout {
+  height: calc(100% - 74px);
+  display: grid;
+  grid-template-columns: minmax(300px, .72fr) minmax(560px, 1.28fr);
+  align-items: center;
+  gap: clamp(25px, 4vw, 68px);
+  padding-bottom: 34px;
+}
+
+.reputation-flow__story {
+  position: relative;
+  z-index: 3;
+  align-self: center;
+}
+
+.reputation-flow__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 0 0 33px;
+  color: #76d7c5;
+  font-size: .69rem;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.reputation-flow__eyebrow::before {
+  content: "";
+  width: 23px;
+  height: 1px;
+  background: #76d7c5;
+}
+
+.reputation-flow__copy-stack {
+  position: relative;
+  min-height: 380px;
+}
+
+.reputation-flow__copy {
+  position: absolute;
+  inset: 0;
+  max-width: 460px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 180ms ease, transform 280ms cubic-bezier(.2, .8, .2, 1);
+  pointer-events: none;
+}
+
+.reputation-flow__copy.is-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reputation-flow__copy > span {
+  display: block;
+  margin-bottom: 25px;
+  color: #79938d;
+  font-size: .66rem;
+  font-weight: 800;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.reputation-flow__copy h2 {
+  margin: 0;
+  color: #f2faf8;
+  font-family: var(--rp-font-display);
+  font-size: clamp(2.65rem, 4vw, 4.65rem);
+  font-weight: 650;
+  letter-spacing: -.072em;
+  line-height: .99;
+  text-wrap: balance;
+}
+
+.reputation-flow__copy p {
+  max-width: 420px;
+  margin: 27px 0 0;
+  color: var(--flow-muted);
+  font-size: .96rem;
+  line-height: 1.76;
+}
+
+.reputation-flow__visual {
+  position: relative;
+  justify-self: end;
+  width: min(100%, 760px);
+  aspect-ratio: 900 / 760;
+  transform: translateZ(0);
+}
+
+.reputation-flow__halo {
+  position: absolute;
+  z-index: 0;
+  width: 47%;
+  aspect-ratio: 1;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  background: rgba(38, 170, 150, .16);
+  filter: blur(70px);
+  opacity: .8;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.reputation-flow__liquid {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.reputation-flow__liquid-field {
+  filter: url(#flow-goo);
+}
+
+.reputation-flow__core-shape {
+  transform-box: fill-box;
+  transform-origin: center;
+  filter: url(#flow-glow);
+}
+
+[data-flow-drop] circle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: reputationDropBreathe 5.5s ease-in-out infinite alternate;
+}
+
+[data-flow-drop]:nth-of-type(3) circle { animation-delay: -1.2s; }
+[data-flow-drop]:nth-of-type(4) circle { animation-delay: -2.7s; }
+[data-flow-drop]:nth-of-type(5) circle { animation-delay: -.6s; }
+[data-flow-drop]:nth-of-type(6) circle { animation-delay: -3.5s; }
+[data-flow-drop]:nth-of-type(7) circle { animation-delay: -1.9s; }
+
+@keyframes reputationDropBreathe {
+  from { transform: scale(.96); }
+  to { transform: scale(1.05); }
+}
+
+.reputation-flow__orbit {
+  fill: none;
+  stroke: rgba(176, 231, 219, .16);
+  stroke-width: 1;
+  stroke-dasharray: 2 12;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.reputation-flow__orbit--inner {
+  stroke: rgba(176, 231, 219, .1);
+  stroke-dasharray: 1 9;
+}
+
+.reputation-flow__trace {
+  fill: none;
+  stroke: url(#flow-line);
+  stroke-width: 1;
+  stroke-dasharray: 7 12;
+  opacity: .42;
+}
+
+.reputation-flow__trace--reverse {
+  stroke-dasharray: 2 15;
+  opacity: .26;
+}
+
+.reputation-flow__spark {
+  fill: #c3f8ed;
+  opacity: .55;
+  filter: url(#flow-glow);
+}
+
+.reputation-flow__core-content {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: 50%;
+  width: 205px;
+  min-height: 132px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.reputation-flow__core-content img {
+  width: 45px;
+  height: 45px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, .32);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(3, 49, 42, .25);
+}
+
+.reputation-flow__core-state {
+  position: absolute;
+  top: 68px;
+  left: 50%;
+  width: 210px;
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  transition: opacity 160ms ease, transform 240ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.reputation-flow__core-state.is-active {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.reputation-flow__core-state strong,
+.reputation-flow__core-state span {
+  display: block;
+}
+
+.reputation-flow__core-state strong {
+  color: #fff;
+  font-family: var(--rp-font-display);
+  font-size: .96rem;
+  letter-spacing: -.025em;
+}
+
+.reputation-flow__core-state span {
+  margin-top: 4px;
+  color: rgba(235, 255, 250, .68);
+  font-size: .64rem;
+}
+
+.reputation-flow__review,
+.reputation-flow__outcome {
+  position: absolute;
+  z-index: 4;
+  border: 1px solid rgba(196, 235, 226, .16);
+  background: rgba(8, 34, 30, .78);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, .18);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.reputation-flow__review {
+  width: 202px;
+  padding: 15px 16px;
+  border-radius: 13px;
+  transform-origin: center;
+}
+
+.reputation-flow__review span,
+.reputation-flow__review strong,
+.reputation-flow__review small {
+  display: block;
+}
+
+.reputation-flow__review span {
+  margin-bottom: 8px;
+  color: #e3bc6e;
+  font-size: .58rem;
+  letter-spacing: .08em;
+}
+
+.reputation-flow__review strong {
+  color: #dceae7;
+  font-size: .71rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.reputation-flow__review small {
+  margin-top: 7px;
+  color: #6f8c85;
+  font-size: .58rem;
+}
+
+.reputation-flow__review--one { left: 1%; top: 12%; }
+.reputation-flow__review--two { right: 0; top: 11%; }
+.reputation-flow__review--three { right: 2%; bottom: 10%; }
+
+.reputation-flow__outcome {
+  width: 212px;
+  min-height: 68px;
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 13px;
+  border-color: rgba(172, 231, 218, .22);
+  border-radius: 14px;
+  background: rgba(9, 42, 37, .9);
+  opacity: 0;
+  transform: translateY(16px) scale(.94);
+  box-shadow: 0 20px 65px rgba(0, 0, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .035);
+}
+
+.reputation-flow__outcome-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(144, 224, 208, .18);
+  border-radius: 10px;
+  background: rgba(90, 198, 177, .1);
+  color: #87dfce;
+  font-size: .88rem;
+}
+
+.reputation-flow__outcome small,
+.reputation-flow__outcome strong {
+  display: block;
+}
+
+.reputation-flow__outcome small {
+  color: #718f88;
+  font-size: .57rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.reputation-flow__outcome strong {
+  margin-top: 3px;
+  color: #e5f1ee;
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.reputation-flow__outcome i {
+  color: #4f7169;
+  font-size: .57rem;
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+}
+
+.reputation-flow__outcome--reply { left: 1%; top: 17%; }
+.reputation-flow__outcome--priority { right: -1%; top: 45%; }
+.reputation-flow__outcome--signal { left: 8%; bottom: 8%; }
+
+.reputation-flow.is-touch .reputation-flow__liquid-field {
+  filter: none !important;
+}
+
+.reputation-flow__scroll-cue {
+  position: absolute;
+  z-index: 6;
+  left: 50%;
+  bottom: 23px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #6d8982;
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+}
+
+.reputation-flow__scroll-cue i {
+  position: relative;
+  width: 34px;
+  height: 1px;
+  overflow: hidden;
+  background: rgba(164, 224, 211, .18);
+}
+
+.reputation-flow__scroll-cue i::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #8edccb;
+  animation: reputationScrollCue 1.8s ease-in-out infinite;
+  transform: translateX(-100%);
+}
+
+@keyframes reputationScrollCue {
+  45%, 55% { transform: translateX(0); }
+  100% { transform: translateX(100%); }
+}
+
+.reputation-flow + .proof {
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 1020px) {
+  .reputation-flow {
+    height: 310vh;
+    height: 310svh;
+  }
+
+  .reputation-flow__layout {
+    grid-template-columns: minmax(270px, .76fr) minmax(470px, 1.24fr);
+    gap: 10px;
+  }
+
+  .reputation-flow__copy h2 {
+    font-size: clamp(2.45rem, 4.5vw, 3.8rem);
+  }
+
+  .reputation-flow__visual {
+    width: min(100%, 650px);
+  }
+
+  .reputation-flow__review,
+  .reputation-flow__outcome {
+    transform-origin: center;
+  }
+}
+
+@media (max-width: 800px) {
+  .landing-page .hero {
+    min-height: calc(100vh - 66px);
+    min-height: calc(100svh - 66px);
+    padding: 70px 0 88px;
+  }
+
+  .landing-page .hero h1 {
+    max-width: 700px;
+    font-size: clamp(3.3rem, 14vw, 5.7rem);
+  }
+
+  .reputation-flow {
+    height: 250vh;
+    height: 250svh;
+  }
+
+  .reputation-flow__sticky {
+    top: 66px;
+    height: calc(100vh - 66px);
+    height: calc(100svh - 66px);
+    min-height: 590px;
+  }
+
+  .reputation-flow__topbar {
+    height: 54px;
+    grid-template-columns: minmax(90px, 1fr) 2fr auto;
+    gap: 15px;
+    font-size: .54rem;
+  }
+
+  .reputation-flow__layout {
+    height: calc(100% - 54px);
+    grid-template-columns: 1fr;
+    grid-template-rows: 220px minmax(0, 1fr);
+    align-content: center;
+    gap: 0;
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+
+  .reputation-flow__story {
+    align-self: start;
+  }
+
+  .reputation-flow__eyebrow {
+    margin-bottom: 19px;
+    font-size: .59rem;
+  }
+
+  .reputation-flow__copy-stack {
+    min-height: 170px;
+  }
+
+  .reputation-flow__copy {
+    max-width: 620px;
+  }
+
+  .reputation-flow__copy > span {
+    margin-bottom: 12px;
+  }
+
+  .reputation-flow__copy h2 {
+    max-width: 650px;
+    font-size: clamp(2rem, 7vw, 3.25rem);
+  }
+
+  .reputation-flow__copy p {
+    max-width: 580px;
+    margin-top: 13px;
+    font-size: .79rem;
+    line-height: 1.55;
+  }
+
+  .reputation-flow__visual {
+    align-self: center;
+    justify-self: center;
+    width: min(620px, 94vw);
+    max-height: 48vh;
+    max-height: 48svh;
+  }
+
+  .reputation-flow__review--one { left: 0; top: 8%; }
+  .reputation-flow__review--two { right: 0; top: 8%; }
+  .reputation-flow__review--three { right: 1%; bottom: 6%; }
+  .reputation-flow__outcome--reply { left: -1%; top: 10%; }
+  .reputation-flow__outcome--priority { right: -2%; top: 43%; }
+  .reputation-flow__outcome--signal { left: 2%; bottom: 3%; }
+
+  .reputation-flow__scroll-cue {
+    bottom: 12px;
+  }
+}
+
+@media (max-width: 560px) {
+  .landing-page .hero h1 {
+    font-size: clamp(3rem, 16vw, 4.8rem);
+  }
+
+  .reputation-flow {
+    height: 220vh;
+    height: 220svh;
+  }
+
+  .reputation-flow__topbar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .reputation-flow__topbar > :first-child {
+    display: none;
+  }
+
+  .reputation-flow__layout {
+    grid-template-rows: 235px minmax(0, 1fr);
+    padding-top: 20px;
+  }
+
+  .reputation-flow__eyebrow {
+    max-width: 270px;
+    line-height: 1.4;
+  }
+
+  .reputation-flow__copy h2 {
+    font-size: clamp(1.82rem, 9.2vw, 2.7rem);
+    line-height: 1.02;
+  }
+
+  .reputation-flow__copy p {
+    font-size: .74rem;
+  }
+
+  .reputation-flow__visual {
+    width: 116%;
+    margin-left: -8%;
+  }
+
+  .reputation-flow__liquid-field {
+    filter: none !important;
+  }
+
+  .reputation-flow__halo {
+    filter: blur(44px);
+  }
+
+  .reputation-flow__review {
+    width: 172px;
+    padding: 11px 12px;
+  }
+
+  .reputation-flow__review--one { left: 10%; top: 8%; }
+  .reputation-flow__review--two { right: 8%; top: 5%; }
+  .reputation-flow__review--three { display: none; }
+
+  .reputation-flow__outcome {
+    width: 190px;
+    min-height: 62px;
+  }
+
+  .reputation-flow__outcome--reply { left: 12%; top: 7%; }
+  .reputation-flow__outcome--priority { right: 8%; top: 19%; }
+  .reputation-flow__outcome--signal { left: 10%; bottom: 0; }
+
+  .reputation-flow__core-content {
+    transform: translate(-50%, -50%) scale(.83);
+  }
+
+  .reputation-flow__scroll-cue span {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce), (max-height: 620px) and (orientation: landscape) {
+  .reputation-flow {
+    height: auto;
+  }
+
+  .reputation-flow__sticky {
+    position: relative;
+    top: 0;
+    height: auto;
+    min-height: 760px;
+  }
+
+  .reputation-flow__scroll-cue {
+    display: none;
+  }
+
+  [data-flow-drop] circle,
+  .reputation-flow__scroll-cue i::after {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (max-width: 800px), (max-height: 620px) and (orientation: landscape) and (max-width: 800px) {
+  .reputation-flow__sticky {
+    min-height: 760px;
+  }
+}

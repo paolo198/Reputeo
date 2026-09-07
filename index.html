@@ -27,12 +27,113 @@
   </style>
   <link rel="stylesheet" href="/assets/css/base.css">
   <link rel="stylesheet" href="/assets/css/landing-refresh.css">
+  <link rel="stylesheet" href="/assets/css/reputation-flow.css">
 </head>
 <body class="landing-page">
   <a class="skip-link" href="#contenu">Aller au contenu</a>
   <header class="nav-shell"><div class="wrap nav"><a href="/" class="brand" aria-label="Reputeo, accueil"><img class="brand-mark" src="/favicon.svg" alt=""><span class="brand-word">Repute<span class="brand-o">o</span></span></a><button class="landing-menu" id="landingMenu" type="button" aria-expanded="false" aria-controls="landingNav" aria-label="Ouvrir la navigation"><span></span></button><nav class="links" id="landingNav" aria-label="Navigation principale"><a href="#fonctionnement">Comment ça marche</a><a href="#tarif">Tarif</a><a href="#questions">Questions</a><a class="button nav-login" href="/login.html">Connexion</a><a class="button" href="/login.html?mode=signup">S’inscrire</a></nav></div></header>
   <main>
     <section class="hero" id="contenu"><div class="wrap hero-grid"><div class="hero-copy"><div class="eyebrow"><i></i> La réputation, enfin actionnable</div><h1>Chaque avis peut renforcer <em>votre confiance.</em></h1><p>Reputeo réunit vos avis Google, prépare des réponses qui vous ressemblent et vous montre les actions qui feront réellement progresser votre établissement.</p><div class="hero-actions"><a class="button" href="/login.html?mode=signup">Commencer l’essai <span aria-hidden="true">→</span></a><a class="button ghost" href="#fonctionnement">Voir comment ça fonctionne</a></div><div class="fine-print">14 jours d’essai · Carte requise, aucun prélèvement avant la fin de l’essai · Résiliable depuis votre espace</div></div><div class="product-card demo-card" id="reputeo-demo" aria-label="Aperçu de l’interface Reputeo"><div class="demo-browser"><i class="demo-dot"></i><i class="demo-dot"></i><i class="demo-dot"></i><span class="demo-address"></span></div><div class="demo-film"><div class="demo-app"><aside class="demo-sidebar"><div class="demo-logo">Repute<span>o</span></div><nav class="demo-nav" aria-label="Aperçu de la navigation"><span class="demo-nav-section">Principal</span><span class="demo-nav-overview">▥ Vue d’ensemble</span><span class="demo-nav-reviews">☆ Mes avis</span><span>⌁ Connexions</span><span>⌂ Ma fiche Google</span><span class="demo-nav-section">Outils</span><span>⌕ Analyser un avis</span><span>▤ Rapports</span><span>▥ Tendances des avis</span><span class="demo-nav-auto">ϟ Automatisations</span><span>ⓘ Aide &amp; support</span></nav></aside><div class="demo-main"><div class="demo-topline"><span>Maison Lenoir · Lyon</span><span class="demo-status">Google synchronisé</span></div><div class="demo-title">Les avis à traiter</div><div class="demo-grid"><div class="demo-score-card"><div class="demo-score">4,8</div><div><b>Votre réputation est solide</b><small>3 avis à consulter</small></div></div><div class="demo-chart-card"><div class="demo-card-label">Évolution sur 30 jours</div><div class="demo-chart"><i></i><i></i><i></i><i></i><i></i></div></div><div class="demo-review-card"><div class="demo-review-row"><span class="demo-avatar">ML</span><div><b>Marie L.</b><p>Intervention très soignée, merci.</p></div><span class="demo-pill">Réponse prête</span></div></div></div><div class="demo-ai-card"><div class="demo-card-label">Réponse assistée</div><h3>Une proposition, à votre image.</h3><p>Reputeo prépare un texte. Vous le relisez, l’ajustez et gardez le dernier mot.</p><div class="demo-ai-answer"><span class="demo-type">Merci Marie pour votre retour. Nous sommes ravis que l’intervention vous ait donné satisfaction.</span></div></div><div class="demo-auto-card"><div class="demo-card-label">Demandes d’avis</div><h3>Après une prestation, tout est prêt.</h3><div class="demo-flow"><span>Prestation<br>terminée</span><i>→</i><span>Délai<br>choisi</span><i>→</i><span>Demande<br>d’avis</span></div><div class="demo-success">✓ Votre demande d’avis est programmée.</div></div></div></div><span class="demo-cursor" aria-hidden="true"></span></div><div class="demo-caption"><span class="demo-recording">Aperçu produit · 0:10</span><span class="demo-progress" aria-hidden="true"></span><button class="demo-replay" type="button" onclick="restartDemo()">↻ Revoir</button></div></div></div></section>
+    <section class="reputation-flow" id="experience" data-reputation-flow aria-labelledby="flow-title">
+      <div class="reputation-flow__sticky">
+        <div class="reputation-flow__atmosphere" aria-hidden="true"></div>
+        <div class="wrap reputation-flow__topbar" aria-hidden="true">
+          <span>Reputeo / Signal de confiance</span>
+          <span class="reputation-flow__progress"><i data-flow-progress></i></span>
+          <span data-flow-counter>01 — 03</span>
+        </div>
+        <div class="wrap reputation-flow__layout">
+          <div class="reputation-flow__story">
+            <p class="reputation-flow__eyebrow">Votre réputation, mise en mouvement</p>
+            <div class="reputation-flow__copy-stack">
+              <article class="reputation-flow__copy is-active" data-flow-copy="0">
+                <span>01 — Écouter</span>
+                <h2 id="flow-title">Chaque avis commence comme un signal isolé.</h2>
+                <p>Des mots, une note, une émotion. Reputeo capte chaque retour sans le réduire à un simple chiffre.</p>
+              </article>
+              <article class="reputation-flow__copy" data-flow-copy="1">
+                <span>02 — Comprendre</span>
+                <h2>Les signaux se rejoignent. Le sens apparaît.</h2>
+                <p>Les retours dispersés deviennent une lecture claire de ce que vos clients apprécient et de ce qui mérite votre attention.</p>
+              </article>
+              <article class="reputation-flow__copy" data-flow-copy="2">
+                <span>03 — Agir</span>
+                <h2>Votre réputation devient un mouvement maîtrisé.</h2>
+                <p>Une réponse juste, une priorité concrète, une tendance à suivre. Vous gardez le dernier mot à chaque étape.</p>
+              </article>
+            </div>
+          </div>
+
+          <div class="reputation-flow__visual" data-flow-visual aria-hidden="true">
+            <div class="reputation-flow__halo"></div>
+            <svg class="reputation-flow__liquid" viewBox="0 0 900 760" role="presentation">
+              <defs>
+                <radialGradient id="flow-liquid-fill" gradientUnits="userSpaceOnUse" cx="330" cy="235" r="520">
+                  <stop offset="0" stop-color="#baf5e7"/>
+                  <stop offset="0.38" stop-color="#61cdb8"/>
+                  <stop offset="1" stop-color="#0b6c64"/>
+                </radialGradient>
+                <linearGradient id="flow-line" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#baf5e7" stop-opacity="0"/>
+                  <stop offset="0.5" stop-color="#baf5e7" stop-opacity="0.72"/>
+                  <stop offset="1" stop-color="#baf5e7" stop-opacity="0"/>
+                </linearGradient>
+                <filter id="flow-goo" x="-40%" y="-40%" width="180%" height="180%" color-interpolation-filters="sRGB">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="19" result="blur"/>
+                  <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 26 -11" result="goo"/>
+                  <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+                </filter>
+                <filter id="flow-glow" x="-80%" y="-80%" width="260%" height="260%">
+                  <feGaussianBlur stdDeviation="14" result="soft"/>
+                  <feMerge><feMergeNode in="soft"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+
+              <circle class="reputation-flow__orbit reputation-flow__orbit--outer" cx="450" cy="380" r="276"/>
+              <circle class="reputation-flow__orbit reputation-flow__orbit--inner" cx="450" cy="380" r="190"/>
+              <path class="reputation-flow__trace" d="M110 182C243 70 341 139 450 380S690 680 808 554"/>
+              <path class="reputation-flow__trace reputation-flow__trace--reverse" d="M86 552C232 670 349 596 450 380S660 78 820 184"/>
+
+              <g class="reputation-flow__liquid-field" filter="url(#flow-goo)">
+                <circle class="reputation-flow__core-shape" cx="450" cy="380" r="116" fill="url(#flow-liquid-fill)"/>
+                <g data-flow-drop data-start-x="128" data-start-y="174" data-end-x="282" data-end-y="245" data-radius="54"><circle r="54" fill="url(#flow-liquid-fill)"/></g>
+                <g data-flow-drop data-start-x="742" data-start-y="150" data-end-x="640" data-end-y="256" data-radius="47"><circle r="47" fill="url(#flow-liquid-fill)"/></g>
+                <g data-flow-drop data-start-x="802" data-start-y="490" data-end-x="674" data-end-y="474" data-radius="61"><circle r="61" fill="url(#flow-liquid-fill)"/></g>
+                <g data-flow-drop data-start-x="625" data-start-y="676" data-end-x="561" data-end-y="585" data-radius="42"><circle r="42" fill="url(#flow-liquid-fill)"/></g>
+                <g data-flow-drop data-start-x="212" data-start-y="608" data-end-x="300" data-end-y="528" data-radius="50"><circle r="50" fill="url(#flow-liquid-fill)"/></g>
+                <g data-flow-drop data-start-x="76" data-start-y="392" data-end-x="221" data-end-y="382" data-radius="34"><circle r="34" fill="url(#flow-liquid-fill)"/></g>
+              </g>
+
+              <circle class="reputation-flow__spark reputation-flow__spark--one" cx="260" cy="111" r="4"/>
+              <circle class="reputation-flow__spark reputation-flow__spark--two" cx="767" cy="363" r="3"/>
+              <circle class="reputation-flow__spark reputation-flow__spark--three" cx="425" cy="696" r="5"/>
+            </svg>
+
+            <div class="reputation-flow__core-content">
+              <img src="/favicon.svg" alt="">
+              <div class="reputation-flow__core-state is-active" data-flow-core="0"><strong>Reputeo écoute</strong><span>Les retours restent humains</span></div>
+              <div class="reputation-flow__core-state" data-flow-core="1"><strong>Le sens émerge</strong><span>Les signaux deviennent lisibles</span></div>
+              <div class="reputation-flow__core-state" data-flow-core="2"><strong>Signal clair</strong><span>Vous savez où agir</span></div>
+            </div>
+
+            <div class="reputation-flow__review reputation-flow__review--one" data-flow-review><span>★★★★★</span><strong>« Une équipe vraiment attentive. »</strong><small>Accueil · positif</small></div>
+            <div class="reputation-flow__review reputation-flow__review--two" data-flow-review><span>★★★★☆</span><strong>« Service rapide et soigné. »</strong><small>Qualité · positif</small></div>
+            <div class="reputation-flow__review reputation-flow__review--three" data-flow-review><span>★★★☆☆</span><strong>« Un peu d’attente cette fois. »</strong><small>Délai · à surveiller</small></div>
+
+            <div class="reputation-flow__outcome reputation-flow__outcome--reply" data-flow-outcome>
+              <span class="reputation-flow__outcome-icon">↗</span><div><small>Réponse</small><strong>Prête à valider</strong></div><i>01</i>
+            </div>
+            <div class="reputation-flow__outcome reputation-flow__outcome--priority" data-flow-outcome>
+              <span class="reputation-flow__outcome-icon">◌</span><div><small>Priorité</small><strong>Délai d’attente</strong></div><i>02</i>
+            </div>
+            <div class="reputation-flow__outcome reputation-flow__outcome--signal" data-flow-outcome>
+              <span class="reputation-flow__outcome-icon">⌁</span><div><small>Tendance</small><strong>Accueil apprécié</strong></div><i>03</i>
+            </div>
+          </div>
+        </div>
+        <div class="reputation-flow__scroll-cue" data-flow-cue aria-hidden="true"><span>Faites défiler</span><i></i></div>
+      </div>
+    </section>
     <section class="proof"><div class="wrap proof-grid"><div class="proof-item"><b>Un seul endroit</b><span>pour suivre vos avis Google</span></div><div class="proof-item"><b>Des réponses justes</b><span>à valider avant publication</span></div><div class="proof-item"><b>Des signaux clairs</b><span>pour savoir quoi améliorer</span></div></div></section>
     <section class="section mist" id="fonctionnement"><div class="wrap"><div class="kicker">L’essentiel, sans le bruit</div><h2>Garder la confiance ne devrait pas être un deuxième métier.</h2><p class="lead">Reputeo vous aide à passer d’un avis reçu à une action utile, sans perdre de temps dans des tableaux compliqués.</p><div class="features"><article class="feature"><div class="feature-icon">✦</div><h3>Vos avis, réunis</h3><p>Connectez votre compte Google Business pour retrouver les nouveaux avis dans une vue claire.</p></article><article class="feature"><div class="feature-icon">↗</div><h3>Des réponses à votre image</h3><p>Préparez une réponse avec l’IA, ajustez-la, puis choisissez vous-même de la publier.</p></article><article class="feature"><div class="feature-icon">◌</div><h3>Une fiche plus solide</h3><p>Identifiez les informations à compléter et les retours qui demandent votre attention.</p></article></div></div></section>
     <section class="section"><div class="wrap"><div class="kicker">Simple par conception</div><h2>Trois étapes pour reprendre la main.</h2><div class="steps"><article class="step"><div class="step-num">01 — CONNECTER</div><h3>Autorisez Google</h3><p>Vous restez propriétaire de votre compte. Reputeo n’accède qu’avec votre accord.</p></article><article class="step"><div class="step-num">02 — COMPRENDRE</div><h3>Consultez ce qui compte</h3><p>Repérez les nouveaux avis, les réponses en attente et les tendances utiles.</p></article><article class="step"><div class="step-num">03 — RÉPONDRE</div><h3>Gardez le bon ton</h3><p>Utilisez une proposition comme point de départ, puis publiez seulement après validation.</p></article></div></div></section>
@@ -51,6 +152,7 @@
     if(landingMenu){landingMenu.addEventListener('click',()=>setLandingMenu(landingMenu.getAttribute('aria-expanded')!=='true'));landingNav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>setLandingMenu(false)));document.addEventListener('keydown',event=>{if(event.key==='Escape')setLandingMenu(false)});window.addEventListener('resize',()=>{if(window.innerWidth>800)setLandingMenu(false)})}
     function restartDemo(){const demo=document.getElementById('reputeo-demo');if(!demo)return;demo.classList.add('demo-restarting');void demo.offsetWidth;window.requestAnimationFrame(()=>demo.classList.remove('demo-restarting'))}
   </script>
+  <script src="/assets/js/reputation-flow.js" defer></script>
   <script src="/cookie-consent.js" defer></script>
 </body>
 </html>
