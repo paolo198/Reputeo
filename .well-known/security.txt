@@ -1,0 +1,4 @@
+Contact: mailto:contact@reputeo.app
+Canonical: https://www.reputeo.app/.well-known/security.txt
+Preferred-Languages: fr, en
+Expires: 2027-09-09T23:59:59Z

@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard.html
+Disallow: /login.html
+Disallow: /google-profile-preview.html
+
+Sitemap: https://www.reputeo.app/sitemap.xml
