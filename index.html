@@ -11,7 +11,37 @@
   <meta property="og:description" content="Répondez avec justesse, comprenez ce que vos clients attendent et transformez chaque prestation en preuve de confiance.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.reputeo.app/">
+  <meta property="og:site_name" content="Reputeo">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:image" content="https://www.reputeo.app/assets/images/reputeo-social-card.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Reputeo — La confiance se construit, avis après avis.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Reputeo — La confiance se construit, avis après avis">
+  <meta name="twitter:description" content="Répondez avec justesse, comprenez ce que vos clients attendent et transformez chaque prestation en preuve de confiance.">
+  <meta name="twitter:image" content="https://www.reputeo.app/assets/images/reputeo-social-card.png">
+  <meta name="twitter:image:alt" content="Reputeo — La confiance se construit, avis après avis.">
   <link rel="canonical" href="https://www.reputeo.app/">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Reputeo",
+      "url": "https://www.reputeo.app/",
+      "image": "https://www.reputeo.app/assets/images/reputeo-social-card.png",
+      "description": "Reputeo aide les entreprises locales à réunir leurs avis Google Business, comprendre les priorités et préparer des réponses qu’elles seules choisissent de publier.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "inLanguage": "fr-FR",
+      "offers": {
+        "@type": "Offer",
+        "price": "29.99",
+        "priceCurrency": "EUR"
+      }
+    }
+  </script>
   <script>
     try {
       const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -22,7 +52,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link rel="preload" href="/assets/images/trust-hands-v1.png" as="image" fetchpriority="high">
+  <link rel="preload" href="/assets/images/trust-hands-v1-1536.avif" as="image" type="image/avif" imagesrcset="/assets/images/trust-hands-v1-1024.avif 1024w, /assets/images/trust-hands-v1-1536.avif 1536w, /assets/images/trust-hands-v1-2048.avif 2048w" imagesizes="(max-width: 800px) 195vw, 112vw" fetchpriority="high">
   <link rel="stylesheet" href="/assets/css/base.css">
   <link rel="stylesheet" href="/assets/css/reputation-flow.css">
   <link rel="stylesheet" href="/assets/css/landing-trial.css">
@@ -42,7 +72,7 @@
         <a href="#tarif">Tarif</a>
         <a href="#questions">Questions</a>
         <a class="landing-login" href="/login.html">Connexion</a>
-        <a class="landing-button landing-button--small" href="/login.html?mode=signup">S’inscrire <span aria-hidden="true">↗</span></a>
+        <a class="landing-button landing-button--small" href="/login.html?mode=signup">Essayer Reputeo 14 jours <span aria-hidden="true">↗</span></a>
       </nav>
     </div>
   </header>
@@ -69,10 +99,10 @@
             <h1 id="journey-title">Un avis est un geste <em>de confiance.</em></h1>
             <p class="trust-copy__lead">Quelques mots, une note, une expérience partagée. Reputeo transforme chaque retour en une relation qui avance.</p>
             <div class="trust-copy__actions">
-              <a class="landing-button" href="/login.html?mode=signup">Commencer l’essai <span aria-hidden="true">→</span></a>
+              <a class="landing-button" href="/login.html?mode=signup">Essayer Reputeo 14 jours <span aria-hidden="true">→</span></a>
               <a class="landing-button landing-button--ghost" href="#fonctionnement">Découvrir le mouvement</a>
             </div>
-            <p class="trust-copy__note">14 jours d’essai · Carte requise · Aucun prélèvement avant la fin de l’essai</p>
+            <p class="trust-copy__note">Carte requise · 0 € aujourd’hui · puis 29,99 € TTC / mois à partir du jour 15 si vous ne résiliez pas</p>
           </article>
 
           <article class="trust-copy__act" id="journey-act-2" data-journey-copy="1">
@@ -101,7 +131,7 @@
             <h2>Chaque prestation peut devenir <em>une nouvelle preuve de confiance.</em></h2>
             <p class="trust-copy__lead">Programmez votre demande d’avis au bon moment, suivez les retours et gardez une réputation qui avance avec votre activité.</p>
             <div class="trust-copy__actions">
-              <a class="landing-button" href="/login.html?mode=signup">Commencer les 14 jours <span aria-hidden="true">→</span></a>
+              <a class="landing-button" href="/login.html?mode=signup">Essayer Reputeo 14 jours <span aria-hidden="true">→</span></a>
             </div>
           </article>
 
@@ -117,8 +147,16 @@
           <div class="trust-orbit trust-orbit--outer"></div>
           <div class="trust-orbit trust-orbit--inner"></div>
           <div class="trust-hands">
-            <img class="trust-hand trust-hand--left" src="/assets/images/trust-hands-v1.png" alt="" width="2048" height="768" decoding="async" fetchpriority="high" draggable="false">
-            <img class="trust-hand trust-hand--right" src="/assets/images/trust-hands-v1.png" alt="" width="2048" height="768" decoding="async" draggable="false">
+            <picture>
+              <source type="image/avif" srcset="/assets/images/trust-hands-v1-1024.avif 1024w, /assets/images/trust-hands-v1-1536.avif 1536w, /assets/images/trust-hands-v1-2048.avif 2048w" sizes="(max-width: 800px) 195vw, 112vw">
+              <source type="image/webp" srcset="/assets/images/trust-hands-v1-1024.webp 1024w, /assets/images/trust-hands-v1-1536.webp 1536w, /assets/images/trust-hands-v1-2048.webp 2048w" sizes="(max-width: 800px) 195vw, 112vw">
+              <img class="trust-hand trust-hand--left" src="/assets/images/trust-hands-v1.png" alt="" width="2048" height="768" decoding="async" fetchpriority="high" draggable="false">
+            </picture>
+            <picture>
+              <source type="image/avif" srcset="/assets/images/trust-hands-v1-1024.avif 1024w, /assets/images/trust-hands-v1-1536.avif 1536w, /assets/images/trust-hands-v1-2048.avif 2048w" sizes="(max-width: 800px) 195vw, 112vw">
+              <source type="image/webp" srcset="/assets/images/trust-hands-v1-1024.webp 1024w, /assets/images/trust-hands-v1-1536.webp 1536w, /assets/images/trust-hands-v1-2048.webp 2048w" sizes="(max-width: 800px) 195vw, 112vw">
+              <img class="trust-hand trust-hand--right" src="/assets/images/trust-hands-v1.png" alt="" width="2048" height="768" decoding="async" draggable="false">
+            </picture>
           </div>
 
           <div class="trust-lens">
@@ -182,49 +220,56 @@
 
     <section class="control-proof" id="confiance" aria-labelledby="control-proof-title">
       <div class="landing-wrap">
-        <header class="control-proof__header">
-          <p class="landing-kicker">Un produit qui connaît sa place</p>
-          <h2 id="control-proof-title">L’assistance accélère.<br><em>Vous décidez.</em></h2>
-          <p>Les règles importantes ne sont ni cachées dans une interface, ni laissées à l’interprétation.</p>
+        <header class="control-proof__header" data-reveal>
+          <div class="control-proof__title">
+            <p class="landing-kicker">Un produit qui connaît sa place</p>
+            <h2 id="control-proof-title">L’assistance accélère.<br><em>Vous décidez.</em></h2>
+          </div>
+          <p class="control-proof__intro">Les règles importantes ne sont ni cachées dans une interface, ni laissées à l’interprétation.</p>
         </header>
         <div class="control-proof__ledger">
-          <article><span>01</span><div><h3>Publier reste votre décision</h3><p>Chaque réponse est une proposition modifiable. Une action explicite est nécessaire avant son envoi sur Google.</p></div><small>Validation humaine</small></article>
-          <article><span>02</span><div><h3>Google reste sous votre contrôle</h3><p>L’autorisation Google Business est distincte de votre compte Reputeo et peut être retirée.</p></div><small>Accès révocable</small></article>
-          <article><span>03</span><div><h3>Votre carte ne transite pas chez nous</h3><p>Stripe traite les informations de paiement. Reputeo ne stocke pas votre numéro de carte bancaire.</p></div><small>Paiement Stripe</small></article>
-          <article><span>04</span><div><h3>Vos données ne sont pas un produit</h3><p>Reputeo ne vend ni ne loue vos données. Vous pouvez demander la suppression de votre compte depuis l’application.</p></div><small>Choix durable</small></article>
+          <article data-reveal><span>01</span><div><h3>Publier reste votre décision</h3><p>Chaque réponse est une proposition modifiable. Une action explicite est nécessaire avant son envoi sur Google.</p></div><small>Validation humaine</small></article>
+          <article data-reveal><span>02</span><div><h3>Google reste sous votre contrôle</h3><p>L’autorisation Google Business est distincte de votre compte Reputeo et peut être retirée.</p></div><small>Accès révocable</small></article>
+          <article data-reveal><span>03</span><div><h3>Votre carte ne transite pas chez nous</h3><p>Stripe traite les informations de paiement. Reputeo ne stocke pas votre numéro de carte bancaire.</p></div><small>Paiement Stripe</small></article>
+          <article data-reveal><span>04</span><div><h3>Vos données ne sont pas un produit</h3><p>Reputeo ne vend ni ne loue vos données. Vous pouvez demander la suppression de votre compte depuis l’application.</p></div><small>Choix durable</small></article>
         </div>
+        <nav class="control-proof__verification" aria-label="Vérifier les engagements de Reputeo" data-reveal>
+          <span>Engagements vérifiables</span>
+          <a href="/privacy">Confidentialité <i aria-hidden="true">↗</i></a>
+          <a href="/terms">Conditions <i aria-hidden="true">↗</i></a>
+        </nav>
       </div>
     </section>
 
     <section class="trial-proof" aria-labelledby="trial-proof-title">
       <div class="landing-wrap trial-proof__layout">
-        <header class="trial-proof__header">
+        <header class="trial-proof__header" data-reveal>
           <h2 id="trial-proof-title">Vous savez quand.<br>Vous savez combien.</h2>
         </header>
         <ol class="trial-timeline">
-          <li><span class="trial-timeline__line" aria-hidden="true"></span><div class="trial-timeline__index">01</div><div><small>Aujourd’hui</small><h3>0 € prélevé</h3><p>Vous activez votre espace et découvrez Reputeo pendant 14 jours.</p></div><strong>Début de l’essai</strong></li>
-          <li><span class="trial-timeline__line" aria-hidden="true"></span><div class="trial-timeline__index">02</div><div><small>Pendant l’essai</small><h3>Vous restez libre</h3><p>Vous pouvez gérer ou annuler votre essai depuis votre espace sécurisé.</p></div><strong>Sans engagement</strong></li>
-          <li><div class="trial-timeline__index">03</div><div><small>Après 14 jours</small><h3>29,99 € TTC / mois</h3><p>L’abonnement commence si vous ne résiliez pas avant la fin de l’essai.</p></div><strong>Facturé par Stripe</strong></li>
+          <li data-reveal><span class="trial-timeline__line" aria-hidden="true"></span><div class="trial-timeline__index">01</div><div><small>Aujourd’hui</small><h3>0 € prélevé</h3><p>Vous activez votre espace et découvrez Reputeo pendant 14 jours.</p></div><strong>Début de l’essai</strong></li>
+          <li data-reveal><span class="trial-timeline__line" aria-hidden="true"></span><div class="trial-timeline__index">02</div><div><small>Pendant l’essai</small><h3>Vous restez libre</h3><p>Vous pouvez gérer ou annuler votre essai depuis votre espace sécurisé.</p></div><strong>Sans engagement</strong></li>
+          <li data-reveal><div class="trial-timeline__index">03</div><div><small>Après 14 jours</small><h3>29,99 € TTC / mois</h3><p>L’abonnement commence si vous ne résiliez pas avant la fin de l’essai.</p></div><strong>Facturé par Stripe</strong></li>
         </ol>
       </div>
     </section>
 
     <section class="landing-pricing" id="tarif" aria-labelledby="pricing-title">
       <div class="landing-wrap landing-pricing__layout">
-        <div class="landing-pricing__intro">
+        <div class="landing-pricing__intro" data-reveal>
           <p class="landing-kicker">Une suite complète, un tarif lisible</p>
           <h2 id="pricing-title">Tout Reputeo.<br>Rien à décrypter.</h2>
           <p>Une seule formule pour suivre, comprendre et développer votre réputation, avec le contrôle humain au centre.</p>
           <div class="landing-pricing__assurances"><span>Sans engagement</span><span>Résiliation en ligne</span><span>Paiement sécurisé Stripe</span></div>
         </div>
-        <article class="landing-plan" aria-labelledby="plan-title">
+        <article class="landing-plan" aria-labelledby="plan-title" data-reveal>
           <div class="landing-plan__top"><div><small>Reputeo Pro</small><h3 id="plan-title">Votre réputation, réunie.</h3></div><span>14 jours d’essai</span></div>
           <div class="landing-plan__price">29,99 € <span>TTC / mois</span></div>
           <p class="landing-plan__note"><strong>Carte bancaire requise.</strong> Aucun prélèvement avant la fin des 14 jours.</p>
           <ul>
             <li>Avis Google Business réunis</li><li>Réponses et analyses assistées</li><li>Demandes d’avis et relance optionnelle</li><li>Historique, tendances et rapport hebdomadaire</li><li>Contrôle humain avant toute publication</li>
           </ul>
-          <a class="landing-button" href="/login.html?mode=signup">Démarrer mon essai <span aria-hidden="true">→</span></a>
+          <a class="landing-button" href="/login.html?mode=signup">Essayer Reputeo 14 jours <span aria-hidden="true">→</span></a>
           <small class="landing-plan__foot">Sans engagement · Résiliable depuis votre espace</small>
         </article>
       </div>
@@ -249,7 +294,7 @@
       <p class="landing-kicker">À vous de jouer</p>
       <h2>La confiance se construit,<br><em>avis après avis.</em></h2>
       <p>Commencez avec une vue claire de ce que vos clients disent déjà.</p>
-      <a class="landing-button" href="/login.html?mode=signup">Créer mon espace <span aria-hidden="true">→</span></a>
+      <a class="landing-button" href="/login.html?mode=signup">Essayer Reputeo 14 jours <span aria-hidden="true">→</span></a>
     </section>
   </main>
 
@@ -257,7 +302,7 @@
     <div class="landing-footer__inner">
       <a href="/" class="landing-brand" aria-label="Reputeo, accueil"><img src="/favicon.svg" alt=""><span>Repute<span>o</span></span></a>
       <div class="landing-footer__links"><a href="/privacy">Confidentialité</a><a href="/terms">Conditions</a><button type="button" onclick="window.reputeoOpenCookiePreferences && window.reputeoOpenCookiePreferences()">Gérer les cookies</button></div>
-      <span>© <span id="currentYear">2026</span> Reputeo</span>
+      <div class="landing-footer__identity"><span>© <span id="currentYear">2026</span> Reputeo · Service édité par Paolo Cugini</span><a href="mailto:contact@reputeo.app">contact@reputeo.app</a></div>
     </div>
   </footer>
 
@@ -266,20 +311,34 @@
     if (currentYear) currentYear.textContent = String(new Date().getFullYear());
     const landingMenu = document.getElementById('landingMenu');
     const landingNav = document.getElementById('landingNav');
+    const mobileNav = window.matchMedia('(max-width: 800px)');
+    let menuOpenedAtY = 0;
     function setLandingMenu(open, restoreFocus = false) {
       if (!landingMenu || !landingNav) return;
-      landingMenu.setAttribute('aria-expanded', String(open));
-      landingMenu.setAttribute('aria-label', open ? 'Fermer la navigation' : 'Ouvrir la navigation');
-      landingNav.classList.toggle('is-open', open);
-      if (!open && restoreFocus) landingMenu.focus();
+      const shouldOpen = mobileNav.matches && open;
+      landingMenu.setAttribute('aria-expanded', String(shouldOpen));
+      landingMenu.setAttribute('aria-label', shouldOpen ? 'Fermer la navigation' : 'Ouvrir la navigation');
+      landingNav.classList.toggle('is-open', shouldOpen);
+      landingNav.toggleAttribute('inert', mobileNav.matches && !shouldOpen);
+      if (shouldOpen) menuOpenedAtY = window.scrollY;
+      if (!shouldOpen && restoreFocus) landingMenu.focus();
     }
     if (landingMenu && landingNav) {
+      document.documentElement.classList.add('landing-menu-ready');
+      setLandingMenu(false);
       landingMenu.addEventListener('click', () => setLandingMenu(landingMenu.getAttribute('aria-expanded') !== 'true'));
       landingNav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setLandingMenu(false)));
       document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape' && landingMenu.getAttribute('aria-expanded') === 'true') setLandingMenu(false, true);
       });
-      window.addEventListener('resize', () => { if (window.innerWidth > 800) setLandingMenu(false); }, { passive: true });
+      const handleMobileNavChange = () => setLandingMenu(false);
+      if (typeof mobileNav.addEventListener === 'function') mobileNav.addEventListener('change', handleMobileNavChange);
+      else if (typeof mobileNav.addListener === 'function') mobileNav.addListener(handleMobileNavChange);
+      window.addEventListener('scroll', () => {
+        if (landingMenu.getAttribute('aria-expanded') === 'true' && Math.abs(window.scrollY - menuOpenedAtY) > 10) {
+          setLandingMenu(false, landingNav.contains(document.activeElement));
+        }
+      }, { passive: true });
     }
     document.querySelectorAll('a[href="#fonctionnement"]').forEach((link) => {
       link.addEventListener('click', () => {

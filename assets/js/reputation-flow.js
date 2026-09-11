@@ -21,7 +21,7 @@
   const reply = section.querySelector('[data-scene="reply"]');
   const request = section.querySelector('[data-scene="request"]');
   const resolution = section.querySelector('[data-scene="resolution"]');
-  const heroImage = section.querySelector('.trust-hand');
+  const heroImages = Array.from(section.querySelectorAll('.trust-hand'));
 
   if (!sticky || !stage || !('IntersectionObserver' in window)) {
     document.documentElement.classList.remove('landing-motion-ready');
@@ -325,10 +325,43 @@
     });
   }
 
-  if (heroImage && typeof heroImage.decode === 'function') {
-    heroImage.decode().catch(function () {}).then(function () {
+  function waitForHeroImage(image) {
+    if (image.complete) {
+      if (!image.naturalWidth) return Promise.resolve(false);
+      if (typeof image.decode !== 'function') return Promise.resolve(true);
+      return image.decode().catch(function () {}).then(function () { return true; });
+    }
+
+    return new Promise(function (resolve) {
+      image.addEventListener('load', function () { resolve(true); }, { once: true });
+      image.addEventListener('error', function () { resolve(false); }, { once: true });
+    });
+  }
+
+  if (heroImages.length) {
+    Promise.all(heroImages.map(waitForHeroImage)).then(function (results) {
+      const mediaReady = results.every(Boolean);
+      section.classList.toggle('is-media-ready', mediaReady);
+      section.classList.toggle('is-media-error', !mediaReady);
       requestMeasure();
     });
+  } else {
+    section.classList.add('is-media-error');
+  }
+
+  const revealItems = Array.from(document.querySelectorAll('[data-reveal]'));
+  if (!reduceMotion.matches && revealItems.length) {
+    document.documentElement.classList.add('landing-reveal-ready');
+    const revealObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-revealed');
+        revealObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: .08 });
+    revealItems.forEach(function (item) { revealObserver.observe(item); });
+  } else {
+    revealItems.forEach(function (item) { item.classList.add('is-revealed'); });
   }
 
   if (header) {
